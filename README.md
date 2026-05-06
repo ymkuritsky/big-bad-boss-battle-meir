@@ -13,7 +13,7 @@ http://127.0.0.1:4173
 Version 1 is playable and deployed.
 
 Main features:
-- Story Mode with Superville Levels 1-3, unlockable Candyland Levels 4-6, unlockable Abandoned Desert Levels 7-10, and unlockable Water World Levels 11-14
+- Story Mode with Superville Levels 1-3, unlockable Candyland Levels 4-6, unlockable Abandoned Desert Levels 7-10, unlockable Water World Levels 11-14, and unlockable Outer Space Levels 15-20
 - Two Player Mode on the same device
 - Each world starts easy, gets harder, then ends with a super hard boss level
 - Pink heart health system
@@ -22,6 +22,7 @@ Main features:
 - Candyland arena with lollipops, gumdrops, candy houses, and a candy stream
 - Abandoned Desert arena with sand, cactuses, hay bales, rolling hay balls, bones, skulls, and a desert stream
 - Water World arena with waves, bubbles, seaweed, coral, fish, and water everywhere
+- Outer Space arenas with the Moon, Mars, Saturn, Neptune, and an asteroid field
 - Abandoned Desert unlock: beat Candyland Levels 4, 5, and 6 twice. The wins do not have to be in a row
 - Abandoned Desert difficulty climbs from Level 7 to Level 8 to Level 9, all harder than Level 6
 - Level 9 shows a danger warning that King Dock is coming next
@@ -40,6 +41,13 @@ Main features:
 - King Dock trap boxes have small booby traps nearby, including pit cracks and Rack Creatures dropping from above
 - King Dock can also drop trap boxes from above for no reason; they fall down with booby traps around them
 - Trap boxes say "BOOBY TRAP" on them
+- Beating Water World Levels 11-14 unlocks Outer Space Levels 15-20
+- Levels 15-17 have King Dock in an astronaut suit with MIM, a red dragon that breathes fire
+- Level 18 has two King Docks on Neptune; one is weaker, but the player has to discover which one by attacking
+- Level 19 moves to an asteroid field with two stronger King Docks and Whack Creatures
+- Level 20 is the Final Showdown: a giant robot with 50 hearts has Mischievous Mayor inside, plus two side King Docks with 10 hearts each
+- The Final Showdown robot has a hidden weak spot; finding it crashes the robot open and leaves Mischievous Mayor with 3 hearts
+- Beating Level 20 earns the "You Won Part 1 of the Last Level!" medal
 - Supercharged Package unlock: beat Mischievous Mayor two times in a row
 - Supercharged Candyland fighters get 5 hearts on Levels 4 and 5, then 10 hearts on Level 6
 - Candyland villains keep their Level 3 power instead of upgrading each level
@@ -77,7 +85,8 @@ Playable characters:
 Story bosses:
 - Mischievous Mayor
 - Yapping Yonatan
-- King Dock in Abandoned Desert and Water World
+- King Dock in Abandoned Desert, Water World, and Outer Space
+- Final Showdown Robot on Level 20
 
 ## Benji
 

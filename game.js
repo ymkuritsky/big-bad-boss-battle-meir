@@ -169,6 +169,33 @@
     13: BOSS_LEVEL_TUNING[2],
     14: BOSS_LEVEL_TUNING[3]
   };
+  const SPACE_BOSS_TUNING = {
+    15: BOSS_LEVEL_TUNING[1],
+    16: BOSS_LEVEL_TUNING[2],
+    17: BOSS_LEVEL_TUNING[2],
+    18: BOSS_LEVEL_TUNING[3],
+    19: DESERT_BOSS_TUNING[10],
+    20: {
+      aiDelayMin: 260,
+      aiDelayRandom: 170,
+      initialPowerDelay: 1200,
+      approachDistance: 135,
+      basicChance: 0.72,
+      botSummonChance: 0.66,
+      botAttackChance: 0.72,
+      laserChance: 0.5,
+      flyChance: 0.22,
+      mouthSummonChance: 0.66,
+      mouthBiteChance: 0.72,
+      mouthKickChance: 0.54,
+      powerDelayMin: 1150,
+      powerDelayRandom: 640,
+      bossSpeed: 1.2,
+      helperSpeed: 1.75,
+      maxDamage: 1,
+      hiddenConfusion: 0.1
+    }
+  };
 
   const FREDDY_ANIMALS = {
     mammal: [
@@ -555,6 +582,20 @@
         { id: "kingRoar", name: "Royal Roar", icon: "mouth" }
       ],
       how: "King Dock is the Level 10 boss in Abandoned Desert and returns in Water World wearing a water suit. He is a giant pink gorilla with purple eyes, an angry mouth, two brown horns, red battle splatters all over him, a crown, and a sword sticking out of his head. He is very huge and can fire one giant hand laser. He can control seven Rack Creatures at a time, but each creature is weak and disappears when it gets hit."
+    },
+    spaceRobot: {
+      id: "spaceRobot",
+      name: "Final Showdown Robot",
+      role: "villain",
+      theme: "theme-mayor",
+      color: "#5f6d7a",
+      accent: "#d91f2e",
+      maxHealth: 50,
+      powers: [
+        { id: "robotBlast", name: "Robot Blast", icon: "laser" },
+        { id: "robotStomp", name: "Robot Stomp", icon: "smash" }
+      ],
+      how: "The Final Showdown Robot has 50 hearts and Mischievous Mayor inside it. It has a hidden weak spot. If you find the weak spot, the robot crashes open and Mischievous Mayor only has 3 hearts."
     }
   };
 
@@ -593,9 +634,17 @@
       startLevel: 11,
       endLevel: 14,
       unlock: "Beat King Dock in Abandoned Desert."
+    },
+    outerSpace: {
+      id: "outerSpace",
+      name: "Outer Space",
+      levels: "Levels 15-20",
+      startLevel: 15,
+      endLevel: 20,
+      unlock: "Beat Water World Levels 11, 12, 13, and 14."
     }
   };
-  const WORLD_ORDER = ["superville", "candyland", "abandonedDesert", "waterWorld"];
+  const WORLD_ORDER = ["superville", "candyland", "abandonedDesert", "waterWorld", "outerSpace"];
   const WATER_WORLD_POWERS = {
     mayor: { id: "waterBoots", name: "Water Boots", icon: "boots", maxCharges: 3 },
     tats: { id: "tidalPunch", name: "Tidal Punch", icon: "fist", maxCharges: 3 },
@@ -622,6 +671,12 @@
       name: "King of the Battle",
       eyebrow: "Crown Earned",
       description: "You beat King Dock and took the crown."
+    },
+    finalShowdownPart1: {
+      id: "finalShowdownPart1",
+      name: "You Won Part 1 of the Last Level!",
+      eyebrow: "Medal Earned",
+      description: "You beat Level 20: Final Showdown."
     }
   };
   const SUPERCHARGED_NAMES = {
@@ -744,6 +799,7 @@
       const unlockedTrophies = normalizeTrophies(Array.isArray(parsed.unlockedTrophies) ? parsed.unlockedTrophies : fallback.unlockedTrophies);
       const unlockedWorlds = normalizeWorlds(Array.isArray(parsed.unlockedWorlds) ? parsed.unlockedWorlds : fallback.unlockedWorlds, unlocked);
       if (unlockedTrophies.includes("kingOfBattle") && !unlockedWorlds.includes("waterWorld")) unlockedWorlds.push("waterWorld");
+      if (unlockedTrophies.includes("finalShowdownPart1") && !unlockedWorlds.includes("outerSpace")) unlockedWorlds.push("outerSpace");
       return {
         unlocked,
         unlockedWorlds,
@@ -919,10 +975,11 @@
     const basics = [
       ["Basic buttons", "Every fighter has Kick, Punch, Jump, Run, Walk, Duck, Dodge, and Hide. Hide only works near trees or benches, and it lasts up to 20 seconds."],
       ["Hearts", "Most fighters have 3 pink hearts. Most hits take half a heart. Giant Punch, Laser Ray, Bite, or two robot chainsaws at once take 1 whole heart."],
-      ["Timer and levels", "Each level lasts 2 minutes. If nobody loses all hearts, whoever has more hearts wins the level. Superville has Levels 1, 2, and 3. Candyland has Levels 4, 5, and 6. Abandoned Desert has Levels 7, 8, 9, and 10. Water World has Levels 11, 12, 13, and 14."],
-      ["Worlds", "Candyland unlocks after you beat Yapping Yonatan through Levels 1, 2, and 3. Abandoned Desert unlocks after you beat Candyland Levels 4, 5, and 6 twice. The Candyland wins do not need to be in a row. Water World unlocks after you beat King Dock in Abandoned Desert."],
+      ["Timer and levels", "Each level lasts 2 minutes. If nobody loses all hearts, whoever has more hearts wins the level. Superville has Levels 1, 2, and 3. Candyland has Levels 4, 5, and 6. Abandoned Desert has Levels 7, 8, 9, and 10. Water World has Levels 11, 12, 13, and 14. Outer Space has Levels 15, 16, 17, 18, 19, and 20."],
+      ["Worlds", "Candyland unlocks after you beat Yapping Yonatan through Levels 1, 2, and 3. Abandoned Desert unlocks after you beat Candyland Levels 4, 5, and 6 twice. The Candyland wins do not need to be in a row. Water World unlocks after you beat King Dock in Abandoned Desert. Outer Space unlocks after you beat Water World Levels 11, 12, 13, and 14."],
       ["King Dock hearts, laser, Rack Creatures, and boxes", "King Dock is very huge, has 10 hearts, and the player starts with 10 hearts in his boss worlds. He can fire one giant hand laser. When you hit King Dock, his heart flies to you and heals you up to your max hearts. Every real hit also makes special prize boxes spread out around him. King Dock can control seven Rack Creatures at a time, but any hit destroys a creature. Sometimes King Dock drops a trap box from above for no reason. Trap boxes say BOOBY TRAP on them. Watch for little traps around trap boxes, like pit cracks and Rack Creatures dropping from above. Jump onto a landed prize box to get rewards like an iron sword, armor, heart, speed boost, or power refill. Beating King Dock earns the King of the Battle crown."],
       ["Water World", "Levels 11-14 take place on water and are meant to be pretty easy, like Levels 1-3. King Dock is the boss again, but he wears a water suit. Benji can use his five shark forms anywhere in Water World. Freddy can still choose fish. Other fighters get a simple water-themed power, like Mr. 67's Ice Feet for walking on water."],
+      ["Outer Space", "Levels 15-17 have King Dock in an astronaut suit with MIM the red dragon helping him. Level 18 has two King Docks on Neptune. Level 19 moves to the asteroid field with stronger double King Docks. Level 20 is the Final Showdown against a giant robot with Mischievous Mayor inside. The robot has 50 hearts and a hidden weak spot."],
       ["Supercharged Package", "Beat Mischievous Mayor two times in a row to unlock the Supercharged Package. Once it is unlocked, Candyland fighters get 5 hearts on Levels 4 and 5, then 10 hearts on Level 6. Supercharged names include Cheetah Racer, Mega Mommy, Ultimate Freddy, and Super Dad. Cheetah Racer only has Super Speed and Sharp Claws; Sharp Claws takes half a heart. Super Dad turns green and his fist becomes giant when he punches. Mega Mommy is all pink and gets Mega Grow, which makes her giant for a little while. The villains keep their Level 3 power in every Candyland level."],
       ["Powers", "Most powers can be used 3 times, then they recharge. Some special powers recharge after 1 use. Normal recharge is 30 seconds. Mischievous Mayor recharges in 20 seconds when he is the boss."]
     ];
@@ -998,7 +1055,7 @@
         worldGrid.append(createWorldCard(id, selectState.world === id, () => {
           if (!isWorldUnlocked(id)) return;
           selectState.world = id;
-          if (id === "waterWorld") selectState.boss = "kingDock";
+          if (id === "waterWorld" || id === "outerSpace") selectState.boss = "kingDock";
           else if (selectState.boss === "kingDock") selectState.boss = "mayor";
           renderSelect();
         }));
@@ -1017,7 +1074,7 @@
     els.bossArea.append(heading);
     const grid = document.createElement("div");
     grid.className = "select-grid";
-    const ids = selectState.mode === "story" ? (selectState.world === "waterWorld" ? ["kingDock"] : STORY_BOSSES) : CHARACTER_ORDER;
+    const ids = selectState.mode === "story" ? ((selectState.world === "waterWorld" || selectState.world === "outerSpace") ? ["kingDock"] : STORY_BOSSES) : CHARACTER_ORDER;
     ids.forEach((id) => {
       const selectedId = selectState.mode === "story" ? selectState.boss : selectState.p2;
       grid.append(createSelectCard(id, selectedId === id, () => {
@@ -1046,6 +1103,8 @@
       message = "Abandoned Desert is ready: Levels 7-10. Level 10 boss is King Dock.";
     } else if (selectState.mode === "story" && selectState.world === "waterWorld") {
       message = "Water World is ready: Levels 11-14. King Dock returns in a water suit.";
+    } else if (selectState.mode === "story" && selectState.world === "outerSpace") {
+      message = "Outer Space is ready: Levels 15-20. King Dock gets an astronaut suit, then the Final Showdown robot appears.";
     } else if (selectState.mode === "two") {
       message = "Player 1 can send a link, then start a local battle here.";
     }
@@ -1135,7 +1194,9 @@
 
   function characterSummary(id) {
     const character = CHARACTERS[id];
-    const hearts = selectState.world === "waterWorld" ? (id === "kingDock" ? KING_DOCK_MAX_HEALTH : "10") : isSuperchargedSelection() ? "5-10" : maxHealthFor(id);
+    const hearts = selectState.world === "outerSpace"
+      ? (id === "kingDock" ? "15-20, then 50 robot" : "15-20")
+      : selectState.world === "waterWorld" ? (id === "kingDock" ? KING_DOCK_MAX_HEALTH : "10") : isSuperchargedSelection() ? "5-10" : maxHealthFor(id);
     const superchargedOnlyPowers = isSuperchargedSelection() ? SUPERCHARGED_POWER_SETS[id] : null;
     const powers = (superchargedOnlyPowers || character.powers).map((power) => power.name);
     if (id === "freddy" && isSuperchargedSelection()) powers.push("Super Giant Punch");
@@ -1188,7 +1249,7 @@
 
   function startBattle() {
     initAudio();
-    const opponentId = selectState.mode === "story" && selectState.world === "waterWorld" ? "kingDock" : selectState.mode === "story" ? selectState.boss : selectState.p2;
+    const opponentId = selectState.mode === "story" && (selectState.world === "waterWorld" || selectState.world === "outerSpace") ? "kingDock" : selectState.mode === "story" ? selectState.boss : selectState.p2;
     const startLevelNumber = selectState.mode === "story" ? WORLDS[selectState.world].startLevel : 1;
     const endLevelNumber = selectState.mode === "story" ? WORLDS[selectState.world].endLevel : 3;
     if (selectState.p1 === opponentId) {
@@ -1259,7 +1320,9 @@
     const now = performance.now();
     const introMs = 3000;
     const levelOpponentId = game.mode === "story" ? storyBossIdForLevel(level) : game.p2Id;
-    const kingDockTalkMs = levelOpponentId === "kingDock" ? (game.world === "waterWorld" ? 2600 : 4600) : 0;
+    const kingDockTalkMs = levelOpponentId === "kingDock"
+      ? (game.world === "waterWorld" || game.world === "outerSpace" ? 2600 : 4600)
+      : levelOpponentId === "spaceRobot" ? 4200 : 0;
     game.level = level;
     game.levelStartCarry = { p1: game.carry.p1, p2: game.carry.p2 };
     game.helpers = [];
@@ -1296,11 +1359,12 @@
     game.dangerWarningText = "";
     game.dangerWarningUntil = 0;
     game.level9WarningShown = false;
-    game.kingDockIntroUntil = levelOpponentId === "kingDock" ? now + introMs + kingDockTalkMs : 0;
-    if (levelOpponentId === "kingDock") {
-      game.dangerWarningText = game.world === "waterWorld" ? "King Dock has a water suit!" : "King Dock: Who is responsible?";
+    game.kingDockIntroUntil = (levelOpponentId === "kingDock" || levelOpponentId === "spaceRobot") ? now + introMs + kingDockTalkMs : 0;
+    if (levelOpponentId === "kingDock" || levelOpponentId === "spaceRobot") {
+      game.dangerWarningText = kingDockWarningText(level, levelOpponentId);
       game.dangerWarningUntil = game.kingDockIntroUntil;
     }
+    setupOuterSpaceLevel(level);
     game.gameOver = false;
     buttonInput.p1 = blankInput();
     buttonInput.p2 = blankInput();
@@ -1312,13 +1376,36 @@
   }
 
   function storyBossIdForLevel(level) {
+    if (game && game.mode === "story" && game.world === "outerSpace") return level >= 20 ? "spaceRobot" : "kingDock";
     if (game && game.mode === "story" && game.world === "abandonedDesert" && level >= 10) return "kingDock";
     if (game && game.mode === "story" && game.world === "waterWorld" && level >= 11) return "kingDock";
     return game ? game.p2Id : selectState.boss;
   }
 
   function isKingDockLevel(level) {
-    return game && game.mode === "story" && game.p2 && game.p2.id === "kingDock" && (game.world === "abandonedDesert" || game.world === "waterWorld");
+    return game && game.mode === "story" && game.p2 && (game.p2.id === "kingDock" || game.p2.id === "spaceRobot") && (game.world === "abandonedDesert" || game.world === "waterWorld" || game.world === "outerSpace");
+  }
+
+  function setupOuterSpaceLevel(level) {
+    if (!game || game.mode !== "story" || game.world !== "outerSpace") return;
+    if (level >= 15 && level <= 17) {
+      spawnMimDragon(game.p2);
+      return;
+    }
+    if (level === 18) {
+      spawnSpaceKingDock(game.p2, 820, 300, 7);
+      return;
+    }
+    if (level === 19) {
+      spawnSpaceKingDock(game.p2, 810, 305, 15);
+      return;
+    }
+    if (level >= 20) {
+      game.p2.robotExposed = false;
+      game.p2.robotWeakSpotFound = false;
+      spawnSpaceKingDock(game.p2, 830, 304, 10);
+      spawnSpaceKingDock(game.p2, 1100, 520, 10);
+    }
   }
 
   function createFighter(id, side, isBoss, x, y, facing) {
@@ -1382,6 +1469,8 @@
       sharkChooserOpen: false,
       sharkForm: null,
       sharkCooldownUntil: 0,
+      robotExposed: false,
+      robotWeakSpotFound: false,
       helperPenaltyNow: 0,
       helperPenaltyNext: 0,
       lastWholeLost: 0,
@@ -1427,6 +1516,7 @@
   }
 
   function fighterMaxHealthForLevel(id, level, isBoss) {
+    if (worldIdForLevel(level) === "outerSpace" && !isBoss) return level >= 19 ? 20 : 15;
     if (worldIdForLevel(level) === "waterWorld" && !isBoss) return 10;
     if (worldIdForLevel(level) === "abandonedDesert" && level >= 10 && !isBoss) return 10;
     const supercharged = superchargedHealthForLevel(level);
@@ -1435,6 +1525,11 @@
   }
 
   function bossMaxHealthForLevel(level, id) {
+    if (id === "spaceRobot") return 50;
+    if (id === "kingDock" && worldIdForLevel(level) === "outerSpace") {
+      if (level >= 20) return 10;
+      return level >= 19 ? 20 : 15;
+    }
     if (id === "kingDock") return KING_DOCK_MAX_HEALTH;
     const world = worldIdForLevel(level);
     const worldBonus = world === "waterWorld" ? 3 : world === "abandonedDesert" ? 2 : world === "candyland" ? 1 : 0;
@@ -1452,6 +1547,14 @@
 
   function levelDifficultyLabel(level) {
     const world = worldIdForLevel(level);
+    if (world === "outerSpace") {
+      if (level >= 20) return "Final Showdown";
+      if (level === 19) return "Asteroid Field";
+      if (level === 18) return "Neptune Double Dock";
+      if (level === 17) return "Saturn Battle";
+      if (level === 16) return "Mars Fire";
+      return "Moon Mission";
+    }
     if (world === "candyland") return "Candyland Level 3 Villain Power";
     if (world === "waterWorld") {
       if (level >= 14) return "Easy King Dock Splash";
@@ -1477,6 +1580,11 @@
   }
 
   function stageLevelFor(level) {
+    if (level >= 15) {
+      if (level >= 19) return 3;
+      if (level === 18) return 2;
+      return clamp(level - 14, 1, 3);
+    }
     if (level >= 11) return level >= 14 ? 3 : clamp(level - 10, 1, 3);
     if (level >= 7) return level >= 10 ? 3 : clamp(level - 6, 1, 3);
     return ((Math.max(1, level) - 1) % 3) + 1;
@@ -1487,6 +1595,7 @@
   }
 
   function worldIdForLevel(level) {
+    if (level >= 15) return "outerSpace";
     if (level >= 11) return "waterWorld";
     if (level >= 7) return "abandonedDesert";
     return level >= 4 ? "candyland" : "superville";
@@ -1496,7 +1605,19 @@
     return !!(game && game.mode === "story" && worldIdForLevel(game.level || 1) === "waterWorld");
   }
 
+  function isOuterSpaceActive() {
+    return !!(game && game.mode === "story" && worldIdForLevel(game.level || 1) === "outerSpace");
+  }
+
   function makeObstacles(worldId = "superville") {
+    if (worldId === "outerSpace") {
+      return [
+        { type: "bench", x: 260, y: 342, w: 132, h: 40, space: true },
+        { type: "bench", x: 910, y: 570, w: 150, h: 42, space: true },
+        { type: "tree", x: 1030, y: 330, r: 42, space: true },
+        { type: "tree", x: 430, y: 565, r: 38, space: true }
+      ];
+    }
     if (worldId === "waterWorld") {
       return [
         { type: "bench", x: 315, y: 338, w: 170, h: 34, water: true },
@@ -1523,7 +1644,11 @@
 
   function sayStartLine(fighter) {
     if (fighter.id === "kingDock") {
-      setBubble(fighter, isWaterWorldActive() ? "My water suit is ready!" : "Who is responsible?", true, 7200);
+      setBubble(fighter, isOuterSpaceActive() ? "My astronaut suit is ready!" : isWaterWorldActive() ? "My water suit is ready!" : "Who is responsible?", true, 7200);
+      return;
+    }
+    if (fighter.id === "spaceRobot") {
+      setBubble(fighter, "Find my weak spot if you can!", true, 7200);
       return;
     }
     if (fighter.character.role === "villain") {
@@ -1531,6 +1656,17 @@
     } else {
       setBubble(fighter, "I need to stop you!", false, 1700);
     }
+  }
+
+  function kingDockWarningText(level, opponentId = "kingDock") {
+    if (game && game.world === "outerSpace") {
+      if (opponentId === "spaceRobot" || level >= 20) return "The robot is very hard to defeat. It has a hidden weak spot!";
+      if (level >= 19) return "Asteroid field! Two King Docks are stronger now!";
+      if (level >= 18) return "Neptune warning: two King Docks are here!";
+      return "MIM the red dragon is helping King Dock!";
+    }
+    if (game && game.world === "waterWorld") return "King Dock has a water suit!";
+    return "King Dock: Who is responsible?";
   }
 
   function setBubble(fighter, text, spiky, duration) {
@@ -1790,6 +1926,9 @@
   }
 
   function bossTuning() {
+    if (game && game.mode === "story" && worldIdForLevel(game.level || 1) === "outerSpace") {
+      return SPACE_BOSS_TUNING[Math.min(20, Math.max(15, game.level || 15))] || SPACE_BOSS_TUNING[15];
+    }
     if (game && game.mode === "story" && worldIdForLevel(game.level || 1) === "waterWorld") {
       return WATER_BOSS_TUNING[Math.min(14, Math.max(11, game.level || 11))] || WATER_BOSS_TUNING[11];
     }
@@ -1863,6 +2002,15 @@
         return;
       }
       if (powerReady && Math.random() < 0.36) aiUsePower(boss, "kingRoar");
+    } else if (boss.id === "spaceRobot") {
+      if (powerReady && Math.abs(dx) < 660 && Math.random() < 0.58) {
+        aiUsePower(boss, "robotBlast");
+        return;
+      }
+      if (powerReady && d < 310 && Math.random() < 0.74) {
+        aiUsePower(boss, "robotStomp");
+        return;
+      }
     } else if (boss.character.secret) {
       const power = boss.character.powers[Math.floor(Math.random() * boss.character.powers.length)];
       if (powerReady && power) aiUsePower(boss, power.id);
@@ -1905,6 +2053,16 @@
           toRemove.add(helper);
         } else {
           updateGhostBat(helper, owner, target, dt);
+        }
+      } else if (helper.kind === "mimDragon") {
+        updateMimDragon(helper, owner, target, dt);
+      } else if (helper.kind === "spaceKingDock") {
+        updateSpaceKingDock(helper, owner, target, dt);
+      } else if (helper.kind === "spaceCreature") {
+        if (helper.until && now > helper.until) {
+          toRemove.add(helper);
+        } else {
+          updateSpaceCreature(helper, owner, target, dt);
         }
       }
       helper.x = clamp(helper.x, 70, WIDTH - 70);
@@ -1971,6 +2129,91 @@
     target.x = clamp(target.x + helper.facing * -22, 95, WIDTH - 95);
     applyDamage(target, 0.5, owner, "BAT BUMP!");
     playEffect("mouth");
+  }
+
+  function updateMimDragon(helper, owner, target, dt) {
+    const now = performance.now();
+    const flap = Math.sin(now / 160 + helper.phase);
+    const goalX = owner.x - owner.facing * 154 + Math.sin(now / 650) * 22;
+    const goalY = owner.y - 78 + Math.cos(now / 520) * 18;
+    helper.x += (goalX - helper.x) * Math.min(1, dt * 3.5);
+    helper.y += (goalY - helper.y) * Math.min(1, dt * 3.5);
+    helper.z = 112 + flap * 12;
+    helper.facing = target.x < helper.x ? -1 : 1;
+    if (now < helper.nextFireAt) return;
+    helper.nextFireAt = now + 3600 + Math.random() * 1600;
+    helper.action = "fire";
+    helper.actionUntil = now + 580;
+    const startX = helper.x + helper.facing * 34;
+    const startY = helper.y - helper.z - 20;
+    const endX = helper.x + helper.facing * 410;
+    game.effects.push({
+      kind: "fireBreath",
+      x1: startX,
+      y1: startY,
+      x2: endX,
+      y2: startY + 28,
+      facing: helper.facing,
+      born: now,
+      until: now + 520
+    });
+    showComicText("FIRE!", helper.x, helper.y - helper.z - 84, "#ff442b");
+    playEffect("laser");
+    const inLine = Math.sign(target.x - helper.x) === helper.facing && Math.abs((target.y - target.z - 58) - startY) < 115 && Math.abs(target.x - helper.x) < 440;
+    if (!inLine || !canBeHit(target)) return;
+    if (target.dodgeUntil > now || target.duckUntil > now || target.z > 115) {
+      showComicText("DODGED", target.x, target.y - target.z - 96, "#111");
+      return;
+    }
+    target.knockdownUntil = Math.max(target.knockdownUntil, now + 900);
+    applyDamage(target, 1, Object.assign({}, helper, { character: { accent: "#ff442b", role: "villain" }, isBoss: false }), "FIRE BREATH!");
+  }
+
+  function updateSpaceKingDock(helper, owner, target, dt) {
+    const now = performance.now();
+    const dx = target.x - helper.x;
+    const dy = target.y - helper.y;
+    const d = distancePoint(helper.x, helper.y, target.x, target.y);
+    helper.facing = dx < 0 ? -1 : 1;
+    if (d > 135) {
+      const len = Math.hypot(dx, dy) || 1;
+      const speed = 102 + stageLevelFor(game.level) * 24;
+      helper.x += (dx / len) * speed * dt;
+      helper.y += (dy / len) * speed * dt;
+    }
+    if (now >= helper.nextCreatureAt && game.helpers.filter((item) => item.kind === "spaceCreature").length < 7) {
+      helper.nextCreatureAt = now + (game.level >= 19 ? 3600 : 5200) + Math.random() * 1800;
+      spawnSpaceCreature(owner, game.level >= 19 ? "Whack Creature" : "Rat Creature");
+      showComicText(game.level >= 19 ? "WHACK CREATURE!" : "RAT CREATURE!", helper.x, helper.y - 120, "#7d43d6");
+    }
+    if (now < helper.nextAttackAt || d > 150) return;
+    helper.nextAttackAt = now + 1500 + Math.random() * 1200;
+    helper.action = Math.random() < 0.5 ? "sword" : "slam";
+    helper.actionUntil = now + 480;
+    if (!canBeHit(target)) return;
+    if (target.dodgeUntil > now || target.z > 90) {
+      showComicText("DODGED", target.x, target.y - target.z - 96, "#111");
+      return;
+    }
+    applyDamage(target, helper.action === "sword" ? 1 : 0.5, owner, helper.action === "sword" ? "SPACE SLASH!" : "MOON SLAM!");
+  }
+
+  function updateSpaceCreature(helper, owner, target, dt) {
+    const now = performance.now();
+    const speed = game.level >= 19 ? 245 : 185;
+    helper.x += helper.facing * speed * dt;
+    helper.y += Math.sin(now / 180 + helper.phase) * 38 * dt;
+    helper.z = 34 + Math.sin(now / 130 + helper.phase) * 18;
+    if (helper.x < 85 || helper.x > WIDTH - 85) helper.facing *= -1;
+    if (helper.hit || distancePoint(helper.x, helper.y, target.x, target.y) > 56 || Math.abs(helper.z - target.z) > 95) return;
+    helper.hit = true;
+    helper.action = "bite";
+    helper.actionUntil = now + 380;
+    if (target.dodgeUntil > now || !canBeHit(target)) {
+      showComicText("DODGED", target.x, target.y - target.z - 96, "#111");
+      return;
+    }
+    applyDamage(target, 0.5, owner, helper.name === "Whack Creature" ? "WHACK!" : "RAT BUMP!");
   }
 
   function followOwner(helper, owner, dt) {
@@ -2287,6 +2530,12 @@
         break;
       case "kingRoar":
         kingRoar(fighter);
+        break;
+      case "robotBlast":
+        robotBlast(fighter);
+        break;
+      case "robotStomp":
+        robotStomp(fighter);
         break;
       case "waterBoots":
       case "tidalPunch":
@@ -3291,6 +3540,70 @@
     playEffect("mouth");
   }
 
+  function spawnMimDragon(owner) {
+    if (!owner || !game) return;
+    const now = performance.now();
+    game.helpers = game.helpers.filter((helper) => helper.kind !== "mimDragon");
+    game.helpers.push({
+      kind: "mimDragon",
+      owner,
+      index: 0,
+      x: owner.x - owner.facing * 150,
+      y: owner.y - 82,
+      z: 112,
+      facing: owner.facing,
+      phase: Math.random() * Math.PI * 2,
+      action: "",
+      actionUntil: 0,
+      health: 8,
+      maxHealth: 8,
+      nextFireAt: now + 3600
+    });
+    showComicText("MIM!", owner.x - owner.facing * 120, owner.y - 174, "#d91f2e");
+  }
+
+  function spawnSpaceKingDock(owner, x, y, maxHealth) {
+    if (!owner || !game) return;
+    game.helpers.push({
+      kind: "spaceKingDock",
+      owner,
+      index: game.helpers.filter((helper) => helper.kind === "spaceKingDock").length,
+      x,
+      y,
+      z: 0,
+      facing: -1,
+      phase: Math.random() * Math.PI * 2,
+      action: "",
+      actionUntil: 0,
+      health: maxHealth,
+      maxHealth,
+      revealed: false,
+      nextAttackAt: performance.now() + 1700 + Math.random() * 900,
+      nextCreatureAt: performance.now() + 3800 + Math.random() * 1600
+    });
+  }
+
+  function spawnSpaceCreature(owner, name = "Rat Creature") {
+    if (!owner || !game) return;
+    const now = performance.now();
+    const side = owner.x > WIDTH / 2 ? -1 : 1;
+    game.helpers.push({
+      kind: "spaceCreature",
+      owner,
+      name,
+      index: game.helpers.filter((helper) => helper.kind === "spaceCreature").length,
+      x: clamp(owner.x + side * (58 + Math.random() * 70), 90, WIDTH - 90),
+      y: clamp(owner.y + (Math.random() * 120 - 60), 230, HEIGHT - 92),
+      z: 42 + Math.random() * 45,
+      facing: side,
+      phase: Math.random() * Math.PI * 2,
+      action: "",
+      actionUntil: 0,
+      hit: false,
+      until: now + 9000
+    });
+  }
+
   function activeGhostBatCount(fighter) {
     if (!game || !game.helpers) return 0;
     return game.helpers.filter((helper) => helper.kind === "ghostBat" && helper.owner === fighter).length;
@@ -3330,6 +3643,100 @@
       showComicText("STUNNED", target.x, target.y - target.z - 100, fighter.character.accent);
     }
     playEffect("mouth");
+  }
+
+  function robotBlast(fighter) {
+    const target = opponentOf(fighter);
+    const now = performance.now();
+    faceAttackTarget(fighter, target, WIDTH);
+    fighter.action = "robotBlast";
+    fighter.actionUntil = now + 1200;
+    const y = fighter.y - fighter.z - 128;
+    const startX = fighter.x + fighter.facing * 112;
+    const endX = fighter.facing > 0 ? WIDTH - 58 : 58;
+    game.effects.push({
+      kind: "giantLaserWarn",
+      x1: startX,
+      y1: y,
+      x2: endX,
+      y2: y,
+      color: "#ffd84a",
+      born: now,
+      until: now + 620
+    });
+    setBubble(fighter, "ROBOT BLAST!", true, 1150);
+    playEffect("laser");
+    setTimeout(() => {
+      if (!game || fighter.health <= 0 || target.health <= 0) return;
+      fireRobotBlast(fighter, target);
+    }, 620);
+  }
+
+  function fireRobotBlast(fighter, target) {
+    const now = performance.now();
+    faceAttackTarget(fighter, target, WIDTH);
+    const y = fighter.y - fighter.z - 128;
+    const startX = fighter.x + fighter.facing * 112;
+    const endX = fighter.facing > 0 ? WIDTH - 58 : 58;
+    game.effects.push({
+      kind: "giantLaserBeam",
+      x1: startX,
+      y1: y,
+      x2: endX,
+      y2: y,
+      facing: fighter.facing,
+      color: "#d91f2e",
+      born: now,
+      until: now + 390
+    });
+    playEffect("boom");
+    const inLine = Math.sign(target.x - fighter.x) === fighter.facing && Math.abs((target.y - target.z - 72) - y) < 150;
+    if (!inLine || !canBeHit(target)) return;
+    if (target.dodgeUntil > now || target.duckUntil > now || target.z > 120) {
+      showComicText("BLAST DODGED", target.x, target.y - target.z - 96, "#111");
+      return;
+    }
+    target.knockdownUntil = Math.max(target.knockdownUntil, now + 1200);
+    applyDamage(target, 1, fighter, "ROBOT BLAST!");
+  }
+
+  function robotStomp(fighter) {
+    const target = opponentOf(fighter);
+    const now = performance.now();
+    faceAttackTarget(fighter, target, 360);
+    fighter.action = "robotStomp";
+    fighter.actionUntil = now + 980;
+    const stompX = fighter.x + fighter.facing * 60;
+    game.effects.push({
+      kind: "giantLaserWarn",
+      x1: stompX - 150,
+      y1: fighter.y - 8,
+      x2: stompX + 150,
+      y2: fighter.y - 8,
+      color: "#ff5fa8",
+      born: now,
+      until: now + 520
+    });
+    setBubble(fighter, "ROBOT STOMP!", true, 1000);
+    playEffect("boom");
+    setTimeout(() => {
+      if (!game || fighter.health <= 0 || target.health <= 0) return;
+      game.effects.push({
+        kind: "circle",
+        x: stompX,
+        y: fighter.y,
+        r: 180,
+        color: "#ff5fa8",
+        born: performance.now(),
+        until: performance.now() + 360
+      });
+      if (distancePoint(stompX, fighter.y, target.x, target.y) < 190 && target.z < 44 && canBeHit(target)) {
+        target.knockdownUntil = Math.max(target.knockdownUntil, performance.now() + 1300);
+        applyDamage(target, 0.5, fighter, "ROBOT STOMP!");
+      } else {
+        showComicText("JUMP SAFE", target.x, target.y - target.z - 96, "#111");
+      }
+    }, 520);
   }
 
   function waterWorldPower(fighter, powerId) {
@@ -3691,13 +4098,30 @@
   }
 
   function destroyHelper(helper, label = "POOF!") {
-    showComicText(helper.kind === "ghostBat" ? "BAT POOF!" : label, helper.x, helper.y - helper.z - 60, "#111");
+    if (helper.maxHealth) {
+      helper.revealed = true;
+      helper.health = Math.max(0, Math.round(((helper.health || helper.maxHealth) - 1) * 2) / 2);
+      showComicText(`${formatHealth(helper.health)}/${formatHealth(helper.maxHealth)}`, helper.x, helper.y - helper.z - 82, "#111");
+      helper.action = "hurt";
+      helper.actionUntil = performance.now() + 340;
+      if (helper.health > 0) {
+        playEffect("hit");
+        return false;
+      }
+    }
+    const helperLabel = helper.kind === "ghostBat"
+      ? "BAT POOF!"
+      : helper.kind === "mimDragon" ? "MIM DOWN!"
+      : helper.kind === "spaceKingDock" ? "KING DOCK DOWN!"
+      : helper.kind === "spaceCreature" ? "CREATURE POOF!"
+      : label;
+    showComicText(helperLabel, helper.x, helper.y - helper.z - 60, "#111");
     game.effects.push({
       kind: "circle",
       x: helper.x,
       y: helper.y - helper.z - 34,
-      r: helper.kind === "ghostBat" ? 44 : 36,
-      color: helper.kind === "ghostBat" ? "#c8b9ff" : "#ffd84a",
+      r: helper.kind === "ghostBat" || helper.kind === "spaceCreature" ? 44 : 54,
+      color: helper.kind === "ghostBat" || helper.kind === "spaceCreature" ? "#c8b9ff" : "#ffd84a",
       born: performance.now(),
       until: performance.now() + 300
     });
@@ -3727,6 +4151,11 @@
       playEffect("shield");
       return;
     }
+    if (target.id === "spaceRobot" && !target.robotExposed && source && source.side === "p1" && robotWeakSpotHit(target, source)) {
+      exposeSpaceRobot(target, source);
+      return;
+    }
+    if (target.id === "spaceRobot" && !target.robotExposed) amount = Math.min(amount, 0.5);
     amount = tunedDamageAmount(target, amount, source);
     const oldHealth = target.health;
     target.health = Math.max(0, Math.round((target.health - amount) * 2) / 2);
@@ -3743,6 +4172,48 @@
     maybeStealKingDockHeart(target, source, actualLost);
     maybeSpawnKingDockBox(target, source, actualLost);
     maybeReduceBossHelpers(target, oldHealth);
+  }
+
+  function robotWeakSpotHit(target, source) {
+    const leftRibX = target.x - 118;
+    const leftRibY = target.y - target.z - 74;
+    const sourceY = source.y - source.z - 70;
+    return source.x < target.x - 54 &&
+      Math.abs(sourceY - leftRibY) < 170 &&
+      distancePoint(source.x, source.y - source.z, leftRibX, leftRibY) < 245;
+  }
+
+  function exposeSpaceRobot(target, source) {
+    target.robotExposed = true;
+    target.robotWeakSpotFound = true;
+    target.id = "mayor";
+    target.character = CHARACTERS.mayor;
+    target.name = "Mischievous Mayor";
+    target.maxHealth = 3;
+    target.health = 3;
+    target.charges = {};
+    target.cooldowns = {};
+    target.character.powers.forEach((power) => {
+      target.charges[power.id] = maxChargesForPower(power);
+      target.cooldowns[power.id] = 0;
+    });
+    target.aiNext = performance.now() + 1600;
+    target.aiPowerNext = performance.now() + 2400;
+    showComicText("WEAK SPOT!", target.x - 92, target.y - target.z - 132, "#ffd84a");
+    showComicText("ROBOT CRASH!", target.x, target.y - target.z - 92, "#d91f2e");
+    game.effects.push({
+      kind: "circle",
+      x: target.x,
+      y: target.y - target.z - 92,
+      r: 155,
+      color: "#d91f2e",
+      born: performance.now(),
+      until: performance.now() + 620
+    });
+    target.knockdownUntil = Math.max(target.knockdownUntil, performance.now() + 1200);
+    setBubble(target, "My robot!", true, 1600);
+    triggerHitFeedback(target, source, 1);
+    playEffect("boom");
   }
 
   function triggerHitFeedback(target, source, amount) {
@@ -3990,7 +4461,7 @@
     game.carry.p1 = game.p1.health;
     maybeUnlockAfterLevel();
     if (game.level >= game.worldEndLevel) {
-      const title = game.world === "abandonedDesert" ? "King of the Battle!" : game.world === "waterWorld" ? "Water World Complete!" : "Game Complete";
+      const title = game.world === "abandonedDesert" ? "King of the Battle!" : game.world === "waterWorld" ? "Water World Complete!" : game.world === "outerSpace" ? "Final Showdown Complete!" : "Game Complete";
       finishGame(true, title, worldCompleteText());
       return;
     }
@@ -4018,6 +4489,7 @@
   }
 
   function worldCompleteText() {
+    if (game.world === "outerSpace") return "You won Part 1 of the Last Level!";
     if (game.world === "waterWorld") return "You beat Water World Levels 11, 12, 13, and 14.";
     if (game.world === "abandonedDesert") return "You beat King Dock and became King of the Battle.";
     if (game.world === "candyland") return "You beat Candyland Levels 4, 5, and 6.";
@@ -4047,6 +4519,12 @@
         awardTrophy("kingOfBattle");
         game.unlocks.push("trophy:kingOfBattle");
         if (unlockWorld("waterWorld")) game.unlocks.push("world:waterWorld");
+      }
+      if (game.bossId === "kingDock" && game.world === "waterWorld" && game.level >= 14) {
+        if (unlockWorld("outerSpace")) game.unlocks.push("world:outerSpace");
+      }
+      if (game.world === "outerSpace" && game.level >= 20) {
+        if (awardTrophy("finalShowdownPart1")) game.unlocks.push("trophy:finalShowdownPart1");
       }
     }
 
@@ -4556,6 +5034,11 @@
     ctx.save();
     const level = game ? game.level : 1;
     const world = worldIdForLevel(level);
+    if (world === "outerSpace") {
+      drawOuterSpaceBackground(level);
+      ctx.restore();
+      return;
+    }
     if (world === "waterWorld") {
       drawWaterWorldBackground(level);
       ctx.restore();
@@ -4616,6 +5099,163 @@
     ctx.stroke();
     ctx.fillStyle = levelLook.tint;
     ctx.fillRect(56, 104, WIDTH - 112, HEIGHT - 160);
+    ctx.restore();
+  }
+
+  function drawOuterSpaceBackground(level) {
+    const look = {
+      15: { sky: "#10152f", ground: "#c7ccd8", horizon: "#8a91a8", planet: "Moon", planetColor: "#d9dce8", accent: "#fff6ba" },
+      16: { sky: "#2b1020", ground: "#c8643d", horizon: "#8f382f", planet: "Mars", planetColor: "#e36b44", accent: "#ffb347" },
+      17: { sky: "#161432", ground: "#bfa66f", horizon: "#776a99", planet: "Saturn", planetColor: "#e2c36c", accent: "#8ed8ff" },
+      18: { sky: "#071d42", ground: "#2b78b8", horizon: "#123c78", planet: "Neptune", planetColor: "#2f8dff", accent: "#9eeeff" },
+      19: { sky: "#070912", ground: "#4b4e5e", horizon: "#272b3a", planet: "Asteroids", planetColor: "#b8b0a4", accent: "#ffd84a" },
+      20: { sky: "#03040c", ground: "#3a303d", horizon: "#1c1a28", planet: "Final Showdown", planetColor: "#d91f2e", accent: "#ffd84a" }
+    }[level] || { sky: "#10152f", ground: "#c7ccd8", horizon: "#8a91a8", planet: "Space", planetColor: "#d9dce8", accent: "#fff6ba" };
+
+    ctx.fillStyle = look.sky;
+    ctx.fillRect(0, 0, WIDTH, HEIGHT);
+    drawStarField(level);
+    roundRect(ctx, 48, 96, WIDTH - 96, HEIGHT - 144, 8);
+    ctx.fillStyle = "rgba(255,255,255,0.06)";
+    ctx.fill();
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 8;
+    ctx.stroke();
+
+    if (level === 17) drawSaturnSky(946, 170, 1.2);
+    else if (level === 18) drawPlanetSky(945, 166, 64, look.planetColor, "#9eeeff");
+    else if (level >= 19) drawAsteroidBelt(level);
+    else drawPlanetSky(945, 166, level === 16 ? 62 : 58, look.planetColor, look.accent);
+    if (level === 16) drawMarsFire();
+
+    ctx.fillStyle = look.horizon;
+    ctx.fillRect(56, 390, WIDTH - 112, 72);
+    ctx.fillStyle = look.ground;
+    ctx.beginPath();
+    ctx.moveTo(56, 436);
+    for (let x = 56; x <= WIDTH - 56; x += 80) {
+      ctx.quadraticCurveTo(x + 42, 420 + Math.sin((x + level * 44) / 85) * 18, x + 80, 436);
+    }
+    ctx.lineTo(WIDTH - 56, HEIGHT - 48);
+    ctx.lineTo(56, HEIGHT - 48);
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    ctx.stroke();
+
+    ctx.strokeStyle = "rgba(23,18,22,0.32)";
+    ctx.lineWidth = 4;
+    for (let i = 0; i < 16; i += 1) {
+      const x = 98 + i * 72;
+      const y = 506 + (i % 4) * 34;
+      ctx.beginPath();
+      ctx.ellipse(x, y, 42 + (i % 3) * 11, 12, 0.12 * i, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
+    ctx.fillStyle = look.accent;
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 4;
+    ctx.font = "900 22px Trebuchet MS";
+    ctx.textAlign = "left";
+    ctx.fillText(look.planet, 76, 138);
+    ctx.strokeText(look.planet, 76, 138);
+  }
+
+  function drawStarField(level) {
+    ctx.save();
+    for (let i = 0; i < 82; i += 1) {
+      const x = 62 + ((i * 113 + level * 37) % (WIDTH - 124));
+      const y = 106 + ((i * 61 + level * 21) % 280);
+      const r = i % 9 === 0 ? 3 : i % 4 === 0 ? 2 : 1.2;
+      ctx.fillStyle = i % 7 === 0 ? "#ffd84a" : "#fffef7";
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  function drawPlanetSky(x, y, r, color, accent) {
+    ctx.save();
+    ctx.fillStyle = color;
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.strokeStyle = accent;
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.arc(x - r * 0.12, y - r * 0.05, r * 0.56, 0.25, Math.PI * 1.25);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawSaturnSky(x, y, scale) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(scale, scale);
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    ctx.fillStyle = "#e2c36c";
+    ctx.beginPath();
+    ctx.arc(0, 0, 50, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.strokeStyle = "#fff2a8";
+    ctx.lineWidth = 9;
+    ctx.beginPath();
+    ctx.ellipse(0, 7, 92, 24, -0.18, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawMarsFire() {
+    ctx.save();
+    for (let i = 0; i < 5; i += 1) {
+      const x = 170 + i * 190;
+      const y = 418 + (i % 2) * 22;
+      ctx.fillStyle = "#ff7a19";
+      ctx.strokeStyle = "#171216";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.quadraticCurveTo(x - 22, y - 34, x, y - 64);
+      ctx.quadraticCurveTo(x + 28, y - 30, x + 10, y);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "#ffd84a";
+      ctx.beginPath();
+      ctx.moveTo(x + 5, y - 5);
+      ctx.quadraticCurveTo(x - 6, y - 29, x + 6, y - 46);
+      ctx.quadraticCurveTo(x + 18, y - 25, x + 13, y - 5);
+      ctx.closePath();
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  function drawAsteroidBelt(level) {
+    ctx.save();
+    for (let i = 0; i < 18; i += 1) {
+      const x = 80 + ((i * 73 + level * 37) % 1120);
+      const y = 136 + ((i * 41) % 230);
+      const r = 10 + (i % 4) * 5;
+      ctx.fillStyle = i % 3 === 0 ? "#a99d91" : "#6f7280";
+      ctx.strokeStyle = "#171216";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.ellipse(x, y, r * 1.4, r, 0.4 * i, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    }
     ctx.restore();
   }
 
@@ -5426,6 +6066,11 @@
     ctx.save();
     ctx.strokeStyle = "#171216";
     ctx.lineWidth = 4;
+    if (obstacle.space) {
+      drawSpaceRockObstacle(obstacle, foreground);
+      ctx.restore();
+      return;
+    }
     if (obstacle.desert && obstacle.type === "tree") {
       drawCactus(obstacle.x, obstacle.y + 16, 0.78, foreground);
       ctx.restore();
@@ -5457,6 +6102,41 @@
       ctx.moveTo(obstacle.x + obstacle.w / 3, obstacle.y + 12);
       ctx.lineTo(obstacle.x + obstacle.w / 2, obstacle.y + 52);
       ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function drawSpaceRockObstacle(obstacle, foreground) {
+    ctx.save();
+    ctx.translate(obstacle.x, obstacle.y);
+    ctx.fillStyle = foreground ? "rgba(175, 188, 211, 0.82)" : "#b8c0d2";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 4;
+    if (obstacle.type === "tree") {
+      ctx.beginPath();
+      ctx.moveTo(-obstacle.r, 22);
+      ctx.lineTo(-obstacle.r * 0.72, -18);
+      ctx.lineTo(-obstacle.r * 0.16, -34);
+      ctx.lineTo(obstacle.r * 0.48, -22);
+      ctx.lineTo(obstacle.r, 20);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "rgba(255,255,255,0.32)";
+      ctx.beginPath();
+      ctx.arc(-obstacle.r * 0.28, -12, 7, 0, Math.PI * 2);
+      ctx.arc(obstacle.r * 0.34, 5, 5, 0, Math.PI * 2);
+      ctx.fill();
+    } else {
+      roundRect(ctx, -obstacle.w / 2, -22, obstacle.w, 44, 10);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "rgba(255,255,255,0.28)";
+      for (let i = -1; i <= 1; i += 1) {
+        ctx.beginPath();
+        ctx.arc(i * 35, -4 + Math.abs(i) * 9, 7, 0, Math.PI * 2);
+        ctx.fill();
+      }
     }
     ctx.restore();
   }
@@ -5674,6 +6354,7 @@
     else if (fighter.id === "hoodie") drawHoodie(ctx, fighter, scale);
     else if (fighter.id === "phantom") drawPhantom(ctx, fighter, scale);
     else if (fighter.id === "kingDock") drawKingDock(ctx, fighter, scale);
+    else if (fighter.id === "spaceRobot") drawSpaceRobot(ctx, fighter, scale);
     ctx.restore();
 
     if (isWaterWorldActive() && fighter.id !== "kingDock") drawWaterWorldGear(fighter, now);
@@ -7395,6 +8076,8 @@
   function drawKingDock(ctx, fighter) {
     const color = CHARACTERS.kingDock.color;
     const accent = CHARACTERS.kingDock.accent;
+    const water = isWaterWorldActive();
+    const space = isOuterSpaceActive();
     ctx.save();
     const hugeScale = ctx.canvas && ctx.canvas.width <= 320 ? 1.14 : 1.62;
     ctx.scale(hugeScale, hugeScale);
@@ -7405,10 +8088,12 @@
     ctx.fill();
     ctx.stroke();
     drawKingDockBodySplatters(ctx);
-    if (isWaterWorldActive()) drawKingDockWaterSuitBody(ctx);
+    if (water) drawKingDockWaterSuitBody(ctx);
+    if (space) drawKingDockAstronautSuitBody(ctx);
 
     drawKingDockHead(ctx, color, accent);
-    if (isWaterWorldActive()) drawKingDockWaterHelmet(ctx);
+    if (water) drawKingDockWaterHelmet(ctx);
+    if (space) drawKingDockAstronautHelmet(ctx);
 
     setupLine(ctx, color, 16);
     ctx.beginPath();
@@ -7435,7 +8120,8 @@
     ctx.moveTo(28, 12);
     ctx.lineTo(72, 62);
     ctx.stroke();
-    if (isWaterWorldActive()) drawKingDockFlippers(ctx);
+    if (water) drawKingDockFlippers(ctx);
+    if (space) drawKingDockMoonBoots(ctx);
     drawKingDockLimbSplatters(ctx);
 
     ctx.fillStyle = accent;
@@ -7455,6 +8141,104 @@
     ctx.lineTo(-5, -118);
     ctx.closePath();
     ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawSpaceRobot(ctx, fighter) {
+    ctx.save();
+    const hugeScale = ctx.canvas && ctx.canvas.width <= 320 ? 1.08 : 1.48;
+    ctx.scale(hugeScale, hugeScale);
+    const metal = "#6f7d8b";
+    const dark = "#171216";
+    const red = "#d91f2e";
+    const yellow = "#ffd84a";
+    ctx.fillStyle = "rgba(255,255,255,0.16)";
+    ctx.strokeStyle = dark;
+    ctx.lineWidth = 7;
+    roundRect(ctx, -58, -142, 116, 52, 12);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = metal;
+    roundRect(ctx, -82, -92, 164, 124, 16);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#b8c0d2";
+    roundRect(ctx, -54, -78, 108, 80, 10);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = "#6b28c7";
+    ctx.strokeStyle = dark;
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.arc(0, -38, 25, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    drawEvilHead(ctx, 0, -38, 15, "#6b28c7", { mustache: true });
+
+    ctx.fillStyle = red;
+    ctx.strokeStyle = dark;
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.arc(-34, -116, 8, 0, Math.PI * 2);
+    ctx.arc(34, -116, 8, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.strokeStyle = yellow;
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.moveTo(-45, -102);
+    ctx.lineTo(-20, -110);
+    ctx.moveTo(45, -102);
+    ctx.lineTo(20, -110);
+    ctx.stroke();
+
+    ctx.strokeStyle = metal;
+    ctx.lineWidth = 20;
+    ctx.lineCap = "round";
+    ctx.beginPath();
+    ctx.moveTo(-76, -70);
+    ctx.lineTo(-138, -38);
+    ctx.lineTo(-162, 6);
+    ctx.moveTo(76, -70);
+    ctx.lineTo(138, -42);
+    ctx.lineTo(166, 2);
+    ctx.stroke();
+    ctx.fillStyle = dark;
+    ctx.beginPath();
+    ctx.arc(-166, 8, 20, 0, Math.PI * 2);
+    ctx.arc(170, 5, 20, 0, Math.PI * 2);
+    ctx.fill();
+    if (fighter.action === "robotBlast") {
+      ctx.fillStyle = red;
+      ctx.strokeStyle = yellow;
+      ctx.lineWidth = 5;
+      ctx.beginPath();
+      ctx.arc(170, 5, 27 + Math.sin(performance.now() / 80) * 4, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    }
+
+    ctx.fillStyle = "#28313d";
+    ctx.strokeStyle = dark;
+    ctx.lineWidth = 6;
+    roundRect(ctx, -84, 12, 72, 82, 12);
+    roundRect(ctx, 12, 12, 72, 82, 12);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#d91f2e";
+    ctx.font = "900 18px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText("BOSS", 0, -8);
+
+    ctx.strokeStyle = "rgba(255,255,255,0.7)";
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(-54, -56);
+    ctx.lineTo(-28, -60);
+    ctx.moveTo(-56, -42);
+    ctx.lineTo(-30, -48);
     ctx.stroke();
     ctx.restore();
   }
@@ -7587,6 +8371,82 @@
     ctx.arc(87, -80, 12, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawKingDockAstronautSuitBody(ctx) {
+    ctx.save();
+    ctx.fillStyle = "rgba(242, 245, 255, 0.74)";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    roundRect(ctx, -54, -108, 108, 110, 16);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#d9edf2";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 4;
+    roundRect(ctx, -42, -75, 84, 46, 10);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#d91f2e";
+    ctx.beginPath();
+    ctx.arc(-20, -52, 7, 0, Math.PI * 2);
+    ctx.arc(0, -52, 7, 0, Math.PI * 2);
+    ctx.arc(20, -52, 7, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.strokeStyle = "#7d43d6";
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.moveTo(-38, -100);
+    ctx.lineTo(38, -10);
+    ctx.moveTo(38, -100);
+    ctx.lineTo(-38, -10);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawKingDockAstronautHelmet(ctx) {
+    ctx.save();
+    ctx.globalAlpha = 0.72;
+    ctx.fillStyle = "#d9edf2";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 6;
+    ctx.beginPath();
+    ctx.ellipse(0, -116, 58, 52, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.globalAlpha = 0.5;
+    ctx.fillStyle = "#ffffff";
+    ctx.beginPath();
+    ctx.ellipse(-18, -132, 18, 8, -0.45, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = "#ffd84a";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.arc(-68, -102, 11, 0, Math.PI * 2);
+    ctx.arc(68, -102, 11, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawKingDockMoonBoots(ctx) {
+    ctx.save();
+    ctx.fillStyle = "#f2f5ff";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 4;
+    roundRect(ctx, -100, 54, 54, 26, 10);
+    roundRect(ctx, 46, 54, 54, 26, 10);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#ffd84a";
+    ctx.beginPath();
+    ctx.arc(-72, 67, 5, 0, Math.PI * 2);
+    ctx.arc(72, 67, 5, 0, Math.PI * 2);
+    ctx.fill();
     ctx.restore();
   }
 
@@ -7725,6 +8585,9 @@
     if (helper.kind === "bot") drawBot(helper);
     if (helper.kind === "mouth") drawMouth(helper);
     if (helper.kind === "ghostBat") drawGhostBat(helper);
+    if (helper.kind === "mimDragon") drawMimDragon(helper);
+    if (helper.kind === "spaceKingDock") drawSpaceKingDockHelper(helper);
+    if (helper.kind === "spaceCreature") drawSpaceCreature(helper);
     ctx.restore();
   }
 
@@ -7851,6 +8714,157 @@
     ctx.restore();
   }
 
+  function drawMimDragon(helper) {
+    ctx.save();
+    const now = performance.now();
+    const flap = Math.sin(now / 95 + helper.phase) * 10;
+    const hurt = helper.action === "hurt" && helper.actionUntil > now;
+    if (hurt) ctx.globalAlpha = 0.62;
+    ctx.fillStyle = "#d91f2e";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.ellipse(0, -35, 48, 24, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(-22, -46);
+    ctx.bezierCurveTo(-58, -78 - flap, -84, -42 + flap, -98, -8);
+    ctx.lineTo(-48, -8);
+    ctx.closePath();
+    ctx.moveTo(20, -46);
+    ctx.bezierCurveTo(56, -78 - flap, 84, -42 + flap, 98, -8);
+    ctx.lineTo(48, -8);
+    ctx.closePath();
+    ctx.fillStyle = "#ff7a19";
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#d91f2e";
+    ctx.beginPath();
+    ctx.ellipse(42, -46, 24, 18, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#ffd84a";
+    ctx.beginPath();
+    ctx.moveTo(42, -68);
+    ctx.lineTo(34, -86);
+    ctx.lineTo(52, -72);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#171216";
+    ctx.beginPath();
+    ctx.arc(50, -50, 3, 0, Math.PI * 2);
+    ctx.fill();
+    if (helper.action === "fire" && helper.actionUntil > now) {
+      ctx.fillStyle = "#ff7a19";
+      ctx.beginPath();
+      ctx.moveTo(64, -44);
+      ctx.quadraticCurveTo(102, -60, 130, -34);
+      ctx.quadraticCurveTo(98, -22, 64, -32);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+    }
+    drawHelperHealth(helper);
+    ctx.restore();
+  }
+
+  function drawSpaceKingDockHelper(helper) {
+    ctx.save();
+    const hurt = helper.action === "hurt" && helper.actionUntil > performance.now();
+    if (hurt) ctx.globalAlpha = 0.62;
+    ctx.scale(0.62, 0.62);
+    ctx.fillStyle = "rgba(255,105,180,0.24)";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 6;
+    ctx.beginPath();
+    ctx.ellipse(0, -54, 50, 64, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    drawKingDockAstronautSuitBody(ctx);
+    drawKingDockHead(ctx, CHARACTERS.kingDock.color, CHARACTERS.kingDock.accent);
+    drawKingDockAstronautHelmet(ctx);
+    setupLine(ctx, CHARACTERS.kingDock.color, 13);
+    ctx.beginPath();
+    ctx.moveTo(-34, -72);
+    ctx.lineTo(-78, -28);
+    ctx.moveTo(34, -72);
+    ctx.lineTo(78, -28);
+    ctx.stroke();
+    if (helper.action === "sword" && helper.actionUntil > performance.now()) {
+      ctx.strokeStyle = "#7d43d6";
+      ctx.lineWidth = 8;
+      ctx.beginPath();
+      ctx.moveTo(74, -36);
+      ctx.lineTo(134, -74);
+      ctx.stroke();
+    }
+    setupLine(ctx, CHARACTERS.kingDock.color, 13);
+    ctx.beginPath();
+    ctx.moveTo(-24, 10);
+    ctx.lineTo(-58, 56);
+    ctx.moveTo(24, 10);
+    ctx.lineTo(58, 56);
+    ctx.stroke();
+    drawKingDockMoonBoots(ctx);
+    ctx.restore();
+    drawHelperHealth(helper);
+  }
+
+  function drawSpaceCreature(helper) {
+    ctx.save();
+    const now = performance.now();
+    const flap = Math.sin(now / 110 + helper.phase) * 8;
+    ctx.globalAlpha = 0.82;
+    ctx.fillStyle = helper.name === "Whack Creature" ? "#8e78ff" : "#b7a6ff";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(0, -24);
+    ctx.bezierCurveTo(-18, -48 - flap, -48, -32 + flap, -62, -10);
+    ctx.lineTo(-32, -2);
+    ctx.lineTo(0, -14);
+    ctx.lineTo(32, -2);
+    ctx.lineTo(62, -10);
+    ctx.bezierCurveTo(48, -32 + flap, 20, -48 - flap, 0, -24);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = helper.name === "Whack Creature" ? "#d91f2e" : "#ede8ff";
+    ctx.beginPath();
+    ctx.ellipse(0, -20, 18, 17, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#171216";
+    ctx.beginPath();
+    ctx.arc(-7, -25, 3, 0, Math.PI * 2);
+    ctx.arc(7, -25, 3, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawHelperHealth(helper) {
+    if (!helper.revealed || !helper.maxHealth) return;
+    ctx.save();
+    ctx.translate(0, -128);
+    ctx.scale(helper.facing || 1, 1);
+    ctx.fillStyle = "rgba(255,255,255,0.9)";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 3;
+    roundRect(ctx, -38, -12, 76, 18, 6);
+    ctx.fill();
+    ctx.stroke();
+    const pct = clamp(helper.health / helper.maxHealth, 0, 1);
+    ctx.fillStyle = pct > 0.5 ? "#49d275" : pct > 0.25 ? "#ffd84a" : "#d91f2e";
+    roundRect(ctx, -34, -8, 68 * pct, 10, 5);
+    ctx.fill();
+    ctx.fillStyle = "#171216";
+    ctx.font = "900 11px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText(`${formatHealth(helper.health)}/${formatHealth(helper.maxHealth)}`, 0, 3);
+    ctx.restore();
+  }
+
   function drawEffects() {
     const now = performance.now();
     game.effects.forEach((effect) => {
@@ -7943,6 +8957,30 @@
         for (let i = 0; i < 12; i += 1) {
           ctx.beginPath();
           ctx.arc(effect.x + effect.facing * (i * 15 + progress * 40), effect.y + Math.sin(i) * 34, 7, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      } else if (effect.kind === "fireBreath") {
+        ctx.globalAlpha = 0.82;
+        ctx.fillStyle = "#ff7a19";
+        ctx.strokeStyle = "#171216";
+        ctx.lineWidth = 4;
+        for (let i = 0; i < 12; i += 1) {
+          const t = i / 11;
+          const x = effect.x1 + (effect.x2 - effect.x1) * t;
+          const y = effect.y1 + (effect.y2 - effect.y1) * t + Math.sin(progress * 8 + i) * 16;
+          const r = 15 + Math.sin(t * Math.PI) * 22;
+          ctx.beginPath();
+          ctx.ellipse(x, y, r, r * 0.6, 0.2 * effect.facing, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+        }
+        ctx.fillStyle = "#ffd84a";
+        for (let i = 0; i < 8; i += 1) {
+          const t = i / 7;
+          const x = effect.x1 + (effect.x2 - effect.x1) * t;
+          const y = effect.y1 + (effect.y2 - effect.y1) * t;
+          ctx.beginPath();
+          ctx.arc(x, y, 7 + Math.sin(t * Math.PI) * 10, 0, Math.PI * 2);
           ctx.fill();
         }
       } else if (effect.kind === "tornado") {
@@ -8228,6 +9266,7 @@
     else if (id === "hoodie") drawHoodie(pctx, fake);
     else if (id === "phantom") drawPhantom(pctx, fake);
     else if (id === "kingDock") drawKingDock(pctx, fake);
+    else if (id === "spaceRobot") drawSpaceRobot(pctx, fake);
     pctx.restore();
     pctx.fillStyle = locked ? "#171216" : character.accent;
     pctx.globalAlpha = locked ? 0.25 : 0.18;
@@ -8335,11 +9374,50 @@
     const h = pctx.canvas.height;
     pctx.clearRect(0, 0, w, h);
     pctx.save();
-    pctx.fillStyle = locked ? "#d7d2cb" : id === "waterWorld" ? "#bcecff" : id === "abandonedDesert" ? "#f2cf86" : id === "candyland" ? "#ffe1f1" : "#d9f4ff";
+    pctx.fillStyle = locked ? "#d7d2cb" : id === "outerSpace" ? "#10152f" : id === "waterWorld" ? "#bcecff" : id === "abandonedDesert" ? "#f2cf86" : id === "candyland" ? "#ffe1f1" : "#d9f4ff";
     pctx.fillRect(0, 0, w, h);
     pctx.strokeStyle = "#171216";
     pctx.lineWidth = 4;
-    if (id === "waterWorld") {
+    if (id === "outerSpace") {
+      pctx.fillStyle = "#10152f";
+      pctx.fillRect(0, 0, w, h);
+      pctx.fillStyle = "#fffef7";
+      for (let i = 0; i < 28; i += 1) {
+        pctx.beginPath();
+        pctx.arc((i * 43 + 17) % w, 14 + (i * 31) % 82, i % 5 === 0 ? 2.5 : 1.4, 0, Math.PI * 2);
+        pctx.fill();
+      }
+      pctx.fillStyle = "#d9dce8";
+      pctx.strokeStyle = "#171216";
+      pctx.lineWidth = 3;
+      pctx.beginPath();
+      pctx.arc(58, 43, 27, 0, Math.PI * 2);
+      pctx.fill();
+      pctx.stroke();
+      pctx.strokeStyle = "#ffd84a";
+      pctx.lineWidth = 4;
+      pctx.beginPath();
+      pctx.ellipse(165, 50, 48, 13, -0.18, 0, Math.PI * 2);
+      pctx.stroke();
+      pctx.fillStyle = "#e2c36c";
+      pctx.strokeStyle = "#171216";
+      pctx.lineWidth = 3;
+      pctx.beginPath();
+      pctx.arc(165, 50, 24, 0, Math.PI * 2);
+      pctx.fill();
+      pctx.stroke();
+      pctx.fillStyle = "#6f7280";
+      for (let i = 0; i < 5; i += 1) {
+        pctx.beginPath();
+        pctx.ellipse(42 + i * 46, 118 + (i % 2) * 8, 16, 9, i * 0.5, 0, Math.PI * 2);
+        pctx.fill();
+        pctx.stroke();
+      }
+      pctx.fillStyle = "#d91f2e";
+      pctx.font = "900 18px Trebuchet MS";
+      pctx.textAlign = "center";
+      pctx.fillText("FINAL", 218, 40);
+    } else if (id === "waterWorld") {
       pctx.fillStyle = "#44bdea";
       pctx.fillRect(0, 0, w, h);
       pctx.fillStyle = "#0f8ed6";
@@ -8524,11 +9602,12 @@
   function drawTrophyCard(pctx, id) {
     const w = pctx.canvas.width;
     const h = pctx.canvas.height;
+    const finalMedal = id === "finalShowdownPart1";
     pctx.clearRect(0, 0, w, h);
     pctx.save();
-    pctx.fillStyle = "#171216";
+    pctx.fillStyle = finalMedal ? "#10152f" : "#171216";
     pctx.fillRect(0, 0, w, h);
-    pctx.fillStyle = "#7d43d6";
+    pctx.fillStyle = finalMedal ? "#d91f2e" : "#7d43d6";
     pctx.fillRect(0, 0, w, 36);
     pctx.strokeStyle = "#171216";
     pctx.lineWidth = 4;
@@ -8537,24 +9616,41 @@
     pctx.fillStyle = "#ffd84a";
     pctx.strokeStyle = "#171216";
     pctx.lineWidth = 5;
-    pctx.beginPath();
-    pctx.moveTo(-54, 24);
-    pctx.lineTo(-42, -18);
-    pctx.lineTo(-16, 10);
-    pctx.lineTo(0, -28);
-    pctx.lineTo(16, 10);
-    pctx.lineTo(42, -18);
-    pctx.lineTo(54, 24);
-    pctx.closePath();
-    pctx.fill();
-    pctx.stroke();
-    pctx.fillStyle = "#ff5fa8";
-    [-42, 0, 42].forEach((x) => {
+    if (finalMedal) {
       pctx.beginPath();
-      pctx.arc(x, -20, 7, 0, Math.PI * 2);
+      pctx.arc(0, 0, 46, 0, Math.PI * 2);
       pctx.fill();
       pctx.stroke();
-    });
+      pctx.fillStyle = "#d91f2e";
+      pctx.beginPath();
+      pctx.moveTo(-18, 38);
+      pctx.lineTo(-38, 75);
+      pctx.lineTo(-4, 58);
+      pctx.lineTo(18, 75);
+      pctx.lineTo(14, 38);
+      pctx.closePath();
+      pctx.fill();
+      pctx.stroke();
+    } else {
+      pctx.beginPath();
+      pctx.moveTo(-54, 24);
+      pctx.lineTo(-42, -18);
+      pctx.lineTo(-16, 10);
+      pctx.lineTo(0, -28);
+      pctx.lineTo(16, 10);
+      pctx.lineTo(42, -18);
+      pctx.lineTo(54, 24);
+      pctx.closePath();
+      pctx.fill();
+      pctx.stroke();
+      pctx.fillStyle = "#ff5fa8";
+      [-42, 0, 42].forEach((x) => {
+        pctx.beginPath();
+        pctx.arc(x, -20, 7, 0, Math.PI * 2);
+        pctx.fill();
+        pctx.stroke();
+      });
+    }
     pctx.fillStyle = "#fffef7";
     pctx.strokeStyle = "#171216";
     pctx.lineWidth = 3;
@@ -8564,7 +9660,7 @@
     pctx.fillStyle = "#171216";
     pctx.font = "900 13px Trebuchet MS";
     pctx.textAlign = "center";
-    pctx.fillText(id === "kingOfBattle" ? "KING OF THE BATTLE" : "BATTLE CROWN", 0, 45);
+    pctx.fillText(id === "kingOfBattle" ? "KING OF THE BATTLE" : finalMedal ? "PART 1 WON" : "BATTLE CROWN", 0, 45);
     pctx.restore();
   }
 
