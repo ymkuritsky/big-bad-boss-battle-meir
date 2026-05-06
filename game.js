@@ -155,6 +155,61 @@
     }
   };
 
+  const WATER_BOSS_TUNING = {
+    11: {
+      aiDelayMin: 1350,
+      aiDelayRandom: 850,
+      initialPowerDelay: 9000,
+      approachDistance: 175,
+      basicChance: 0.24,
+      powerDelayMin: 6200,
+      powerDelayRandom: 2200,
+      bossSpeed: 0.82,
+      helperSpeed: 1.05,
+      maxDamage: 1,
+      hiddenConfusion: 0.34
+    },
+    12: {
+      aiDelayMin: 760,
+      aiDelayRandom: 460,
+      initialPowerDelay: 5200,
+      approachDistance: 145,
+      basicChance: 0.45,
+      powerDelayMin: 3600,
+      powerDelayRandom: 1400,
+      bossSpeed: 1.08,
+      helperSpeed: 1.32,
+      maxDamage: 1,
+      hiddenConfusion: 0.22
+    },
+    13: {
+      aiDelayMin: 460,
+      aiDelayRandom: 280,
+      initialPowerDelay: 2800,
+      approachDistance: 124,
+      basicChance: 0.62,
+      powerDelayMin: 2300,
+      powerDelayRandom: 900,
+      bossSpeed: 1.35,
+      helperSpeed: 1.62,
+      maxDamage: 1,
+      hiddenConfusion: 0.14
+    },
+    14: {
+      aiDelayMin: 235,
+      aiDelayRandom: 150,
+      initialPowerDelay: 950,
+      approachDistance: 100,
+      basicChance: 0.84,
+      powerDelayMin: 950,
+      powerDelayRandom: 520,
+      bossSpeed: 1.7,
+      helperSpeed: 2,
+      maxDamage: 1,
+      hiddenConfusion: 0.06
+    }
+  };
+
   const FREDDY_ANIMALS = {
     mammal: [
       animal("Gorilla", "gorilla", { strong: true }),
@@ -539,7 +594,7 @@
         { id: "trapBox", name: "Trap Box", icon: "box" },
         { id: "kingRoar", name: "Royal Roar", icon: "mouth" }
       ],
-      how: "King Dock is the Level 10 boss in Abandoned Desert. He is a giant pink gorilla with purple eyes, an angry mouth, two brown horns, red battle splatters all over him, and a sword sticking out of his head. He is very huge and can fire one giant hand laser. He can control seven ghost bats at a time, but each bat is weak and disappears when it gets hit."
+      how: "King Dock is the Level 10 boss in Abandoned Desert and returns in Water World wearing a water suit. He is a giant pink gorilla with purple eyes, an angry mouth, two brown horns, red battle splatters all over him, a crown, and a sword sticking out of his head. He is very huge and can fire one giant hand laser. He can control seven ghost bats at a time, but each bat is weak and disappears when it gets hit."
     }
   };
 
@@ -570,9 +625,29 @@
       startLevel: 7,
       endLevel: 10,
       unlock: "Beat Candyland Levels 4, 5, and 6 twice."
+    },
+    waterWorld: {
+      id: "waterWorld",
+      name: "Water World",
+      levels: "Levels 11-14",
+      startLevel: 11,
+      endLevel: 14,
+      unlock: "Beat King Dock in Abandoned Desert."
     }
   };
-  const WORLD_ORDER = ["superville", "candyland", "abandonedDesert"];
+  const WORLD_ORDER = ["superville", "candyland", "abandonedDesert", "waterWorld"];
+  const WATER_WORLD_POWERS = {
+    mayor: { id: "waterBoots", name: "Water Boots", icon: "boots", maxCharges: 3 },
+    tats: { id: "tidalPunch", name: "Tidal Punch", icon: "fist", maxCharges: 3 },
+    fary: { id: "bubbleWings", name: "Bubble Wings", icon: "wing", maxCharges: 3 },
+    apple: { id: "juiceWave", name: "Juice Wave", icon: "splash", maxCharges: 3 },
+    yapping: { id: "seaMouth", name: "Sea Mouth", icon: "mouth", maxCharges: 3 },
+    frost: { id: "iceFeet", name: "Ice Feet", icon: "freeze", maxCharges: 3 },
+    ness: { id: "waterHide", name: "Water Hide", icon: "hide", maxCharges: 3 },
+    crayon: { id: "paintRaft", name: "Paint Raft", icon: "crayon", maxCharges: 3 },
+    hoodie: { id: "staticSurf", name: "Static Surf", icon: "bolt", maxCharges: 3 },
+    phantom: { id: "mistVanish", name: "Mist Vanish", icon: "hide", maxCharges: 3 }
+  };
   const PACKAGES = {
     supercharged: {
       id: "supercharged",
@@ -699,11 +774,14 @@
       if (!raw) return fallback;
       const parsed = JSON.parse(raw);
       const unlocked = normalizeUnlocked(Array.isArray(parsed.unlocked) ? parsed.unlocked : []);
+      const unlockedTrophies = normalizeTrophies(Array.isArray(parsed.unlockedTrophies) ? parsed.unlockedTrophies : fallback.unlockedTrophies);
+      const unlockedWorlds = normalizeWorlds(Array.isArray(parsed.unlockedWorlds) ? parsed.unlockedWorlds : fallback.unlockedWorlds, unlocked);
+      if (unlockedTrophies.includes("kingOfBattle") && !unlockedWorlds.includes("waterWorld")) unlockedWorlds.push("waterWorld");
       return {
         unlocked,
-        unlockedWorlds: normalizeWorlds(Array.isArray(parsed.unlockedWorlds) ? parsed.unlockedWorlds : fallback.unlockedWorlds, unlocked),
+        unlockedWorlds,
         unlockedPackages: normalizePackages(Array.isArray(parsed.unlockedPackages) ? parsed.unlockedPackages : fallback.unlockedPackages),
-        unlockedTrophies: normalizeTrophies(Array.isArray(parsed.unlockedTrophies) ? parsed.unlockedTrophies : fallback.unlockedTrophies),
+        unlockedTrophies,
         bossAttempts: Object.assign(fallback.bossAttempts, parsed.bossAttempts || {}),
         mayorWinStreak: Number.isFinite(Number(parsed.mayorWinStreak)) ? Math.max(0, Number(parsed.mayorWinStreak)) : 0,
         candylandWinStreak: Number.isFinite(Number(parsed.candylandWinStreak)) ? Math.max(0, Number(parsed.candylandWinStreak)) : 0,
@@ -874,9 +952,10 @@
     const basics = [
       ["Basic buttons", "Every fighter has Kick, Punch, Jump, Run, Walk, Duck, Dodge, and Hide. Hide only works near trees or benches, and it lasts up to 20 seconds."],
       ["Hearts", "Most fighters have 3 pink hearts. Most hits take half a heart. Giant Punch, Laser Ray, Bite, or two robot chainsaws at once take 1 whole heart."],
-      ["Timer and levels", "Each level lasts 2 minutes. If nobody loses all hearts, whoever has more hearts wins the level. Superville has Levels 1, 2, and 3. Candyland has Levels 4, 5, and 6. Abandoned Desert has Levels 7, 8, 9, and 10."],
-      ["Worlds", "Candyland unlocks after you beat Yapping Yonatan through Levels 1, 2, and 3. Abandoned Desert unlocks after you beat Candyland Levels 4, 5, and 6 twice. The Candyland wins do not need to be in a row. Level 10 has the special boss King Dock."],
+      ["Timer and levels", "Each level lasts 2 minutes. If nobody loses all hearts, whoever has more hearts wins the level. Superville has Levels 1, 2, and 3. Candyland has Levels 4, 5, and 6. Abandoned Desert has Levels 7, 8, 9, and 10. Water World has Levels 11, 12, 13, and 14."],
+      ["Worlds", "Candyland unlocks after you beat Yapping Yonatan through Levels 1, 2, and 3. Abandoned Desert unlocks after you beat Candyland Levels 4, 5, and 6 twice. The Candyland wins do not need to be in a row. Water World unlocks after you beat King Dock in Abandoned Desert."],
       ["King Dock hearts, laser, bats, and boxes", "In Level 10, King Dock is very huge, has 25 hearts, and the player starts with 10 hearts. He can fire one giant hand laser. When you hit King Dock, his heart flies to you and heals you up to your max hearts. King Dock can control seven ghost bats at a time, but any hit destroys a bat. When a power damages King Dock, a box can pop out. Sometimes King Dock drops a box from above for no reason. Trap boxes say BOOBY TRAP on them. Watch for little traps around the box, like pit cracks and ghost bats dropping from above. Jump onto a landed box to get an iron sword damage boost or armor. Beating King Dock earns the King of the Battle crown."],
+      ["Water World", "Levels 11-14 take place on water. King Dock is the boss again, but he wears a water suit. Benji can use his five shark forms anywhere in Water World. Freddy can still choose fish. Other fighters get a simple water-themed power, like Mr. 67's Ice Feet for walking on water."],
       ["Supercharged Package", "Beat Mischievous Mayor two times in a row to unlock the Supercharged Package. Once it is unlocked, Candyland fighters get 5 hearts on Levels 4 and 5, then 10 hearts on Level 6. Supercharged names include Cheetah Racer, Mega Mommy, Ultimate Freddy, and Super Dad. The villains keep their Level 3 power in every Candyland level."],
       ["Powers", "Most powers can be used 3 times, then they recharge. Some special powers recharge after 1 use. Normal recharge is 30 seconds. Mischievous Mayor recharges in 20 seconds when he is the boss."]
     ];
@@ -952,6 +1031,8 @@
         worldGrid.append(createWorldCard(id, selectState.world === id, () => {
           if (!isWorldUnlocked(id)) return;
           selectState.world = id;
+          if (id === "waterWorld") selectState.boss = "kingDock";
+          else if (selectState.boss === "kingDock") selectState.boss = "mayor";
           renderSelect();
         }));
       });
@@ -969,7 +1050,7 @@
     els.bossArea.append(heading);
     const grid = document.createElement("div");
     grid.className = "select-grid";
-    const ids = selectState.mode === "story" ? STORY_BOSSES : CHARACTER_ORDER;
+    const ids = selectState.mode === "story" ? (selectState.world === "waterWorld" ? ["kingDock"] : STORY_BOSSES) : CHARACTER_ORDER;
     ids.forEach((id) => {
       const selectedId = selectState.mode === "story" ? selectState.boss : selectState.p2;
       grid.append(createSelectCard(id, selectedId === id, () => {
@@ -996,6 +1077,8 @@
         : `Candyland is ready. Supercharged Package locked: ${progress.mayorWinStreak || 0}/2 Mayor wins.`;
     } else if (selectState.mode === "story" && selectState.world === "abandonedDesert") {
       message = "Abandoned Desert is ready: Levels 7-10. Level 10 boss is King Dock.";
+    } else if (selectState.mode === "story" && selectState.world === "waterWorld") {
+      message = "Water World is ready: Levels 11-14. King Dock returns in a water suit.";
     } else if (selectState.mode === "two") {
       message = "Player 1 can send a link, then start a local battle here.";
     }
@@ -1085,10 +1168,16 @@
 
   function characterSummary(id) {
     const character = CHARACTERS[id];
-    const hearts = isSuperchargedSelection() ? "5-10" : maxHealthFor(id);
+    const hearts = selectState.world === "waterWorld" ? (id === "kingDock" ? "12-25" : "10") : isSuperchargedSelection() ? "5-10" : maxHealthFor(id);
     const powers = character.powers.map((power) => power.name);
     if (id === "freddy" && isSuperchargedSelection()) powers.push("Super Giant Punch");
     if (id === "frost" && (isSuperchargedSelection() || selectState.world === "abandonedDesert")) powers.push("Level 10 Super Axe Throw");
+    const waterPower = waterPowerFor(id);
+    if (selectState.world === "waterWorld") {
+      if (waterPower) powers.push(waterPower.name);
+      if (id === "freddy") powers.push("Fish forms work everywhere");
+      if (id === "benji") powers.push("Sharks work everywhere");
+    }
     const powerText = powers.join(", ");
     return `${hearts} hearts. Powers: ${powerText}.`;
   }
@@ -1130,7 +1219,7 @@
 
   function startBattle() {
     initAudio();
-    const opponentId = selectState.mode === "story" ? selectState.boss : selectState.p2;
+    const opponentId = selectState.mode === "story" && selectState.world === "waterWorld" ? "kingDock" : selectState.mode === "story" ? selectState.boss : selectState.p2;
     const startLevelNumber = selectState.mode === "story" ? WORLDS[selectState.world].startLevel : 1;
     const endLevelNumber = selectState.mode === "story" ? WORLDS[selectState.world].endLevel : 3;
     if (selectState.p1 === opponentId) {
@@ -1201,7 +1290,7 @@
     const now = performance.now();
     const introMs = 3000;
     const levelOpponentId = game.mode === "story" ? storyBossIdForLevel(level) : game.p2Id;
-    const kingDockTalkMs = levelOpponentId === "kingDock" ? 4600 : 0;
+    const kingDockTalkMs = levelOpponentId === "kingDock" ? (game.world === "waterWorld" ? 2600 : 4600) : 0;
     game.level = level;
     game.levelStartCarry = { p1: game.carry.p1, p2: game.carry.p2 };
     game.helpers = [];
@@ -1240,7 +1329,7 @@
     game.level9WarningShown = false;
     game.kingDockIntroUntil = levelOpponentId === "kingDock" ? now + introMs + kingDockTalkMs : 0;
     if (levelOpponentId === "kingDock") {
-      game.dangerWarningText = "King Dock: Who is responsible?";
+      game.dangerWarningText = game.world === "waterWorld" ? "King Dock has a water suit!" : "King Dock: Who is responsible?";
       game.dangerWarningUntil = game.kingDockIntroUntil;
     }
     game.gameOver = false;
@@ -1255,11 +1344,12 @@
 
   function storyBossIdForLevel(level) {
     if (game && game.mode === "story" && game.world === "abandonedDesert" && level >= 10) return "kingDock";
+    if (game && game.mode === "story" && game.world === "waterWorld" && level >= 11) return "kingDock";
     return game ? game.p2Id : selectState.boss;
   }
 
   function isKingDockLevel(level) {
-    return game && game.mode === "story" && game.world === "abandonedDesert" && level >= 10;
+    return game && game.mode === "story" && game.p2 && game.p2.id === "kingDock" && (game.world === "abandonedDesert" || game.world === "waterWorld");
   }
 
   function createFighter(id, side, isBoss, x, y, facing) {
@@ -1305,6 +1395,8 @@
       flyForever: false,
       speedBoostUntil: 0,
       damageBonusUntil: 0,
+      waterFormUntil: 0,
+      waterWalkUntil: 0,
       lastPowerUsedAt: 0,
       lastPowerId: "",
       supercharged: false,
@@ -1342,7 +1434,13 @@
     if (fighter.id === "frost" && (fighter.supercharged || (game && game.mode === "story" && game.level >= 10))) {
       powers.push({ id: "superAxeThrow", name: "Super Axe Throw", icon: "axe", noRecharge: true });
     }
+    const waterPower = waterPowerFor(fighter.id);
+    if (isWaterWorldActive() && waterPower) powers.push(waterPower);
     return powers;
+  }
+
+  function waterPowerFor(id) {
+    return WATER_WORLD_POWERS[id] || null;
   }
 
   function syncFighterPowers(fighter) {
@@ -1353,6 +1451,7 @@
   }
 
   function fighterMaxHealthForLevel(id, level, isBoss) {
+    if (worldIdForLevel(level) === "waterWorld" && !isBoss) return 10;
     if (worldIdForLevel(level) === "abandonedDesert" && level >= 10 && !isBoss) return 10;
     const supercharged = superchargedHealthForLevel(level);
     if (supercharged) return supercharged;
@@ -1361,8 +1460,12 @@
 
   function bossMaxHealthForLevel(level, id) {
     if (id === "kingDock" && worldIdForLevel(level) === "abandonedDesert" && level >= 10) return 25;
+    if (id === "kingDock" && worldIdForLevel(level) === "waterWorld") {
+      if (level >= 14) return 25;
+      return level === 13 ? 20 : level === 12 ? 16 : 12;
+    }
     const world = worldIdForLevel(level);
-    const worldBonus = world === "abandonedDesert" ? 2 : world === "candyland" ? 1 : 0;
+    const worldBonus = world === "waterWorld" ? 3 : world === "abandonedDesert" ? 2 : world === "candyland" ? 1 : 0;
     return maxHealthFor(id) + Math.max(0, stageLevelFor(level) - 1) * 2 + worldBonus;
   }
 
@@ -1378,6 +1481,12 @@
   function levelDifficultyLabel(level) {
     const world = worldIdForLevel(level);
     if (world === "candyland") return "Candyland Level 3 Villain Power";
+    if (world === "waterWorld") {
+      if (level >= 14) return "Water Suit King Dock Final";
+      if (level === 11) return "Water World Begins";
+      if (level === 12) return "Deeper Water";
+      return "Stormy Water";
+    }
     if (world === "abandonedDesert") {
       if (level >= 10) return "King Dock Final Boss";
       if (level === 7) return "Desert Harder Than Level 6";
@@ -1396,6 +1505,7 @@
   }
 
   function stageLevelFor(level) {
+    if (level >= 11) return level >= 14 ? 3 : clamp(level - 10, 1, 3);
     if (level >= 7) return level >= 10 ? 3 : clamp(level - 6, 1, 3);
     return ((Math.max(1, level) - 1) % 3) + 1;
   }
@@ -1405,11 +1515,24 @@
   }
 
   function worldIdForLevel(level) {
+    if (level >= 11) return "waterWorld";
     if (level >= 7) return "abandonedDesert";
     return level >= 4 ? "candyland" : "superville";
   }
 
+  function isWaterWorldActive() {
+    return !!(game && game.mode === "story" && worldIdForLevel(game.level || 1) === "waterWorld");
+  }
+
   function makeObstacles(worldId = "superville") {
+    if (worldId === "waterWorld") {
+      return [
+        { type: "bench", x: 315, y: 338, w: 170, h: 34, water: true },
+        { type: "bench", x: 865, y: 520, w: 190, h: 36, water: true },
+        { type: "tree", x: 1040, y: 318, r: 42, water: true },
+        { type: "tree", x: 220, y: 570, r: 38, water: true }
+      ];
+    }
     if (worldId === "abandonedDesert") {
       return [
         { type: "tree", x: 245, y: 315, r: 42, desert: true },
@@ -1428,7 +1551,7 @@
 
   function sayStartLine(fighter) {
     if (fighter.id === "kingDock") {
-      setBubble(fighter, "Who is responsible?", true, 7200);
+      setBubble(fighter, isWaterWorldActive() ? "My water suit is ready!" : "Who is responsible?", true, 7200);
       return;
     }
     if (fighter.character.role === "villain") {
@@ -1680,17 +1803,24 @@
       speed *= inStream(fighter) ? (sharkTraits.speed || 1.25) : 0.42;
       if (fighter.moveMode === "run" && inStream(fighter)) speed *= 1.18;
     }
+    if (isWaterWorldActive()) {
+      speed *= now < fighter.waterWalkUntil ? 1.22 : 0.92;
+      if (!animalForm && !sharkForm && now < fighter.waterFormUntil) speed *= 1.08;
+    }
     if (now < fighter.dodgeUntil) speed *= 2.2;
     if (fighter.isBoss && game && game.mode === "story") speed *= bossTuning().bossSpeed;
 
     fighter.x += dx * speed * dt;
     fighter.y += dy * speed * dt;
     fighter.x = clamp(fighter.x, 95, WIDTH - 95);
-    const canSwim = (animalForm && animalForm.swim) || !!sharkForm;
+    const canSwim = isWaterWorldActive() || (animalForm && animalForm.swim) || !!sharkForm;
     fighter.y = clamp(fighter.y, 210, canSwim ? HEIGHT - 58 : HEIGHT - 124);
   }
 
   function bossTuning() {
+    if (game && game.mode === "story" && worldIdForLevel(game.level || 1) === "waterWorld") {
+      return WATER_BOSS_TUNING[Math.min(14, Math.max(11, game.level || 11))] || WATER_BOSS_TUNING[11];
+    }
     if (game && game.mode === "story" && worldIdForLevel(game.level || 1) === "abandonedDesert") {
       return DESERT_BOSS_TUNING[Math.min(10, Math.max(7, game.level || 7))] || DESERT_BOSS_TUNING[7];
     }
@@ -2174,6 +2304,18 @@
       case "kingRoar":
         kingRoar(fighter);
         break;
+      case "waterBoots":
+      case "tidalPunch":
+      case "bubbleWings":
+      case "juiceWave":
+      case "seaMouth":
+      case "iceFeet":
+      case "waterHide":
+      case "paintRaft":
+      case "staticSurf":
+      case "mistVanish":
+        waterWorldPower(fighter, powerId);
+        break;
       default:
         break;
     }
@@ -2312,8 +2454,10 @@
     fighter.flyForever = false;
     fighter.flyingUntil = 0;
     fighter.z = 0;
-    fighter.y = Math.max(fighter.y, 626);
-    fighter.x = fighter.side === "p1" ? Math.max(fighter.x, 470) : Math.min(fighter.x, WIDTH - 470);
+    if (!isWaterWorldActive()) {
+      fighter.y = Math.max(fighter.y, 626);
+      fighter.x = fighter.side === "p1" ? Math.max(fighter.x, 470) : Math.min(fighter.x, WIDTH - 470);
+    }
     if (sharkForm.power === "shield") fighter.shieldHits = Math.max(fighter.shieldHits, 1);
     setBubble(fighter, sharkForm.name, false, 1100);
     showComicText(sharkForm.name.toUpperCase(), fighter.x, fighter.y - 102, fighter.character.accent);
@@ -2467,7 +2611,7 @@
   }
 
   function inStream(fighter) {
-    return fighter.y > 600;
+    return isWaterWorldActive() || fighter.y > 600;
   }
 
   function toggleMayorBots(fighter) {
@@ -3144,6 +3288,112 @@
     playEffect("mouth");
   }
 
+  function waterWorldPower(fighter, powerId) {
+    const now = performance.now();
+    const target = opponentOf(fighter);
+    fighter.waterFormUntil = Math.max(fighter.waterFormUntil || 0, now + 18000);
+    if (powerId === "iceFeet") {
+      fighter.waterWalkUntil = now + 26000;
+      fighter.shieldHits = Math.max(fighter.shieldHits, 1);
+      fighter.z = Math.max(fighter.z, 10);
+      game.effects.push({
+        kind: "icePath",
+        x: fighter.x,
+        y: fighter.y + 10,
+        color: fighter.character.accent,
+        born: now,
+        until: now + 1800
+      });
+      setBubble(fighter, "Ice feet!", false, 1000);
+      showComicText("ICE FEET!", fighter.x, fighter.y - fighter.z - 108, fighter.character.accent);
+      playEffect("shield");
+      return;
+    }
+    if (powerId === "bubbleWings") {
+      fighter.flyForever = true;
+      fighter.flyingUntil = 0;
+      fighter.z = flyingHeightFor(fighter);
+      game.effects.push({
+        kind: "waterBurst",
+        x: fighter.x,
+        y: fighter.y - 58,
+        color: "#9eeeff",
+        born: now,
+        until: now + 900
+      });
+      setBubble(fighter, "Bubble wings!", false, 1100);
+      playEffect("fly");
+      return;
+    }
+    if (powerId === "waterHide" || powerId === "mistVanish") {
+      fighter.hiddenUntil = now + (powerId === "waterHide" ? 12000 : 8000);
+      game.effects.push({
+        kind: "waterBurst",
+        x: fighter.x,
+        y: fighter.y - 45,
+        color: "#67d4ff",
+        born: now,
+        until: now + 900
+      });
+      setBubble(fighter, powerId === "waterHide" ? "Water hide!" : "Mist vanish!", false, 1000);
+      playEffect("whoosh");
+      return;
+    }
+    if (powerId === "waterBoots" || powerId === "staticSurf" || powerId === "paintRaft") {
+      faceAttackTarget(fighter, target, 320);
+      fighter.waterWalkUntil = now + 18000;
+      fighter.dodgeUntil = now + 650;
+      fighter.x = clamp(fighter.x + fighter.facing * (powerId === "waterBoots" ? 150 : 118), 95, WIDTH - 95);
+      game.effects.push({
+        kind: "splash",
+        x: fighter.x - fighter.facing * 55,
+        y: fighter.y - 42,
+        facing: -fighter.facing,
+        color: powerId === "staticSurf" ? "#ffd84a" : powerId === "paintRaft" ? "#ff5fa8" : "#45a6db",
+        born: now,
+        until: now + 420
+      });
+      if (isInFront(fighter, target, 145) && canBeHit(target)) {
+        applyDamage(target, 0.5, fighter, powerId === "staticSurf" ? "STATIC SURF!" : "SURF HIT!");
+      } else {
+        showComicText("SURF!", fighter.x, fighter.y - fighter.z - 92, fighter.character.accent);
+      }
+      playEffect(powerId === "staticSurf" ? "laser" : "splash");
+      return;
+    }
+
+    faceAttackTarget(fighter, target, WIDTH);
+    const labels = {
+      tidalPunch: "TIDAL PUNCH!",
+      juiceWave: "JUICE WAVE!",
+      seaMouth: "SEA MOUTH!"
+    };
+    const colors = {
+      tidalPunch: "#177bd1",
+      juiceWave: "#f58b21",
+      seaMouth: "#d91f2e"
+    };
+    const y = fighter.y - fighter.z - 62;
+    const reach = powerId === "seaMouth" ? 250 : 360;
+    addFlashLine(fighter.x + fighter.facing * 28, y, fighter.x + fighter.facing * reach, y + 16, colors[powerId] || "#45a6db", 10, 320);
+    game.effects.push({
+      kind: "waterBurst",
+      x: fighter.x + fighter.facing * 90,
+      y: fighter.y - 45,
+      color: colors[powerId] || "#45a6db",
+      born: now,
+      until: now + 600
+    });
+    hitHelpersAlongLine(fighter, fighter.x + fighter.facing * 28, y, fighter.x + fighter.facing * reach, y + 16, 58);
+    if (Math.sign(target.x - fighter.x) === fighter.facing && Math.abs(target.y - fighter.y) < 125 && Math.abs(target.x - fighter.x) < reach && canBeHit(target)) {
+      applyDamage(target, 0.5, fighter, labels[powerId] || "WAVE!");
+      if (powerId === "seaMouth") target.trappedUntil = Math.max(target.trappedUntil, now + 1300);
+    } else {
+      showComicText("WAVE!", fighter.x + fighter.facing * 105, y - 22, fighter.character.accent);
+    }
+    playEffect("splash");
+  }
+
   function benjiTornado(fighter) {
     trapTarget(fighter, 4200, "TORNADO!");
   }
@@ -3642,7 +3892,7 @@
     game.carry.p1 = game.p1.health;
     maybeUnlockAfterLevel();
     if (game.level >= game.worldEndLevel) {
-      const title = game.world === "abandonedDesert" ? "King of the Battle!" : "Game Complete";
+      const title = game.world === "abandonedDesert" ? "King of the Battle!" : game.world === "waterWorld" ? "Water World Complete!" : "Game Complete";
       finishGame(true, title, worldCompleteText());
       return;
     }
@@ -3670,6 +3920,7 @@
   }
 
   function worldCompleteText() {
+    if (game.world === "waterWorld") return "You beat Water World Levels 11, 12, 13, and 14.";
     if (game.world === "abandonedDesert") return "You beat King Dock and became King of the Battle.";
     if (game.world === "candyland") return "You beat Candyland Levels 4, 5, and 6.";
     return "You beat Superville Levels 1, 2, and 3.";
@@ -3697,6 +3948,7 @@
       if (game.bossId === "kingDock" && game.world === "abandonedDesert" && game.level >= 10) {
         awardTrophy("kingOfBattle");
         game.unlocks.push("trophy:kingOfBattle");
+        if (unlockWorld("waterWorld")) game.unlocks.push("world:waterWorld");
       }
     }
 
@@ -4206,6 +4458,11 @@
     ctx.save();
     const level = game ? game.level : 1;
     const world = worldIdForLevel(level);
+    if (world === "waterWorld") {
+      drawWaterWorldBackground(level);
+      ctx.restore();
+      return;
+    }
     if (world === "abandonedDesert") {
       drawDesertBackground(level);
       ctx.restore();
@@ -4261,6 +4518,166 @@
     ctx.stroke();
     ctx.fillStyle = levelLook.tint;
     ctx.fillRect(56, 104, WIDTH - 112, HEIGHT - 160);
+    ctx.restore();
+  }
+
+  function drawWaterWorldBackground(level) {
+    const stage = stageLevelFor(level);
+    const deep = level >= 14;
+    ctx.fillStyle = deep ? "#063a78" : "#0f8ed6";
+    ctx.fillRect(0, 0, WIDTH, HEIGHT);
+    ctx.fillStyle = deep ? "#0b5aa0" : "#4bc4f5";
+    roundRect(ctx, 48, 96, WIDTH - 96, HEIGHT - 144, 8);
+    ctx.fill();
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 8;
+    ctx.stroke();
+
+    const bands = [
+      deep ? "#075089" : "#78ddff",
+      deep ? "#0c6aaa" : "#43bcea",
+      deep ? "#0a4c84" : "#229ad4"
+    ];
+    bands.forEach((color, index) => {
+      ctx.fillStyle = color;
+      const y = 104 + index * 122;
+      ctx.beginPath();
+      ctx.moveTo(56, y);
+      for (let x = 56; x <= WIDTH - 56; x += 80) {
+        ctx.quadraticCurveTo(x + 40, y + 22 + Math.sin((x + level * 30) / 85) * 8, x + 80, y);
+      }
+      ctx.lineTo(WIDTH - 56, y + 135);
+      ctx.lineTo(56, y + 135);
+      ctx.closePath();
+      ctx.fill();
+    });
+
+    ctx.fillStyle = "rgba(255,255,255,0.18)";
+    for (let i = 0; i < 34; i += 1) {
+      const x = 84 + ((i * 89 + level * 23) % 1110);
+      const y = 150 + ((i * 47) % 452);
+      ctx.beginPath();
+      ctx.arc(x, y, 5 + (i % 4) * 3, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    drawWaterCoral(120, 595, 1.1, "#ff5fa8");
+    drawWaterCoral(1030, 575, 0.95, "#ffd84a");
+    drawWaterSeaweed(240, 610, 1);
+    drawWaterSeaweed(910, 612, 1.15);
+    for (let i = 0; i < 8; i += 1) {
+      drawTinyFish(180 + i * 130, 210 + (i % 4) * 76, i % 2 ? -1 : 1, i % 3 === 0 ? "#ffd84a" : "#fffef7");
+    }
+    if (stage >= 2) {
+      drawFloatingBuoy(650, 166);
+      drawTinyFish(1090, 260, -1, "#ff8a58");
+    }
+    if (stage >= 3) drawWaterStormMarks();
+
+    ctx.strokeStyle = "rgba(255,255,255,0.52)";
+    ctx.lineWidth = 12;
+    for (let y = 245; y < 660; y += 90) {
+      ctx.beginPath();
+      ctx.moveTo(72, y);
+      for (let x = 72; x < WIDTH - 72; x += 92) {
+        ctx.quadraticCurveTo(x + 46, y - 18, x + 92, y);
+      }
+      ctx.stroke();
+    }
+  }
+
+  function drawWaterCoral(x, y, scale, color) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(scale, scale);
+    ctx.strokeStyle = "#171216";
+    ctx.fillStyle = color;
+    ctx.lineWidth = 4;
+    for (let i = -1; i <= 1; i += 1) {
+      ctx.beginPath();
+      ctx.moveTo(i * 18, 0);
+      ctx.quadraticCurveTo(i * 28, -30, i * 10, -58);
+      ctx.lineTo(i * 28, -45);
+      ctx.quadraticCurveTo(i * 34, -28, i * 18, 0);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function drawWaterSeaweed(x, y, scale) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(scale, scale);
+    ctx.strokeStyle = "#171216";
+    ctx.fillStyle = "#1aa870";
+    ctx.lineWidth = 3;
+    for (let i = 0; i < 5; i += 1) {
+      const offset = (i - 2) * 13;
+      ctx.beginPath();
+      ctx.ellipse(offset, -36, 8, 44, Math.sin(i) * 0.38, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function drawTinyFish(x, y, facing, color) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(facing, 1);
+    ctx.fillStyle = color;
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 22, 11, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(-21, 0);
+    ctx.lineTo(-39, -12);
+    ctx.lineTo(-39, 12);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#171216";
+    ctx.beginPath();
+    ctx.arc(9, -3, 3, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawFloatingBuoy(x, y) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.fillStyle = "#fffef7";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.arc(0, 0, 28, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#d91f2e";
+    ctx.fillRect(-25, -7, 50, 14);
+    ctx.strokeRect(-25, -7, 50, 14);
+    ctx.restore();
+  }
+
+  function drawWaterStormMarks() {
+    ctx.save();
+    ctx.strokeStyle = "rgba(255,255,255,0.6)";
+    ctx.lineWidth = 5;
+    for (let i = 0; i < 7; i += 1) {
+      const x = 150 + i * 155;
+      const y = 135 + (i % 3) * 34;
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(x - 18, y + 28);
+      ctx.lineTo(x + 8, y + 26);
+      ctx.lineTo(x - 12, y + 58);
+      ctx.stroke();
+    }
     ctx.restore();
   }
 
@@ -5155,6 +5572,7 @@
     else if (fighter.id === "kingDock") drawKingDock(ctx, fighter, scale);
     ctx.restore();
 
+    if (isWaterWorldActive() && fighter.id !== "kingDock") drawWaterWorldGear(fighter, now);
     if (now < fighter.hitFlashUntil) drawHitStar(fighter, now);
 
     if (fighter.shieldHits > 0) {
@@ -5167,6 +5585,30 @@
       ctx.restore();
     }
     drawPowerCue(fighter);
+  }
+
+  function drawWaterWorldGear(fighter, now) {
+    const active = now < fighter.waterFormUntil || now < fighter.waterWalkUntil || activeBenjiShark(fighter) || activeFreddyAnimal(fighter);
+    ctx.save();
+    ctx.globalAlpha = active ? 0.8 : 0.42;
+    ctx.strokeStyle = active ? "#fffef7" : "#78d8ff";
+    ctx.fillStyle = active ? "rgba(120,216,255,0.22)" : "rgba(120,216,255,0.12)";
+    ctx.lineWidth = active ? 5 : 3;
+    ctx.beginPath();
+    ctx.ellipse(fighter.x, fighter.y + 5, 46, 14, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    if (now < fighter.waterWalkUntil) {
+      ctx.fillStyle = "rgba(190,245,255,0.78)";
+      ctx.strokeStyle = "#146e8f";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.ellipse(fighter.x - 25, fighter.y + 15, 26, 8, -0.12, 0, Math.PI * 2);
+      ctx.ellipse(fighter.x + 25, fighter.y + 15, 26, 8, 0.12, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    }
+    ctx.restore();
   }
 
   function drawHitStar(fighter, now) {
@@ -6733,8 +7175,10 @@
     ctx.fill();
     ctx.stroke();
     drawKingDockBodySplatters(ctx);
+    if (isWaterWorldActive()) drawKingDockWaterSuitBody(ctx);
 
     drawKingDockHead(ctx, color, accent);
+    if (isWaterWorldActive()) drawKingDockWaterHelmet(ctx);
 
     setupLine(ctx, color, 16);
     ctx.beginPath();
@@ -6761,6 +7205,7 @@
     ctx.moveTo(28, 12);
     ctx.lineTo(72, 62);
     ctx.stroke();
+    if (isWaterWorldActive()) drawKingDockFlippers(ctx);
     drawKingDockLimbSplatters(ctx);
 
     ctx.fillStyle = accent;
@@ -6855,6 +7300,75 @@
     ctx.beginPath();
     ctx.moveTo(-16, -92);
     ctx.quadraticCurveTo(0, -104, 18, -92);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawKingDockWaterSuitBody(ctx) {
+    ctx.save();
+    ctx.fillStyle = "rgba(74, 196, 245, 0.62)";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    roundRect(ctx, -48, -106, 96, 104, 14);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#146e8f";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 4;
+    roundRect(ctx, -62, -82, 18, 74, 8);
+    ctx.fill();
+    ctx.stroke();
+    roundRect(ctx, 44, -82, 18, 74, 8);
+    ctx.fill();
+    ctx.stroke();
+    ctx.strokeStyle = "#fffef7";
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.moveTo(-36, -100);
+    ctx.lineTo(36, -8);
+    ctx.moveTo(36, -100);
+    ctx.lineTo(-36, -8);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawKingDockWaterHelmet(ctx) {
+    ctx.save();
+    ctx.globalAlpha = 0.58;
+    ctx.fillStyle = "#bdf4ff";
+    ctx.strokeStyle = "#146e8f";
+    ctx.lineWidth = 6;
+    ctx.beginPath();
+    ctx.ellipse(0, -116, 54, 48, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.moveTo(-54, -111);
+    ctx.lineTo(-78, -86);
+    ctx.moveTo(54, -111);
+    ctx.lineTo(78, -86);
+    ctx.stroke();
+    ctx.fillStyle = "#78d8ff";
+    ctx.beginPath();
+    ctx.arc(-87, -80, 12, 0, Math.PI * 2);
+    ctx.arc(87, -80, 12, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawKingDockFlippers(ctx) {
+    ctx.save();
+    ctx.fillStyle = "#146e8f";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.ellipse(-82, 69, 28, 12, -0.2, 0, Math.PI * 2);
+    ctx.ellipse(82, 69, 28, 12, 0.2, 0, Math.PI * 2);
+    ctx.fill();
     ctx.stroke();
     ctx.restore();
   }
@@ -7154,6 +7668,30 @@
         ctx.beginPath();
         ctx.arc(effect.x, effect.y, effect.r * progress, 0, Math.PI * 2);
         ctx.stroke();
+      } else if (effect.kind === "waterBurst") {
+        ctx.strokeStyle = effect.color;
+        ctx.fillStyle = effect.color;
+        ctx.lineWidth = 5;
+        for (let i = 0; i < 14; i += 1) {
+          const angle = i * 0.9 + progress * 2;
+          const r = 18 + progress * (34 + (i % 3) * 12);
+          ctx.beginPath();
+          ctx.arc(effect.x + Math.cos(angle) * r, effect.y + Math.sin(angle) * r * 0.55, 5 + (i % 2) * 3, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.beginPath();
+        ctx.ellipse(effect.x, effect.y + 18, 62 * progress, 18 * progress, 0, 0, Math.PI * 2);
+        ctx.stroke();
+      } else if (effect.kind === "icePath") {
+        ctx.fillStyle = "rgba(180, 242, 255, 0.72)";
+        ctx.strokeStyle = "#146e8f";
+        ctx.lineWidth = 4;
+        for (let i = -2; i <= 2; i += 1) {
+          ctx.beginPath();
+          ctx.ellipse(effect.x + i * 38, effect.y + Math.sin(i) * 6, 34 + progress * 12, 13, 0.08 * i, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+        }
       } else if (effect.kind === "gust") {
         ctx.strokeStyle = "#88d8ff";
         ctx.lineWidth = 7;
@@ -7556,11 +8094,46 @@
     const h = pctx.canvas.height;
     pctx.clearRect(0, 0, w, h);
     pctx.save();
-    pctx.fillStyle = locked ? "#d7d2cb" : id === "abandonedDesert" ? "#f2cf86" : id === "candyland" ? "#ffe1f1" : "#d9f4ff";
+    pctx.fillStyle = locked ? "#d7d2cb" : id === "waterWorld" ? "#bcecff" : id === "abandonedDesert" ? "#f2cf86" : id === "candyland" ? "#ffe1f1" : "#d9f4ff";
     pctx.fillRect(0, 0, w, h);
     pctx.strokeStyle = "#171216";
     pctx.lineWidth = 4;
-    if (id === "abandonedDesert") {
+    if (id === "waterWorld") {
+      pctx.fillStyle = "#44bdea";
+      pctx.fillRect(0, 0, w, h);
+      pctx.fillStyle = "#0f8ed6";
+      for (let y = 20; y < h; y += 28) {
+        pctx.beginPath();
+        pctx.moveTo(0, y);
+        for (let x = 0; x < w; x += 42) {
+          pctx.quadraticCurveTo(x + 21, y - 10, x + 42, y);
+        }
+        pctx.lineTo(w, y + 20);
+        pctx.lineTo(0, y + 20);
+        pctx.closePath();
+        pctx.fill();
+      }
+      pctx.fillStyle = "#fffef7";
+      for (let i = 0; i < 10; i += 1) {
+        pctx.beginPath();
+        pctx.arc(22 + i * 24, 36 + (i % 3) * 24, 4 + (i % 2) * 3, 0, Math.PI * 2);
+        pctx.fill();
+      }
+      pctx.fillStyle = "#ffd84a";
+      pctx.strokeStyle = "#171216";
+      pctx.lineWidth = 3;
+      pctx.beginPath();
+      pctx.moveTo(98, 42);
+      pctx.lineTo(104, 14);
+      pctx.lineTo(122, 34);
+      pctx.lineTo(136, 14);
+      pctx.lineTo(144, 42);
+      pctx.closePath();
+      pctx.fill();
+      pctx.stroke();
+      drawTinyCardFish(pctx, 52, 102, 1, "#fffef7");
+      drawTinyCardFish(pctx, 204, 86, -1, "#ffd84a");
+    } else if (id === "abandonedDesert") {
       pctx.fillStyle = "#e7a45d";
       pctx.fillRect(0, 0, w, 58);
       pctx.fillStyle = "#eac071";
@@ -7810,6 +8383,31 @@
     pctx.closePath();
     pctx.fill();
     pctx.stroke();
+    pctx.restore();
+  }
+
+  function drawTinyCardFish(pctx, x, y, facing, color) {
+    pctx.save();
+    pctx.translate(x, y);
+    pctx.scale(facing, 1);
+    pctx.fillStyle = color;
+    pctx.strokeStyle = "#171216";
+    pctx.lineWidth = 3;
+    pctx.beginPath();
+    pctx.ellipse(0, 0, 22, 11, 0, 0, Math.PI * 2);
+    pctx.fill();
+    pctx.stroke();
+    pctx.beginPath();
+    pctx.moveTo(-20, 0);
+    pctx.lineTo(-36, -11);
+    pctx.lineTo(-36, 11);
+    pctx.closePath();
+    pctx.fill();
+    pctx.stroke();
+    pctx.fillStyle = "#171216";
+    pctx.beginPath();
+    pctx.arc(8, -3, 3, 0, Math.PI * 2);
+    pctx.fill();
     pctx.restore();
   }
 

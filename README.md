@@ -13,7 +13,7 @@ http://127.0.0.1:4173
 Version 1 is playable and deployed.
 
 Main features:
-- Story Mode with Superville Levels 1-3, unlockable Candyland Levels 4-6, and unlockable Abandoned Desert Levels 7-10
+- Story Mode with Superville Levels 1-3, unlockable Candyland Levels 4-6, unlockable Abandoned Desert Levels 7-10, and unlockable Water World Levels 11-14
 - Two Player Mode on the same device
 - Each world starts easy, gets harder, then ends with a super hard boss level
 - Pink heart health system
@@ -21,6 +21,7 @@ Main features:
 - Park battle arena with stream, trees, benches, houses, and the Mayor mansion
 - Candyland arena with lollipops, gumdrops, candy houses, and a candy stream
 - Abandoned Desert arena with sand, cactuses, hay bales, rolling hay balls, bones, skulls, and a desert stream
+- Water World arena with waves, bubbles, seaweed, coral, fish, and water everywhere
 - Abandoned Desert unlock: beat Candyland Levels 4, 5, and 6 twice. The wins do not have to be in a row
 - Abandoned Desert difficulty climbs from Level 7 to Level 8 to Level 9, all harder than Level 6
 - Level 9 shows a danger warning that King Dock is coming next
@@ -30,6 +31,10 @@ Main features:
 - Hitting King Dock makes one of his hearts fly back to the player and heal them up to their max hearts
 - King Dock can summon up to seven ghost bats at a time; the bats are weak and disappear from any hit
 - Beating King Dock earns the "King of the Battle" crown trophy
+- Beating King Dock in Abandoned Desert unlocks Water World Levels 11-14
+- In Water World, King Dock returns in a water suit
+- Benji's five shark forms work anywhere in Water World
+- Freddy can still use fish forms, and the other fighters get water-themed powers like Mr. 67's Ice Feet
 - Power hits on King Dock pop out reward boxes; jump onto a box to get an iron sword damage boost or armor
 - King Dock reward boxes have small booby traps nearby, including pit cracks and ghost bats dropping from above
 - King Dock can also drop trap boxes from above for no reason; they fall down with booby traps around them
@@ -67,6 +72,7 @@ Playable characters:
 Story bosses:
 - Mischievous Mayor
 - Yapping Yonatan
+- King Dock in Abandoned Desert and Water World
 
 ## Benji
 
