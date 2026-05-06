@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Big Bad Boss Battle</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23171216'/%3E%3Cpath d='M10 46 20 14l12 20 12-20 10 32z' fill='%23d91f2e' stroke='%238543d8' stroke-width='4'/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main id="app">
+      <section id="mainMenu" class="view active">
+        <div class="menu-stage">
+          <div class="volume-panel">
+            <label for="volumeSlider">Volume</label>
+            <input id="volumeSlider" type="range" min="0" max="1" step="0.01" value="0" />
+          </div>
+
+          <h1 class="game-title" aria-label="Big Bad Boss Battle">
+            <span>Big</span>
+            <span>Bad</span>
+            <span>Boss</span>
+            <span>Battle</span>
+          </h1>
+
+          <div id="menuCharacters" class="character-row"></div>
+
+          <div class="menu-actions">
+            <button id="storyButton" class="comic-button danger">Story Mode</button>
+            <button id="twoPlayerButton" class="comic-button violet">Two Player Mode</button>
+            <button id="howToButton" class="comic-button ink">How To Play</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="howToView" class="view">
+        <article class="how-board">
+          <button class="back-button" data-back-menu>Back</button>
+          <h2>How To Play</h2>
+          <div id="howToContent" class="how-grid"></div>
+        </article>
+      </section>
+
+      <section id="selectView" class="view">
+        <div id="selectBackdrop" class="select-backdrop">
+          <button class="back-button select-back" data-back-menu>Back</button>
+          <div class="select-layout">
+            <div>
+              <p id="selectModeLabel" class="eyebrow">Story Mode</p>
+              <h2 id="selectTitle">Choose Your Fighter</h2>
+              <div id="selectMessage" class="select-message"></div>
+            </div>
+            <div id="fighterGrid" class="select-grid"></div>
+            <div id="bossArea" class="boss-area"></div>
+            <div class="select-actions">
+              <button id="sendLinkButton" class="comic-button ink hidden">Send Link</button>
+              <button id="startBattleButton" class="comic-button danger">Start Battle</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="battleView" class="view">
+        <div class="battle-shell">
+          <canvas id="gameCanvas" width="1280" height="720" aria-label="Big Bad Boss Battle play area"></canvas>
+          <div id="hud" class="hud"></div>
+          <button id="pauseButton" class="pause-button">Pause</button>
+          <div id="animalChooser" class="animal-chooser hidden"></div>
+          <div id="controlDock" class="control-dock"></div>
+          <div id="pauseOverlay" class="pause-overlay hidden">
+            <div class="pause-card">
+              <h2>Paused</h2>
+              <button id="resumeButton" class="comic-button violet">Resume</button>
+              <button id="restartButton" class="comic-button danger">Restart</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="resultView" class="view">
+        <article class="result-card">
+          <h2 id="resultTitle">Game Complete</h2>
+          <p id="resultText"></p>
+          <div id="unlockList" class="unlock-list"></div>
+          <button id="playAgainButton" class="comic-button danger">Play Again</button>
+          <button id="menuButton" class="comic-button ink">Main Menu</button>
+        </article>
+      </section>
+    </main>
+
+    <script src="game.js"></script>
+  </body>
+</html>

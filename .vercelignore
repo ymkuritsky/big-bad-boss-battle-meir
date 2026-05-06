@@ -1,0 +1,7 @@
+.DS_Store
+.netlify/
+.vercel/
+.playwright-cli/
+deploy/
+output/
+node_modules/
