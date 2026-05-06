@@ -598,11 +598,11 @@
         { id: "kingSword", name: "Sword Charge", icon: "sword" },
         { id: "kingSlam", name: "Gorilla Slam", icon: "gorilla" },
         { id: "kingLaser", name: "Giant Laser", icon: "laser", maxCharges: 1, noRefill: true },
-        { id: "ghostBats", name: "Ghost Bats", icon: "bat" },
+        { id: "ghostBats", name: "Rack Creatures", icon: "bat" },
         { id: "trapBox", name: "Trap Box", icon: "box" },
         { id: "kingRoar", name: "Royal Roar", icon: "mouth" }
       ],
-      how: "King Dock is the Level 10 boss in Abandoned Desert and returns in Water World wearing a water suit. He is a giant pink gorilla with purple eyes, an angry mouth, two brown horns, red battle splatters all over him, a crown, and a sword sticking out of his head. He is very huge and can fire one giant hand laser. He can control seven ghost bats at a time, but each bat is weak and disappears when it gets hit."
+      how: "King Dock is the Level 10 boss in Abandoned Desert and returns in Water World wearing a water suit. He is a giant pink gorilla with purple eyes, an angry mouth, two brown horns, red battle splatters all over him, a crown, and a sword sticking out of his head. He is very huge and can fire one giant hand laser. He can control seven Rack Creatures at a time, but each creature is weak and disappears when it gets hit."
     }
   };
 
@@ -962,7 +962,7 @@
       ["Hearts", "Most fighters have 3 pink hearts. Most hits take half a heart. Giant Punch, Laser Ray, Bite, or two robot chainsaws at once take 1 whole heart."],
       ["Timer and levels", "Each level lasts 2 minutes. If nobody loses all hearts, whoever has more hearts wins the level. Superville has Levels 1, 2, and 3. Candyland has Levels 4, 5, and 6. Abandoned Desert has Levels 7, 8, 9, and 10. Water World has Levels 11, 12, 13, and 14."],
       ["Worlds", "Candyland unlocks after you beat Yapping Yonatan through Levels 1, 2, and 3. Abandoned Desert unlocks after you beat Candyland Levels 4, 5, and 6 twice. The Candyland wins do not need to be in a row. Water World unlocks after you beat King Dock in Abandoned Desert."],
-      ["King Dock hearts, laser, bats, and boxes", "King Dock is very huge, has 10 hearts, and the player starts with 10 hearts in his boss worlds. He can fire one giant hand laser. When you hit King Dock, his heart flies to you and heals you up to your max hearts. Every real hit also makes special prize boxes spread out around him. King Dock can control seven ghost bats at a time, but any hit destroys a bat. Sometimes King Dock drops a trap box from above for no reason. Trap boxes say BOOBY TRAP on them. Watch for little traps around trap boxes, like pit cracks and ghost bats dropping from above. Jump onto a landed prize box to get rewards like an iron sword, armor, heart, speed boost, or power refill. Beating King Dock earns the King of the Battle crown."],
+      ["King Dock hearts, laser, Rack Creatures, and boxes", "King Dock is very huge, has 10 hearts, and the player starts with 10 hearts in his boss worlds. He can fire one giant hand laser. When you hit King Dock, his heart flies to you and heals you up to your max hearts. Every real hit also makes special prize boxes spread out around him. King Dock can control seven Rack Creatures at a time, but any hit destroys a creature. Sometimes King Dock drops a trap box from above for no reason. Trap boxes say BOOBY TRAP on them. Watch for little traps around trap boxes, like pit cracks and Rack Creatures dropping from above. Jump onto a landed prize box to get rewards like an iron sword, armor, heart, speed boost, or power refill. Beating King Dock earns the King of the Battle crown."],
       ["Water World", "Levels 11-14 take place on water. King Dock is the boss again, but he wears a water suit. Benji can use his five shark forms anywhere in Water World. Freddy can still choose fish. Other fighters get a simple water-themed power, like Mr. 67's Ice Feet for walking on water."],
       ["Supercharged Package", "Beat Mischievous Mayor two times in a row to unlock the Supercharged Package. Once it is unlocked, Candyland fighters get 5 hearts on Levels 4 and 5, then 10 hearts on Level 6. Supercharged names include Cheetah Racer, Mega Mommy, Ultimate Freddy, and Super Dad. The villains keep their Level 3 power in every Candyland level."],
       ["Powers", "Most powers can be used 3 times, then they recharge. Some special powers recharge after 1 use. Normal recharge is 30 seconds. Mischievous Mayor recharges in 20 seconds when he is the boss."]
@@ -3246,8 +3246,8 @@
         until: now + 26000
       });
     }
-    setBubble(fighter, "Ghost bats!", true, 1100);
-    showComicText("GHOST BATS!", fighter.x, fighter.y - fighter.z - 142, fighter.character.accent);
+    setBubble(fighter, "Rack creatures!", true, 1100);
+    showComicText("RACK CREATURES!", fighter.x, fighter.y - fighter.z - 142, fighter.character.accent);
     playEffect("mouth");
   }
 

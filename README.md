@@ -29,14 +29,14 @@ Main features:
 - At the start of Level 10, King Dock pauses, says "Who is responsible?", and then begins attacking
 - Level 10 player fighters start with 10 hearts
 - Hitting King Dock makes one of his hearts fly back to the player and heal them up to their max hearts
-- King Dock can summon up to seven ghost bats at a time; the bats are weak and disappear from any hit
+- King Dock can summon up to seven Rack Creatures at a time; the creatures are weak and disappear from any hit
 - Beating King Dock earns the "King of the Battle" crown trophy
 - Beating King Dock in Abandoned Desert unlocks Water World Levels 11-14
 - In Water World, King Dock returns in a water suit
 - Benji's five shark forms work anywhere in Water World
 - Freddy can still use fish forms, and the other fighters get water-themed powers like Mr. 67's Ice Feet
 - Every hit on King Dock pops out special prize boxes; jump onto a prize box to get an iron sword damage boost, armor, a heart, speed, or a power refill
-- King Dock trap boxes have small booby traps nearby, including pit cracks and ghost bats dropping from above
+- King Dock trap boxes have small booby traps nearby, including pit cracks and Rack Creatures dropping from above
 - King Dock can also drop trap boxes from above for no reason; they fall down with booby traps around them
 - Trap boxes say "BOOBY TRAP" on them
 - Supercharged Package unlock: beat Mischievous Mayor two times in a row
