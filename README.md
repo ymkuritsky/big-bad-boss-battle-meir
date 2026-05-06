@@ -44,6 +44,7 @@ Main features:
 - Supercharged Candyland fighters get 5 hearts on Levels 4 and 5, then 10 hearts on Level 6
 - Candyland villains keep their Level 3 power instead of upgrading each level
 - Supercharged names include Cheetah Racer, Mega Mommy, Ultimate Freddy, and Super Dad
+- Cheetah Racer does not use Super Appie Juice powers; her only powers are Super Speed and Sharp Claws, and Sharp Claws takes half a heart
 - Ultimate Freddy gets Super Giant Punch in Candyland when Supercharged is unlocked
 - New unlocked characters: Mr. 67 and Super Ness
 - Mr. 67 powers: Freeze Block, Burrow Strike, Poison Storm, plus Super Axe Throw in Level 10 or when supercharged

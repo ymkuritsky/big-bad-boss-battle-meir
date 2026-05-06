@@ -631,6 +631,13 @@
     tats: "Super Dad"
   };
 
+  const SUPERCHARGED_POWER_SETS = {
+    apple: [
+      { id: "cheetahSpeed", name: "Super Speed", icon: "speed" },
+      { id: "cheetahClaws", name: "Sharp Claws", icon: "claws" }
+    ]
+  };
+
   const els = {
     views: {
       menu: document.getElementById("mainMenu"),
@@ -916,7 +923,7 @@
       ["Worlds", "Candyland unlocks after you beat Yapping Yonatan through Levels 1, 2, and 3. Abandoned Desert unlocks after you beat Candyland Levels 4, 5, and 6 twice. The Candyland wins do not need to be in a row. Water World unlocks after you beat King Dock in Abandoned Desert."],
       ["King Dock hearts, laser, Rack Creatures, and boxes", "King Dock is very huge, has 10 hearts, and the player starts with 10 hearts in his boss worlds. He can fire one giant hand laser. When you hit King Dock, his heart flies to you and heals you up to your max hearts. Every real hit also makes special prize boxes spread out around him. King Dock can control seven Rack Creatures at a time, but any hit destroys a creature. Sometimes King Dock drops a trap box from above for no reason. Trap boxes say BOOBY TRAP on them. Watch for little traps around trap boxes, like pit cracks and Rack Creatures dropping from above. Jump onto a landed prize box to get rewards like an iron sword, armor, heart, speed boost, or power refill. Beating King Dock earns the King of the Battle crown."],
       ["Water World", "Levels 11-14 take place on water and are meant to be pretty easy, like Levels 1-3. King Dock is the boss again, but he wears a water suit. Benji can use his five shark forms anywhere in Water World. Freddy can still choose fish. Other fighters get a simple water-themed power, like Mr. 67's Ice Feet for walking on water."],
-      ["Supercharged Package", "Beat Mischievous Mayor two times in a row to unlock the Supercharged Package. Once it is unlocked, Candyland fighters get 5 hearts on Levels 4 and 5, then 10 hearts on Level 6. Supercharged names include Cheetah Racer, Mega Mommy, Ultimate Freddy, and Super Dad. The villains keep their Level 3 power in every Candyland level."],
+      ["Supercharged Package", "Beat Mischievous Mayor two times in a row to unlock the Supercharged Package. Once it is unlocked, Candyland fighters get 5 hearts on Levels 4 and 5, then 10 hearts on Level 6. Supercharged names include Cheetah Racer, Mega Mommy, Ultimate Freddy, and Super Dad. Cheetah Racer only has Super Speed and Sharp Claws; Sharp Claws takes half a heart. The villains keep their Level 3 power in every Candyland level."],
       ["Powers", "Most powers can be used 3 times, then they recharge. Some special powers recharge after 1 use. Normal recharge is 30 seconds. Mischievous Mayor recharges in 20 seconds when he is the boss."]
     ];
 
@@ -1129,7 +1136,8 @@
   function characterSummary(id) {
     const character = CHARACTERS[id];
     const hearts = selectState.world === "waterWorld" ? (id === "kingDock" ? KING_DOCK_MAX_HEALTH : "10") : isSuperchargedSelection() ? "5-10" : maxHealthFor(id);
-    const powers = character.powers.map((power) => power.name);
+    const superchargedOnlyPowers = isSuperchargedSelection() ? SUPERCHARGED_POWER_SETS[id] : null;
+    const powers = (superchargedOnlyPowers || character.powers).map((power) => power.name);
     if (id === "freddy" && isSuperchargedSelection()) powers.push("Super Giant Punch");
     if (id === "frost" && (isSuperchargedSelection() || selectState.world === "abandonedDesert")) powers.push("Level 10 Super Axe Throw");
     const waterPower = waterPowerFor(id);
@@ -1387,6 +1395,9 @@
   }
 
   function fighterPowers(fighter) {
+    if (fighter.supercharged && SUPERCHARGED_POWER_SETS[fighter.id]) {
+      return SUPERCHARGED_POWER_SETS[fighter.id].slice();
+    }
     const powers = fighter.character.powers.slice();
     if (fighter.id === "freddy" && fighter.supercharged) {
       powers.push({ id: "superGiantPunch", name: "Super Giant Punch", icon: "fist", maxCharges: 1 });
@@ -2192,6 +2203,12 @@
       case "appleSpeed":
         appleSpeed(fighter);
         break;
+      case "cheetahSpeed":
+        cheetahSpeed(fighter);
+        break;
+      case "cheetahClaws":
+        cheetahClaws(fighter);
+        break;
       case "mouthMonsters":
         toggleMouthMonsters(fighter);
         break;
@@ -2852,6 +2869,48 @@
     setBubble(fighter, "Apple juice speed!", false, 1200);
     showComicText("SPEED x2", fighter.x, fighter.y - fighter.z - 100, "#f58b21");
     playEffect("speed");
+  }
+
+  function cheetahSpeed(fighter) {
+    fighter.speedBoostUntil = performance.now() + 30000;
+    fighter.dodgeUntil = Math.max(fighter.dodgeUntil, performance.now() + 260);
+    setBubble(fighter, "Super fast!", false, 1000);
+    showComicText("CHEETAH SPEED!", fighter.x, fighter.y - fighter.z - 100, "#f5c242");
+    playEffect("speed");
+  }
+
+  function cheetahClaws(fighter) {
+    const target = opponentOf(fighter);
+    const now = performance.now();
+    const range = 118;
+    faceAttackTarget(fighter, target, range + 88);
+    fighter.action = "punch";
+    fighter.actionUntil = now + 420;
+    hitHelpersNear(fighter, range);
+    addFlashLine(
+      fighter.x + fighter.facing * 34,
+      fighter.y - fighter.z - 88,
+      fighter.x + fighter.facing * 104,
+      fighter.y - fighter.z - 48,
+      "#171216",
+      6,
+      190
+    );
+    addFlashLine(
+      fighter.x + fighter.facing * 36,
+      fighter.y - fighter.z - 62,
+      fighter.x + fighter.facing * 108,
+      fighter.y - fighter.z - 26,
+      "#f5c242",
+      5,
+      190
+    );
+    playEffect("whack");
+    if (isInFront(fighter, target, range) && canBeHit(target)) {
+      applyDamage(target, 0.5, fighter, "CLAW!");
+    } else {
+      showComicText("SWIPE", fighter.x + fighter.facing * 72, fighter.y - fighter.z - 80, "#4c4c4c");
+    }
   }
 
   function freezeBlock(fighter) {
