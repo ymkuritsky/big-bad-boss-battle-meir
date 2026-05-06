@@ -923,7 +923,7 @@
       ["Worlds", "Candyland unlocks after you beat Yapping Yonatan through Levels 1, 2, and 3. Abandoned Desert unlocks after you beat Candyland Levels 4, 5, and 6 twice. The Candyland wins do not need to be in a row. Water World unlocks after you beat King Dock in Abandoned Desert."],
       ["King Dock hearts, laser, Rack Creatures, and boxes", "King Dock is very huge, has 10 hearts, and the player starts with 10 hearts in his boss worlds. He can fire one giant hand laser. When you hit King Dock, his heart flies to you and heals you up to your max hearts. Every real hit also makes special prize boxes spread out around him. King Dock can control seven Rack Creatures at a time, but any hit destroys a creature. Sometimes King Dock drops a trap box from above for no reason. Trap boxes say BOOBY TRAP on them. Watch for little traps around trap boxes, like pit cracks and Rack Creatures dropping from above. Jump onto a landed prize box to get rewards like an iron sword, armor, heart, speed boost, or power refill. Beating King Dock earns the King of the Battle crown."],
       ["Water World", "Levels 11-14 take place on water and are meant to be pretty easy, like Levels 1-3. King Dock is the boss again, but he wears a water suit. Benji can use his five shark forms anywhere in Water World. Freddy can still choose fish. Other fighters get a simple water-themed power, like Mr. 67's Ice Feet for walking on water."],
-      ["Supercharged Package", "Beat Mischievous Mayor two times in a row to unlock the Supercharged Package. Once it is unlocked, Candyland fighters get 5 hearts on Levels 4 and 5, then 10 hearts on Level 6. Supercharged names include Cheetah Racer, Mega Mommy, Ultimate Freddy, and Super Dad. Cheetah Racer only has Super Speed and Sharp Claws; Sharp Claws takes half a heart. The villains keep their Level 3 power in every Candyland level."],
+      ["Supercharged Package", "Beat Mischievous Mayor two times in a row to unlock the Supercharged Package. Once it is unlocked, Candyland fighters get 5 hearts on Levels 4 and 5, then 10 hearts on Level 6. Supercharged names include Cheetah Racer, Mega Mommy, Ultimate Freddy, and Super Dad. Cheetah Racer only has Super Speed and Sharp Claws; Sharp Claws takes half a heart. Super Dad turns green and his fist becomes giant when he punches. Mega Mommy is all pink and gets Mega Grow, which makes her giant for a little while. The villains keep their Level 3 power in every Candyland level."],
       ["Powers", "Most powers can be used 3 times, then they recharge. Some special powers recharge after 1 use. Normal recharge is 30 seconds. Mischievous Mayor recharges in 20 seconds when he is the boss."]
     ];
 
@@ -1139,6 +1139,7 @@
     const superchargedOnlyPowers = isSuperchargedSelection() ? SUPERCHARGED_POWER_SETS[id] : null;
     const powers = (superchargedOnlyPowers || character.powers).map((power) => power.name);
     if (id === "freddy" && isSuperchargedSelection()) powers.push("Super Giant Punch");
+    if (id === "fary" && isSuperchargedSelection()) powers.push("Mega Grow");
     if (id === "frost" && (isSuperchargedSelection() || selectState.world === "abandonedDesert")) powers.push("Level 10 Super Axe Throw");
     const waterPower = waterPowerFor(id);
     if (selectState.world === "waterWorld") {
@@ -1365,6 +1366,7 @@
       damageBonusUntil: 0,
       waterFormUntil: 0,
       waterWalkUntil: 0,
+      giantUntil: 0,
       lastPowerUsedAt: 0,
       lastPowerId: "",
       supercharged: false,
@@ -1401,6 +1403,9 @@
     const powers = fighter.character.powers.slice();
     if (fighter.id === "freddy" && fighter.supercharged) {
       powers.push({ id: "superGiantPunch", name: "Super Giant Punch", icon: "fist", maxCharges: 1 });
+    }
+    if (fighter.id === "fary" && fighter.supercharged) {
+      powers.push({ id: "megaGrow", name: "Mega Grow", icon: "smash", maxCharges: 3 });
     }
     if (fighter.id === "frost" && (fighter.supercharged || (game && game.mode === "story" && game.level >= 10))) {
       powers.push({ id: "superAxeThrow", name: "Super Axe Throw", icon: "axe", noRecharge: true });
@@ -2057,12 +2062,15 @@
     }
 
     const target = opponentOf(fighter);
-    const range = type === "kick" ? 92 : 78;
+    const superDadGiantFist = fighter.id === "tats" && fighter.supercharged && type === "punch";
+    const megaMommyGiant = fighter.id === "fary" && fighter.supercharged && now < fighter.giantUntil && (type === "punch" || type === "kick");
+    const range = superDadGiantFist ? 128 : megaMommyGiant ? 124 : type === "kick" ? 92 : 78;
     if (type === "punch" || type === "kick") faceAttackTarget(fighter, target, range + 80);
     const damage = 0.5;
     hitHelpersNear(fighter, range);
     if (isInFront(fighter, target, range) && canBeHit(target)) {
-      applyDamage(target, damage, fighter, type === "kick" ? "WHACK!" : "POW!");
+      const label = superDadGiantFist ? "GIANT FIST!" : megaMommyGiant ? "MEGA HIT!" : type === "kick" ? "WHACK!" : "POW!";
+      applyDamage(target, damage, fighter, label);
       playEffect(type === "kick" ? "whack" : "pow");
     } else {
       showComicText(type === "kick" ? "WHIFF" : "MISS", fighter.x + fighter.facing * 62, fighter.y - fighter.z - 80, "#4c4c4c");
@@ -2190,6 +2198,9 @@
         break;
       case "takeoff":
         takeoffJump(fighter);
+        break;
+      case "megaGrow":
+        megaMommyGrow(fighter);
         break;
       case "appleShot":
         appleShot(fighter);
@@ -2800,6 +2811,24 @@
     fighter.x += fighter.facing * 54;
     setBubble(fighter, "Takeoff!", false, 900);
     playEffect("fly");
+  }
+
+  function megaMommyGrow(fighter) {
+    const now = performance.now();
+    fighter.giantUntil = now + 18000;
+    fighter.shieldHits = Math.max(fighter.shieldHits, 1);
+    setBubble(fighter, "Mega Mommy!", false, 1200);
+    showComicText("MEGA GROW!", fighter.x, fighter.y - fighter.z - 116, "#ff5fa8");
+    game.effects.push({
+      kind: "circle",
+      x: fighter.x,
+      y: fighter.y - fighter.z - 72,
+      r: 82,
+      color: "#ff89c6",
+      born: now,
+      until: now + 520
+    });
+    playEffect("shield");
   }
 
   function appleShot(fighter) {
@@ -5902,11 +5931,12 @@
   }
 
   function drawTats(ctx, fighter) {
-    const color = CHARACTERS.tats.color;
+    const color = fighter.supercharged ? "#1fa65a" : CHARACTERS.tats.color;
+    const fill = fighter.supercharged ? "rgba(82, 224, 132, 0.24)" : "rgba(120,201,255,0.2)";
     setupLine(ctx, color, 10);
     drawHead(ctx, 0, -112, 24, color);
-    drawCloudMuscle(ctx, -58, -58, 1.2);
-    drawCloudMuscle(ctx, 58, -58, 1.2);
+    drawCloudMuscle(ctx, -58, -58, 1.2, color, fill);
+    drawCloudMuscle(ctx, 58, -58, 1.2, color, fill);
     ctx.beginPath();
     ctx.moveTo(0, -88);
     ctx.lineTo(0, -20);
@@ -5923,9 +5953,10 @@
   function drawTatsArms(ctx, fighter, color) {
     const punching = fighter.action === "punch" || fighter.action === "giantPunch";
     const kicking = fighter.action === "kick";
+    const superDadGiantFist = fighter.supercharged && punching;
     ctx.save();
     ctx.strokeStyle = color;
-    ctx.fillStyle = "rgba(120, 201, 255, 0.22)";
+    ctx.fillStyle = fighter.supercharged ? "rgba(82, 224, 132, 0.25)" : "rgba(120, 201, 255, 0.22)";
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
 
@@ -5939,13 +5970,13 @@
       ctx.ellipse(55, -72, 28, 22, -0.1, 0, Math.PI * 2);
       ctx.fill();
       ctx.stroke();
-      ctx.lineWidth = fighter.action === "giantPunch" ? 22 : 17;
+      ctx.lineWidth = (fighter.action === "giantPunch" || superDadGiantFist) ? 22 : 17;
       ctx.beginPath();
       ctx.moveTo(72, -72);
-      ctx.lineTo(fighter.action === "giantPunch" ? 132 : 104, -76);
+      ctx.lineTo((fighter.action === "giantPunch" || superDadGiantFist) ? 132 : 104, -76);
       ctx.stroke();
       ctx.beginPath();
-      ctx.arc(fighter.action === "giantPunch" ? 148 : 118, -76, fighter.action === "giantPunch" ? 29 : 18, 0, Math.PI * 2);
+      ctx.arc((fighter.action === "giantPunch" || superDadGiantFist) ? 148 : 118, -76, (fighter.action === "giantPunch" || superDadGiantFist) ? 29 : 18, 0, Math.PI * 2);
       ctx.fill();
       ctx.stroke();
       ctx.lineWidth = 16;
@@ -5994,13 +6025,13 @@
     ctx.restore();
   }
 
-  function drawCloudMuscle(ctx, x, y, s) {
+  function drawCloudMuscle(ctx, x, y, s, color = CHARACTERS.tats.color, fill = "rgba(120,201,255,0.2)") {
     ctx.save();
     ctx.translate(x, y);
     ctx.scale(s, s);
-    ctx.strokeStyle = CHARACTERS.tats.color;
+    ctx.strokeStyle = color;
     ctx.lineWidth = 8;
-    ctx.fillStyle = "rgba(120,201,255,0.2)";
+    ctx.fillStyle = fill;
     ctx.beginPath();
     ctx.arc(-22, 0, 22, 0, Math.PI * 2);
     ctx.arc(2, -16, 24, 0, Math.PI * 2);
@@ -6012,9 +6043,14 @@
   }
 
   function drawFary(ctx, fighter) {
-    const color = CHARACTERS.fary.color;
+    const now = performance.now();
+    const mega = fighter.supercharged;
+    const giant = mega && now < fighter.giantUntil;
+    const color = mega ? "#ff4fa8" : CHARACTERS.fary.color;
+    const wingFill = mega ? "rgba(255, 112, 190, 0.58)" : "rgba(255,137,198,0.42)";
+    if (giant) ctx.scale(1.34, 1.34);
     setupLine(ctx, color, 8);
-    ctx.fillStyle = "rgba(255,137,198,0.42)";
+    ctx.fillStyle = wingFill;
     ctx.strokeStyle = color;
     ctx.lineWidth = 5;
     ctx.beginPath();
@@ -6023,6 +6059,16 @@
     ctx.fill();
     ctx.stroke();
     drawHead(ctx, 0, -112, 22, color);
+    if (mega) {
+      ctx.fillStyle = "#ff89c6";
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(-9, -139, 5, 0, Math.PI * 2);
+      ctx.arc(9, -139, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    }
     ctx.beginPath();
     ctx.moveTo(0, -90);
     ctx.lineTo(0, -22);
@@ -6034,6 +6080,12 @@
     ctx.moveTo(0, -22);
     ctx.lineTo(24, 44);
     ctx.stroke();
+    if (giant) {
+      ctx.fillStyle = "#ff5fa8";
+      ctx.font = "900 13px Trebuchet MS";
+      ctx.textAlign = "center";
+      ctx.fillText("MEGA", 0, -52);
+    }
   }
 
   function drawApple(ctx, fighter) {

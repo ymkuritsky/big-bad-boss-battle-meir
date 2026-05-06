@@ -46,6 +46,8 @@ Main features:
 - Supercharged names include Cheetah Racer, Mega Mommy, Ultimate Freddy, and Super Dad
 - Cheetah Racer does not use Super Appie Juice powers; her only powers are Super Speed and Sharp Claws, and Sharp Claws takes half a heart
 - Cheetah Racer is yellow with black spots
+- Super Dad is green when supercharged, and his fist becomes giant when he punches
+- Mega Mommy is all pink when supercharged, and she gets Mega Grow so she can become giant for a little while
 - Ultimate Freddy gets Super Giant Punch in Candyland when Supercharged is unlocked
 - New unlocked characters: Mr. 67 and Super Ness
 - Mr. 67 powers: Freeze Block, Burrow Strike, Poison Storm, plus Super Axe Throw in Level 10 or when supercharged
