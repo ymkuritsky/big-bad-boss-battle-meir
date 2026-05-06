@@ -89,6 +89,9 @@ Shark forms:
 The game is deployed on Vercel:
 https://big-bad-boss-battle-meir.vercel.app
 
+It can also run on GitHub Pages after the repo is pushed:
+https://ymkuritsky.github.io/big-bad-boss-battle-meir/
+
 Old Netlify link:
 https://big-bad-boss-battle-meir.netlify.app
 
@@ -104,7 +107,8 @@ Vercel should deploy the main game files:
 1. Make the change in `index.html`, `styles.css`, or `game.js`.
 2. Test the game on the computer.
 3. Save the change to GitHub.
-4. Vercel will automatically update the public game link after GitHub is connected.
+4. GitHub Pages will automatically update the GitHub game link after Pages is turned on.
+5. Vercel will also automatically update the Vercel link after GitHub is connected to Vercel.
 
 Simple test command:
 
@@ -117,6 +121,18 @@ If the check says nothing, that means the game script is okay.
 ## GitHub Auto Deploy
 
 This folder is ready for GitHub and has the remote set to:
-https://github.com/yechielkuritsky/big-bad-boss-battle-meir.git
+https://github.com/ymkuritsky/big-bad-boss-battle-meir.git
 
-To finish automatic deployment, connect GitHub to the Vercel account, create or use that GitHub repository, push the `main` branch, then run Vercel's Git connection for this project.
+GitHub Pages can publish this game directly from the `main` branch because the game is a simple website.
+
+To finish it:
+
+1. Create or open the GitHub repository.
+2. Push this folder's `main` branch.
+3. In GitHub, go to Settings > Pages.
+4. Set Source to Deploy from a branch.
+5. Set Branch to `main` and Folder to `/root`.
+6. The game will publish at:
+   https://ymkuritsky.github.io/big-bad-boss-battle-meir/
+
+To also finish Vercel automatic deployment, connect GitHub to the Vercel account, then connect the Vercel project to this same GitHub repository.
