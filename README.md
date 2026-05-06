@@ -33,6 +33,7 @@ Main features:
 - Beating King Dock earns the "King of the Battle" crown trophy
 - Beating King Dock in Abandoned Desert unlocks Water World Levels 11-14
 - In Water World, King Dock returns in a water suit
+- Water World Levels 11-14 are tuned to be pretty easy, like Levels 1-3
 - Benji's five shark forms work anywhere in Water World
 - Freddy can still use fish forms, and the other fighters get water-themed powers like Mr. 67's Ice Feet
 - Every hit on King Dock pops out special prize boxes; jump onto a prize box to get an iron sword damage boost, armor, a heart, speed, or a power refill
