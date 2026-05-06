@@ -25,7 +25,7 @@ Main features:
 - Abandoned Desert unlock: beat Candyland Levels 4, 5, and 6 twice. The wins do not have to be in a row
 - Abandoned Desert difficulty climbs from Level 7 to Level 8 to Level 9, all harder than Level 6
 - Level 9 shows a danger warning that King Dock is coming next
-- Level 10 special boss: King Dock, a very huge pink gorilla with purple eyes, an angry mouth, two brown horns, red battle splatters all over him, a sword sticking out of his head, one giant hand laser, and 25 hearts
+- Level 10 special boss: King Dock, a very huge pink gorilla with purple eyes, an angry mouth, two brown horns, red battle splatters all over him, a sword sticking out of his head, one giant hand laser, and 10 hearts
 - At the start of Level 10, King Dock pauses, says "Who is responsible?", and then begins attacking
 - Level 10 player fighters start with 10 hearts
 - Hitting King Dock makes one of his hearts fly back to the player and heal them up to their max hearts
@@ -35,8 +35,8 @@ Main features:
 - In Water World, King Dock returns in a water suit
 - Benji's five shark forms work anywhere in Water World
 - Freddy can still use fish forms, and the other fighters get water-themed powers like Mr. 67's Ice Feet
-- Power hits on King Dock pop out reward boxes; jump onto a box to get an iron sword damage boost or armor
-- King Dock reward boxes have small booby traps nearby, including pit cracks and ghost bats dropping from above
+- Every hit on King Dock pops out special prize boxes; jump onto a prize box to get an iron sword damage boost, armor, a heart, speed, or a power refill
+- King Dock trap boxes have small booby traps nearby, including pit cracks and ghost bats dropping from above
 - King Dock can also drop trap boxes from above for no reason; they fall down with booby traps around them
 - Trap boxes say "BOOBY TRAP" on them
 - Supercharged Package unlock: beat Mischievous Mayor two times in a row

@@ -8,6 +8,14 @@
   const WALK_SPEED = 135;
   const RUN_SPEED = 235;
   const STORAGE_KEY = "bigBadBossBattleProgressV1";
+  const KING_DOCK_MAX_HEALTH = 10;
+  const KING_DOCK_PRIZES = [
+    { id: "ironSword", label: "IRON SWORD!", bubble: "Iron sword!", color: "#d9edf2" },
+    { id: "armor", label: "ARMOR!", bubble: "Armor!", color: "#ffd84a" },
+    { id: "heart", label: "HEART +1!", bubble: "Heart prize!", color: "#ff5fa8" },
+    { id: "speed", label: "SPEED!", bubble: "Speed prize!", color: "#70f0ff" },
+    { id: "powerRefill", label: "POWER UP!", bubble: "Power prize!", color: "#a98bff" }
+  ];
 
   const BOSS_LEVEL_TUNING = {
     1: {
@@ -954,7 +962,7 @@
       ["Hearts", "Most fighters have 3 pink hearts. Most hits take half a heart. Giant Punch, Laser Ray, Bite, or two robot chainsaws at once take 1 whole heart."],
       ["Timer and levels", "Each level lasts 2 minutes. If nobody loses all hearts, whoever has more hearts wins the level. Superville has Levels 1, 2, and 3. Candyland has Levels 4, 5, and 6. Abandoned Desert has Levels 7, 8, 9, and 10. Water World has Levels 11, 12, 13, and 14."],
       ["Worlds", "Candyland unlocks after you beat Yapping Yonatan through Levels 1, 2, and 3. Abandoned Desert unlocks after you beat Candyland Levels 4, 5, and 6 twice. The Candyland wins do not need to be in a row. Water World unlocks after you beat King Dock in Abandoned Desert."],
-      ["King Dock hearts, laser, bats, and boxes", "In Level 10, King Dock is very huge, has 25 hearts, and the player starts with 10 hearts. He can fire one giant hand laser. When you hit King Dock, his heart flies to you and heals you up to your max hearts. King Dock can control seven ghost bats at a time, but any hit destroys a bat. When a power damages King Dock, a box can pop out. Sometimes King Dock drops a box from above for no reason. Trap boxes say BOOBY TRAP on them. Watch for little traps around the box, like pit cracks and ghost bats dropping from above. Jump onto a landed box to get an iron sword damage boost or armor. Beating King Dock earns the King of the Battle crown."],
+      ["King Dock hearts, laser, bats, and boxes", "King Dock is very huge, has 10 hearts, and the player starts with 10 hearts in his boss worlds. He can fire one giant hand laser. When you hit King Dock, his heart flies to you and heals you up to your max hearts. Every real hit also makes special prize boxes spread out around him. King Dock can control seven ghost bats at a time, but any hit destroys a bat. Sometimes King Dock drops a trap box from above for no reason. Trap boxes say BOOBY TRAP on them. Watch for little traps around trap boxes, like pit cracks and ghost bats dropping from above. Jump onto a landed prize box to get rewards like an iron sword, armor, heart, speed boost, or power refill. Beating King Dock earns the King of the Battle crown."],
       ["Water World", "Levels 11-14 take place on water. King Dock is the boss again, but he wears a water suit. Benji can use his five shark forms anywhere in Water World. Freddy can still choose fish. Other fighters get a simple water-themed power, like Mr. 67's Ice Feet for walking on water."],
       ["Supercharged Package", "Beat Mischievous Mayor two times in a row to unlock the Supercharged Package. Once it is unlocked, Candyland fighters get 5 hearts on Levels 4 and 5, then 10 hearts on Level 6. Supercharged names include Cheetah Racer, Mega Mommy, Ultimate Freddy, and Super Dad. The villains keep their Level 3 power in every Candyland level."],
       ["Powers", "Most powers can be used 3 times, then they recharge. Some special powers recharge after 1 use. Normal recharge is 30 seconds. Mischievous Mayor recharges in 20 seconds when he is the boss."]
@@ -1168,7 +1176,7 @@
 
   function characterSummary(id) {
     const character = CHARACTERS[id];
-    const hearts = selectState.world === "waterWorld" ? (id === "kingDock" ? "12-25" : "10") : isSuperchargedSelection() ? "5-10" : maxHealthFor(id);
+    const hearts = selectState.world === "waterWorld" ? (id === "kingDock" ? KING_DOCK_MAX_HEALTH : "10") : isSuperchargedSelection() ? "5-10" : maxHealthFor(id);
     const powers = character.powers.map((power) => power.name);
     if (id === "freddy" && isSuperchargedSelection()) powers.push("Super Giant Punch");
     if (id === "frost" && (isSuperchargedSelection() || selectState.world === "abandonedDesert")) powers.push("Level 10 Super Axe Throw");
@@ -1459,11 +1467,7 @@
   }
 
   function bossMaxHealthForLevel(level, id) {
-    if (id === "kingDock" && worldIdForLevel(level) === "abandonedDesert" && level >= 10) return 25;
-    if (id === "kingDock" && worldIdForLevel(level) === "waterWorld") {
-      if (level >= 14) return 25;
-      return level === 13 ? 20 : level === 12 ? 16 : 12;
-    }
+    if (id === "kingDock") return KING_DOCK_MAX_HEALTH;
     const world = worldIdForLevel(level);
     const worldBonus = world === "waterWorld" ? 3 : world === "abandonedDesert" ? 2 : world === "candyland" ? 1 : 0;
     return maxHealthFor(id) + Math.max(0, stageLevelFor(level) - 1) * 2 + worldBonus;
@@ -3697,7 +3701,7 @@
     const hitLine = target.character.role === "villain" ? "Oh, that hurts. How dare you!" : (Math.random() < 0.5 ? "Please don't do that!" : "Stop right there!");
     setBubble(target, hitLine, true, 1300);
     maybeStealKingDockHeart(target, source, actualLost);
-    maybeSpawnKingDockBox(target, source);
+    maybeSpawnKingDockBox(target, source, actualLost);
     maybeReduceBossHelpers(target, oldHealth);
   }
 
@@ -3746,20 +3750,26 @@
     playEffect("shield");
   }
 
-  function maybeSpawnKingDockBox(target, source) {
+  function maybeSpawnKingDockBox(target, source, amount) {
     const now = performance.now();
     if (!game || target.id !== "kingDock" || target.health <= 0) return;
     if (!source || source.side !== "p1") return;
-    if (!source.lastPowerUsedAt || now - source.lastPowerUsedAt > 2300) return;
-    if (activeRewardBoxCount() >= 5) return;
-    const x = clamp(target.x + (Math.random() * 140 - 70), 110, WIDTH - 110);
-    const y = clamp(target.y + 24 + (Math.random() * 60 - 30), 250, HEIGHT - 132);
-    spawnKingDockRewardBox(x, y, now, { drop: false });
+    if (amount <= 0) return;
+    const count = amount >= 1 ? 3 : 2;
+    const spread = 74 + Math.random() * 28;
+    const angleStart = Math.random() * Math.PI * 2;
+    for (let i = 0; i < count; i += 1) {
+      const angle = angleStart + (Math.PI * 2 * i) / count;
+      const x = clamp(target.x + Math.cos(angle) * spread, 110, WIDTH - 110);
+      const y = clamp(target.y + 24 + Math.sin(angle) * spread * 0.58, 250, HEIGHT - 132);
+      spawnKingDockRewardBox(x, y, now + i * 35, { drop: false, boobyTrap: false, specialPrize: true });
+    }
+    trimRewardBoxes(16);
   }
 
   function spawnKingDockRewardBox(x, y, now, options = {}) {
     const boxCount = game.kingDockBoxCount || 0;
-    const item = boxCount % 2 === 0 ? "ironSword" : "armor";
+    const item = options.item || KING_DOCK_PRIZES[boxCount % KING_DOCK_PRIZES.length].id;
     game.kingDockBoxCount = boxCount + 1;
     game.pickups.push({
       kind: "rewardBox",
@@ -3770,17 +3780,28 @@
       vz: options.drop ? -70 : 250,
       born: now,
       until: now + (options.drop ? 18000 : 15000),
-      boobyTrap: true,
+      boobyTrap: options.boobyTrap !== false,
+      specialPrize: !!options.specialPrize,
       droppedByKing: !!options.drop
     });
-    spawnKingDockBoxTraps(x, y, now);
-    showComicText(options.drop ? "DROP BOX!" : "BOX!", x, y - (options.drop ? 126 : 82), "#ffd84a");
+    if (options.boobyTrap !== false) spawnKingDockBoxTraps(x, y, now);
+    showComicText(options.drop ? "DROP BOX!" : options.specialPrize ? "SPECIAL PRIZE!" : "BOX!", x, y - (options.drop ? 126 : 82), "#ffd84a");
     playEffect("shield");
   }
 
   function activeRewardBoxCount() {
     if (!game || !game.pickups) return 0;
     return game.pickups.filter((pickup) => pickup.kind === "rewardBox").length;
+  }
+
+  function trimRewardBoxes(limit) {
+    if (!game || !game.pickups) return;
+    const boxes = game.pickups.filter((pickup) => pickup.kind === "rewardBox");
+    if (boxes.length <= limit) return;
+    const toRemove = boxes
+      .sort((a, b) => a.born - b.born)
+      .slice(0, boxes.length - limit);
+    game.pickups = game.pickups.filter((pickup) => !toRemove.includes(pickup));
   }
 
   function spawnKingDockBoxTraps(boxX, boxY, now) {
@@ -3821,10 +3842,47 @@
       playEffect("laser");
       return;
     }
-    fighter.shieldHits = Math.max(fighter.shieldHits, 3);
-    setBubble(fighter, "Armor!", false, 1000);
-    showComicText("ARMOR!", fighter.x, fighter.y - fighter.z - 112, "#ffd84a");
+    if (pickup.item === "armor") {
+      fighter.shieldHits = Math.max(fighter.shieldHits, 3);
+      setBubble(fighter, "Armor!", false, 1000);
+      showComicText("ARMOR!", fighter.x, fighter.y - fighter.z - 112, "#ffd84a");
+      playEffect("shield");
+      return;
+    }
+    if (pickup.item === "heart") {
+      fighter.health = Math.min(fighter.maxHealth, Math.round((fighter.health + 1) * 2) / 2);
+      setBubble(fighter, "Heart prize!", false, 1000);
+      showComicText("HEART +1!", fighter.x, fighter.y - fighter.z - 112, "#ff5fa8");
+      playEffect("win");
+      return;
+    }
+    if (pickup.item === "speed") {
+      fighter.speedBoostUntil = now + 14000;
+      setBubble(fighter, "Speed prize!", false, 1000);
+      showComicText("SPEED!", fighter.x, fighter.y - fighter.z - 112, "#70f0ff");
+      playEffect("speed");
+      return;
+    }
+    if (pickup.item === "powerRefill") {
+      fighterPowers(fighter).forEach((power) => {
+        if (power.noRefill) return;
+        fighter.charges[power.id] = maxChargesForPower(power);
+        fighter.cooldowns[power.id] = 0;
+      });
+      setBubble(fighter, "Power prize!", false, 1000);
+      showComicText("POWER UP!", fighter.x, fighter.y - fighter.z - 112, "#a98bff");
+      playEffect("shield");
+      renderControls(true);
+      return;
+    }
+    const prize = kingDockPrizeFor(pickup.item);
+    setBubble(fighter, prize.bubble, false, 1000);
+    showComicText(prize.label, fighter.x, fighter.y - fighter.z - 112, prize.color);
     playEffect("shield");
+  }
+
+  function kingDockPrizeFor(item) {
+    return KING_DOCK_PRIZES.find((prize) => prize.id === item) || KING_DOCK_PRIZES[0];
   }
 
   function maybeReduceBossHelpers(target, oldHealth) {
@@ -5387,7 +5445,8 @@
     ctx.save();
     ctx.translate(pickup.x, pickup.y - pickup.z);
     const pulse = Math.sin(performance.now() / 110) * 3;
-    ctx.fillStyle = pickup.item === "ironSword" ? "#d9edf2" : "#ffd84a";
+    const prize = kingDockPrizeFor(pickup.item);
+    ctx.fillStyle = prize.color;
     ctx.strokeStyle = "#171216";
     ctx.lineWidth = 5;
     roundRect(ctx, -24 - pulse * 0.2, -38 - pulse * 0.2, 48 + pulse * 0.4, 42 + pulse * 0.4, 7);
@@ -5408,6 +5467,11 @@
       ctx.font = "900 24px Trebuchet MS";
       ctx.fillText("!", 0, -12);
     } else {
+      if (pickup.specialPrize) {
+        ctx.fillStyle = "#171216";
+        ctx.font = "900 10px Trebuchet MS";
+        ctx.fillText("PRIZE", 0, -48);
+      }
       ctx.fillStyle = "#171216";
       ctx.font = "900 24px Trebuchet MS";
       ctx.fillText("?", 0, -11);
