@@ -6827,6 +6827,7 @@
     ctx.closePath();
     ctx.fill();
     ctx.stroke();
+    drawKingBattleCrown(ctx);
     setupLine(ctx, color, 8);
     ctx.beginPath();
     ctx.arc(0, -112, 32, 0, Math.PI * 2);
@@ -6854,6 +6855,38 @@
     ctx.beginPath();
     ctx.moveTo(-16, -92);
     ctx.quadraticCurveTo(0, -104, 18, -92);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawKingBattleCrown(ctx) {
+    ctx.save();
+    ctx.fillStyle = "#ffd84a";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.moveTo(-40, -132);
+    ctx.lineTo(-34, -166);
+    ctx.lineTo(-15, -143);
+    ctx.lineTo(0, -174);
+    ctx.lineTo(15, -143);
+    ctx.lineTo(34, -166);
+    ctx.lineTo(40, -132);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#ff5fa8";
+    [-34, 0, 34].forEach((x, index) => {
+      ctx.beginPath();
+      ctx.arc(x, index === 1 ? -173 : -166, index === 1 ? 6 : 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    });
+    ctx.fillStyle = "#fffef7";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 3;
+    roundRect(ctx, -43, -137, 86, 13, 5);
+    ctx.fill();
     ctx.stroke();
     ctx.restore();
   }
