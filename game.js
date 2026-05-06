@@ -902,7 +902,7 @@
         card.append(badge);
       }
       els.menuCharacters.append(card);
-      drawPortrait(canvas.getContext("2d"), id, false);
+      drawPortrait(canvas.getContext("2d"), id, false, false);
     });
   }
 
@@ -1076,7 +1076,7 @@
       stamp.textContent = "Locked";
       card.append(stamp);
     }
-    requestAnimationFrame(() => drawPortrait(canvas.getContext("2d"), id, !unlocked));
+    requestAnimationFrame(() => drawPortrait(canvas.getContext("2d"), id, !unlocked, unlocked && isSuperchargedSelection()));
     return card;
   }
 
@@ -4091,7 +4091,7 @@
     powers.textContent = `Powers: ${character.powers.map((power) => power.name).join(", ")}.`;
     text.append(eyebrow, name, powers);
     item.append(canvas, text);
-    requestAnimationFrame(() => drawPortrait(canvas.getContext("2d"), id, false));
+    requestAnimationFrame(() => drawPortrait(canvas.getContext("2d"), id, false, false));
     return item;
   }
 
@@ -6037,6 +6037,10 @@
   }
 
   function drawApple(ctx, fighter) {
+    if (fighter.supercharged) {
+      drawCheetahRacer(ctx, fighter);
+      return;
+    }
     const color = CHARACTERS.apple.color;
     setupLine(ctx, color, 9);
     drawHead(ctx, 0, -112, 23, color);
@@ -6054,6 +6058,105 @@
     ctx.moveTo(0, -22);
     ctx.lineTo(28, 44);
     ctx.stroke();
+  }
+
+  function drawCheetahRacer(ctx, fighter) {
+    const yellow = "#f5c242";
+    const black = "#171216";
+    ctx.save();
+    setupLine(ctx, yellow, 9);
+
+    ctx.strokeStyle = yellow;
+    ctx.lineWidth = 9;
+    ctx.beginPath();
+    ctx.moveTo(10, -36);
+    ctx.bezierCurveTo(48, -43, 56, -12, 32, 12);
+    ctx.stroke();
+    ctx.fillStyle = black;
+    ctx.beginPath();
+    ctx.arc(34, 10, 4, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = yellow;
+    ctx.strokeStyle = black;
+    ctx.lineWidth = 4;
+    roundRect(ctx, -20, -88, 40, 66, 12);
+    ctx.fill();
+    ctx.stroke();
+    drawCheetahSpots(ctx, [
+      [-10, -74, 4], [9, -68, 3.6], [-3, -54, 3.8],
+      [12, -42, 4], [-11, -34, 3.6]
+    ]);
+
+    drawCheetahRacerHead(ctx, yellow, black);
+
+    drawArms(ctx, fighter, yellow);
+    drawCheetahSpots(ctx, [[-29, -53, 3], [28, -55, 3], [39, -44, 3]]);
+    if (fighter.action === "punch" || fighter.action === "power") drawCheetahClawMarks(ctx, black);
+
+    setupLine(ctx, yellow, 9);
+    ctx.beginPath();
+    ctx.moveTo(0, -22);
+    ctx.lineTo(-25, 44);
+    ctx.moveTo(0, -22);
+    ctx.lineTo(28, 44);
+    ctx.stroke();
+    drawCheetahSpots(ctx, [[-16, 10, 3], [18, 13, 3], [25, 31, 3]]);
+    ctx.restore();
+  }
+
+  function drawCheetahRacerHead(ctx, yellow, black) {
+    ctx.fillStyle = yellow;
+    ctx.strokeStyle = black;
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.arc(0, -112, 24, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(-18, -131);
+    ctx.lineTo(-28, -152);
+    ctx.lineTo(-7, -137);
+    ctx.moveTo(18, -131);
+    ctx.lineTo(28, -152);
+    ctx.lineTo(7, -137);
+    ctx.fill();
+    ctx.stroke();
+
+    drawCheetahSpots(ctx, [[-9, -125, 3], [9, -128, 3], [0, -137, 3], [-15, -111, 2.7], [14, -109, 2.7]]);
+    ctx.fillStyle = black;
+    ctx.beginPath();
+    ctx.arc(-8, -115, 2.8, 0, Math.PI * 2);
+    ctx.arc(8, -115, 2.8, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(0, -105, 8, 0.12, Math.PI - 0.12);
+    ctx.stroke();
+  }
+
+  function drawCheetahSpots(ctx, spots) {
+    const previous = ctx.fillStyle;
+    ctx.fillStyle = "#171216";
+    spots.forEach(([x, y, r]) => {
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    ctx.fillStyle = previous;
+  }
+
+  function drawCheetahClawMarks(ctx, black) {
+    ctx.save();
+    ctx.strokeStyle = black;
+    ctx.lineWidth = 4;
+    for (let i = -1; i <= 1; i += 1) {
+      ctx.beginPath();
+      ctx.moveTo(96, -84 + i * 8);
+      ctx.lineTo(118, -94 + i * 8);
+      ctx.stroke();
+    }
+    ctx.restore();
   }
 
   function drawYapping(ctx, fighter) {
@@ -8047,13 +8150,14 @@
     ctx.restore();
   }
 
-  function drawPortrait(pctx, id, locked) {
+  function drawPortrait(pctx, id, locked, supercharged = false) {
     pctx.clearRect(0, 0, pctx.canvas.width, pctx.canvas.height);
     const character = CHARACTERS[id];
     pctx.fillStyle = locked ? "#d7d2cb" : "#fffaf0";
     pctx.fillRect(0, 0, pctx.canvas.width, pctx.canvas.height);
-    drawPortraitBackground(pctx, id, locked);
+    drawPortraitBackground(pctx, id, locked, supercharged);
     const fake = createFighter(id, "p1", false, pctx.canvas.width / 2, pctx.canvas.height - 48, 1);
+    fake.supercharged = supercharged;
     fake.z = 0;
     pctx.save();
     pctx.translate(fake.x, fake.y);
@@ -8079,7 +8183,7 @@
     pctx.globalAlpha = 1;
   }
 
-  function drawPortraitBackground(pctx, id, locked) {
+  function drawPortraitBackground(pctx, id, locked, supercharged = false) {
     if (locked) return;
     const w = pctx.canvas.width;
     const h = pctx.canvas.height;
@@ -8096,11 +8200,21 @@
         pctx.fill();
       }
     } else if (id === "apple") {
-      pctx.fillStyle = "#f58b21";
+      pctx.fillStyle = supercharged ? "#f5c242" : "#f58b21";
       for (let i = 0; i < 13; i += 1) {
+        const x = (i * 35) % w;
+        const y = 20 + (i % 5) * 35;
         pctx.beginPath();
-        pctx.arc((i * 35) % w, 20 + (i % 5) * 35, 12, 0, Math.PI * 2);
+        pctx.arc(x, y, 12, 0, Math.PI * 2);
         pctx.fill();
+        if (supercharged) {
+          pctx.fillStyle = "#171216";
+          pctx.beginPath();
+          pctx.arc(x - 4, y - 3, 2.2, 0, Math.PI * 2);
+          pctx.arc(x + 5, y + 4, 2.2, 0, Math.PI * 2);
+          pctx.fill();
+          pctx.fillStyle = "#f5c242";
+        }
       }
     } else if (id === "mayor") {
       for (let i = 0; i < 9; i += 1) drawMiniGear(pctx, (i * 48) % w, 32 + (i % 4) * 42);
