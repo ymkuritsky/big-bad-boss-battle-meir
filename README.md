@@ -182,7 +182,7 @@ iPhone and iPad:
 
 ## Better Voices
 
-The game can use better recorded/generated voice clips if they are added under `assets/voices/`.
+The game gives every main character a different browser voice style during short dialogue. For even better voices, recorded/generated voice clips can be added under `assets/voices/`.
 
 Current expected optional files:
 - `assets/voices/mayor-default.mp3`
@@ -191,7 +191,7 @@ Current expected optional files:
 - `assets/voices/king-dock-default.mp3`
 - `assets/voices/final-robot-default.mp3`
 
-If those files are missing, the game falls back to browser speech voices.
+If those files are missing, the game falls back to the built-in character voice styles.
 
 If the check says nothing, that means the game script is okay.
 

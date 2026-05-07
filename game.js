@@ -672,7 +672,10 @@
     benji: { pitch: 1.18, rate: 1.12, prefer: /male|google us english/i },
     freddy: { pitch: 1.04, rate: 1.08, prefer: /male|google us english/i },
     frost: { pitch: 0.82, rate: 0.95, prefer: /male|daniel|google us english/i },
-    ness: { pitch: 1.12, rate: 1.1, prefer: /female|samantha|zira|google us english/i }
+    ness: { pitch: 1.12, rate: 1.1, prefer: /female|samantha|zira|google us english/i },
+    crayon: { pitch: 1.28, rate: 1.05, prefer: /female|samantha|zira|google us english/i },
+    hoodie: { pitch: 0.76, rate: 0.92, prefer: /male|daniel|fred|google us english/i },
+    phantom: { pitch: 0.62, rate: 0.82, prefer: /male|daniel|fred|google us english/i }
   };
   const ACTION_SHORTCUTS = {
     Walk: "Q",
@@ -1967,13 +1970,15 @@
   }
 
   function setBubble(fighter, text, spiky, duration) {
+    const now = performance.now();
     fighter.bubble = {
       text,
       spiky,
-      until: performance.now() + duration
+      until: now + duration
     };
-    if (fighter.id === "mayor" && text.length < 60) {
-      speakMayor(text);
+    if (text.length < 70 && now > (fighter.nextVoiceAt || 0)) {
+      speakCharacterLine(fighter.id, text, "line");
+      fighter.nextVoiceAt = now + (spiky ? 2600 : 1700);
     }
   }
 
@@ -2029,6 +2034,7 @@
     updateFighter(game.p1, dt);
     if (game.mode === "story") updateBossAI(game.p2, game.p1, dt);
     updateFighter(game.p2, dt);
+    resolveFighterBodyCollision();
     updateHelpers(dt);
     updateEffects();
     updatePickups(dt);
@@ -2275,6 +2281,74 @@
     fighter.y += fighter.vy * dt;
     fighter.x = clamp(fighter.x, 95, WIDTH - 95);
     const canSwim = isWaterWorldActive() || (animalForm && animalForm.swim) || !!sharkForm;
+    fighter.y = clamp(fighter.y, 210, canSwim ? HEIGHT - 58 : HEIGHT - 124);
+  }
+
+  function resolveFighterBodyCollision() {
+    if (!game || !game.p1 || !game.p2) return;
+    const a = game.p1;
+    const b = game.p2;
+    if (!canBodyCollide(a, b)) return;
+
+    const minDist = fighterBodyRadius(a) + fighterBodyRadius(b);
+    const dx = b.x - a.x;
+    const dy = (b.y - a.y) * 0.72;
+    const dist = Math.hypot(dx, dy) || 1;
+    if (dist >= minDist) return;
+
+    const now = performance.now();
+    const overlap = minDist - dist;
+    const nx = dx / dist;
+    const ny = (dy / dist) / 0.72;
+    const aLocked = now < a.knockdownUntil || now < a.trappedUntil;
+    const bLocked = now < b.knockdownUntil || now < b.trappedUntil;
+    const split = aLocked || bLocked ? overlap : overlap / 2;
+
+    if (!aLocked) pushFighterBody(a, -nx * split, -ny * split);
+    if (!bLocked) pushFighterBody(b, nx * split, ny * split);
+
+    a.facing = b.x < a.x ? -1 : 1;
+    b.facing = a.x < b.x ? -1 : 1;
+    a.vx *= 0.38;
+    a.vy *= 0.38;
+    b.vx *= 0.38;
+    b.vy *= 0.38;
+
+    if (overlap > 18 && now > (game.nextBodyBumpAt || 0)) {
+      showComicText("BUMP!", (a.x + b.x) / 2, Math.min(a.y - a.z, b.y - b.z) - 78, "#111");
+      addGroundPuff((a.x + b.x) / 2, (a.y + b.y) / 2 + 8, "dust");
+      playEffect("tap");
+      game.nextBodyBumpAt = now + 650;
+    }
+  }
+
+  function canBodyCollide(a, b) {
+    const now = performance.now();
+    return a.health > 0 && b.health > 0
+      && a.undergroundUntil <= now
+      && b.undergroundUntil <= now
+      && Math.abs((a.z || 0) - (b.z || 0)) < 82;
+  }
+
+  function fighterBodyRadius(fighter) {
+    const now = performance.now();
+    if (fighter.id === "spaceRobot") return 76;
+    if (fighter.id === "kingDock") return 62;
+    if (fighter.giantUntil > now) return 66;
+    const animalForm = activeFreddyAnimal(fighter);
+    if (animalForm && animalForm.big) return 58;
+    if (animalForm && animalForm.small) return 32;
+    if (activeBenjiShark(fighter)) return 50;
+    return fighter.isBoss ? 48 : 38;
+  }
+
+  function pushFighterBody(fighter, dx, dy) {
+    fighter.x += dx;
+    fighter.y += dy;
+    const animalForm = activeFreddyAnimal(fighter);
+    const sharkForm = activeBenjiShark(fighter);
+    const canSwim = isWaterWorldActive() || (animalForm && animalForm.swim) || !!sharkForm;
+    fighter.x = clamp(fighter.x, 95, WIDTH - 95);
     fighter.y = clamp(fighter.y, 210, canSwim ? HEIGHT - 58 : HEIGHT - 124);
   }
 
@@ -11403,13 +11477,13 @@
   function speakMayor(text) {
     if (audio.volume <= 0) return;
     if (!/ha ha|beat|take|scared|bank|bots|flying|laser|how dare/i.test(text)) return;
-    speakCharacterLine("mayor", text);
+    speakCharacterLine("mayor", text, "line");
   }
 
   function speakCharacterLine(characterId, text, mood = "default") {
     if (audio.volume <= 0) return;
     const clips = CHARACTER_VOICE_CLIPS[characterId];
-    const clip = clips && (clips[mood] || clips.default);
+    const clip = clips && (clips[mood] || (mood === "default" ? clips.default : ""));
     if (clip) {
       const voice = new Audio(clip);
       voice.volume = clamp(audio.volume, 0, 1);
