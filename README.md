@@ -83,6 +83,7 @@ Main features:
 - Thin bottom control bar for laptop/computer and touch devices
 - Keyboard movement on computer, with number keys 1-9 for powers
 - Power buttons show their keyboard shortcuts
+- Music has three original arcade-style base themes with world and level variations, so different backgrounds feel different
 - Big health bars that turn green, yellow, then red
 - Flash, knockback, shake, and sound when a fighter gets hit
 - Ground dust and landing puffs make movement feel more physical

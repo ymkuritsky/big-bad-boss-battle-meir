@@ -865,7 +865,7 @@
 
   const audio = {
     ctx: null,
-    volume: 0,
+    volume: 0.35,
     musicTimer: null,
     musicStep: 0,
     musicOn: true
@@ -1049,8 +1049,7 @@
     stopBattleMusic();
     game = null;
     lastHudHtml = "";
-    els.volumeSlider.value = "0";
-    audio.volume = 0;
+    els.volumeSlider.value = String(audio.volume);
     renderMainCharacters();
     showView("menu");
   }
@@ -11289,14 +11288,87 @@
     stopBattleMusic();
     updateMusicButton();
     if (!audio.ctx || audio.volume <= 0 || !audio.musicOn) return;
-    const pattern = [330, 247, 262, 294, 262, 247, 220, 220, 262, 330, 294, 262, 247, 262, 294, 330];
+    audio.musicStep = 0;
     audio.musicTimer = setInterval(() => {
       if (!game || game.paused || game.gameOver || audio.volume <= 0 || !audio.musicOn) return;
-      const freq = pattern[audio.musicStep % pattern.length];
-      playTone(freq, 0.1, "square", 0.026);
-      if (audio.musicStep % 4 === 0) playTone(freq / 2, 0.08, "triangle", 0.018);
+      playLevelMusicStep(game.level || 1, audio.musicStep);
       audio.musicStep += 1;
-    }, 132);
+    }, musicProfileForLevel(game && game.level ? game.level : 1).tempo);
+  }
+
+  function playLevelMusicStep(level, step) {
+    const profile = musicProfileForLevel(level);
+    const freq = profile.notes[step % profile.notes.length] * profile.transpose;
+    playTone(freq, profile.noteLength, profile.wave, profile.gain);
+    if (profile.bass && step % profile.bassEvery === 0) playTone(freq / profile.bass, profile.noteLength * 1.25, "triangle", profile.gain * 0.66);
+    if (profile.sparkle && step % profile.sparkleEvery === 0) playTone(freq * profile.sparkle, 0.045, "sine", profile.gain * 0.5);
+  }
+
+  function musicProfileForLevel(level) {
+    const world = worldIdForLevel(level);
+    const variation = ((level - 1) % 3) * 0.035;
+    const base = {
+      notes: [330, 247, 262, 294, 262, 247, 220, 220, 262, 330, 294, 262, 247, 262, 294, 330],
+      tempo: 132,
+      noteLength: 0.1,
+      wave: "square",
+      gain: 0.026,
+      transpose: 1 + variation,
+      bass: 2,
+      bassEvery: 4,
+      sparkle: 0,
+      sparkleEvery: 8
+    };
+    if (world === "candyland") return Object.assign(base, {
+      notes: [392, 523, 494, 440, 392, 330, 392, 440, 523, 587, 523, 440],
+      tempo: 150,
+      wave: "triangle",
+      sparkle: 2,
+      sparkleEvery: 6
+    });
+    if (world === "abandonedDesert") return Object.assign(base, {
+      notes: [220, 247, 262, 247, 220, 196, 175, 196, 220, 262, 247, 196],
+      tempo: 178,
+      wave: "sawtooth",
+      gain: 0.022,
+      bassEvery: 3
+    });
+    if (world === "waterWorld") return Object.assign(base, {
+      notes: [262, 330, 392, 330, 294, 349, 440, 349, 330, 392, 523, 392],
+      tempo: 165,
+      wave: "sine",
+      gain: 0.032,
+      sparkle: 1.5,
+      sparkleEvery: 4
+    });
+    if (world === "outerSpace") return Object.assign(base, {
+      notes: [196, 294, 392, 587, 523, 392, 294, 247, 330, 494, 659, 494],
+      tempo: 142,
+      wave: "triangle",
+      gain: 0.024,
+      bass: 3,
+      sparkle: 2,
+      sparkleEvery: 5
+    });
+    if (world === "finalShowdownPartTwo") return Object.assign(base, {
+      notes: [147, 185, 220, 185, 165, 147, 131, 147, 220, 247, 220, 185],
+      tempo: 126,
+      wave: "sawtooth",
+      gain: 0.028,
+      bassEvery: 2
+    });
+    if (world === "megaCity") return Object.assign(base, {
+      notes: level >= 30
+        ? [165, 220, 247, 330, 294, 247, 220, 196, 247, 330, 370, 330]
+        : [262, 330, 392, 330, 349, 440, 392, 330, 294, 349, 440, 523],
+      tempo: level >= 30 ? 118 : 132,
+      wave: "square",
+      gain: level >= 30 ? 0.032 : 0.028,
+      bassEvery: level >= 30 ? 2 : 4,
+      sparkle: level >= 30 ? 0 : 1.5,
+      sparkleEvery: 8
+    });
+    return base;
   }
 
   function stopBattleMusic() {
