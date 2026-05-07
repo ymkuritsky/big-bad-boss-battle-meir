@@ -21,6 +21,8 @@ body {
   margin: 0;
   min-height: 100vh;
   overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: manipulation;
   color: var(--ink);
   font-family: "Trebuchet MS", "Comic Sans MS", Arial, sans-serif;
   background:
@@ -450,6 +452,8 @@ button {
   place-items: center;
   overflow: hidden;
   background: #f7efe1;
+  touch-action: none;
+  user-select: none;
 }
 
 #gameCanvas {
@@ -460,6 +464,7 @@ button {
   background: #b7ef86;
   border: 10px solid var(--ink);
   box-shadow: 0 0 0 10px #fff, 0 18px 34px rgba(0,0,0,0.2);
+  touch-action: none;
 }
 
 .hud {
@@ -616,21 +621,29 @@ button {
   text-transform: uppercase;
 }
 
-.pause-button {
+.pause-button,
+.music-button {
   position: absolute;
   top: 82px;
-  right: 14px;
   padding: 7px 10px;
   font-size: 13px;
 }
 
+.pause-button {
+  right: 14px;
+}
+
+.music-button {
+  right: 86px;
+}
+
 .control-dock {
   position: absolute;
-  inset: auto 10px 10px;
+  inset: auto 8px max(6px, env(safe-area-inset-bottom)) 8px;
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 10px;
+  align-items: stretch;
+  justify-content: center;
+  gap: 8px;
   pointer-events: none;
 }
 
@@ -671,21 +684,23 @@ button {
 
 .control-panel {
   display: grid;
-  grid-template-columns: minmax(105px, 140px) minmax(150px, 250px);
-  gap: 8px;
-  max-width: min(48vw, 430px);
-  max-height: min(360px, 50vh);
-  overflow: hidden;
-  padding: 9px;
-  border: 4px solid var(--ink);
+  grid-template-columns: 104px minmax(0, 1fr);
+  gap: 6px;
+  width: min(900px, calc(100vw - 22px));
+  max-height: 108px;
+  overflow: visible;
+  padding: 6px;
+  border: 3px solid var(--ink);
   border-radius: 8px;
-  background: rgba(255,255,255,0.88);
-  box-shadow: 7px 7px 0 rgba(0,0,0,0.13);
+  background: rgba(255,255,255,0.68);
+  backdrop-filter: blur(3px);
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.13);
   pointer-events: auto;
+  touch-action: none;
 }
 
 .control-panel.p2 {
-  grid-template-columns: minmax(150px, 250px) minmax(105px, 140px);
+  grid-template-columns: minmax(0, 1fr) 104px;
 }
 
 .control-panel.p2 .dpad {
@@ -697,19 +712,24 @@ button {
 }
 
 .panel-title {
+  display: none;
+}
+
+.keyboard-hint {
   grid-column: 1 / -1;
   margin: 0;
-  font-size: 13px;
+  font-size: 10px;
   line-height: 1;
   font-weight: 900;
   text-transform: uppercase;
+  opacity: 0.82;
 }
 
 .dpad {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3, 34px);
-  gap: 4px;
+  grid-template-rows: repeat(3, 24px);
+  gap: 3px;
 }
 
 .dpad .up { grid-column: 2; }
@@ -727,15 +747,18 @@ button {
 
 .actions {
   display: grid;
-  gap: 6px;
-  max-height: min(305px, 43vh);
-  overflow: auto;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  align-items: start;
+  gap: 5px;
+  max-height: 74px;
+  overflow: visible;
   padding-bottom: 2px;
 }
 
 .utility-drawer,
 .power-drawer {
   display: block;
+  min-width: 0;
 }
 
 .drawer-summary {
@@ -757,12 +780,21 @@ button {
 
 .utility-row,
 .power-row {
-  margin-top: 5px;
+  margin-top: 0;
+}
+
+.power-row {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 1px 3px 4px 1px;
+  scrollbar-width: thin;
 }
 
 .control-button {
-  min-width: 42px;
-  min-height: 34px;
+  position: relative;
+  min-width: 46px;
+  min-height: 30px;
   display: inline-grid;
   grid-template-columns: auto 1fr;
   align-items: center;
@@ -772,7 +804,7 @@ button {
   border-radius: 7px;
   color: var(--ink);
   background: #fff;
-  font-size: 11px;
+  font-size: 9px;
   font-weight: 900;
   line-height: 1;
   text-transform: uppercase;
@@ -797,8 +829,26 @@ button {
 }
 
 .control-button canvas {
-  width: 25px;
-  height: 25px;
+  width: 20px;
+  height: 20px;
+}
+
+.shortcut-badge {
+  position: absolute;
+  top: -7px;
+  right: -6px;
+  min-width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  padding: 0 3px;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  background: #ffd84a;
+  color: var(--ink);
+  font-size: 9px;
+  line-height: 1;
+  font-weight: 900;
 }
 
 .cooldown {
@@ -1010,9 +1060,17 @@ button {
     font-size: 16px;
   }
 
-  .pause-button {
+  .pause-button,
+  .music-button {
     top: 60px;
+  }
+
+  .pause-button {
     right: 6px;
+  }
+
+  .music-button {
+    right: 72px;
   }
 
   .control-dock {
@@ -1034,9 +1092,9 @@ button {
 
   .control-panel {
     grid-template-columns: 78px minmax(0, 1fr);
-    width: min(390px, calc(100vw - 12px));
-    max-width: min(390px, calc(100vw - 12px));
-    max-height: min(178px, 36vh);
+    width: min(520px, calc(100vw - 12px));
+    max-width: min(520px, calc(100vw - 12px));
+    max-height: 118px;
     padding: 4px;
     gap: 4px;
     overflow: visible;
@@ -1050,7 +1108,7 @@ button {
     grid-template-columns: minmax(0, 1fr) 78px;
   }
 
-  .panel-title {
+  .keyboard-hint {
     display: none;
   }
 
@@ -1060,7 +1118,8 @@ button {
   }
 
   .actions {
-    max-height: 168px;
+    grid-template-columns: auto auto minmax(0, 1fr);
+    max-height: 98px;
     overflow: visible;
     gap: 4px;
   }
@@ -1078,17 +1137,18 @@ button {
   }
 
   .power-row {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(54px, 1fr));
+    display: flex;
+    flex-wrap: nowrap;
     gap: 4px;
-    max-height: 84px;
-    overflow: auto;
-    padding-right: 2px;
+    max-height: 74px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 1px 2px 4px;
   }
 
   .utility-row,
   .power-row {
-    margin-top: 4px;
+    margin-top: 0;
   }
 
   .utility-drawer,
@@ -1125,6 +1185,15 @@ button {
   .control-button canvas {
     width: 17px;
     height: 17px;
+  }
+
+  .shortcut-badge {
+    min-width: 15px;
+    height: 15px;
+    top: -6px;
+    right: -5px;
+    border-width: 1px;
+    font-size: 7px;
   }
 
   .drawer-summary {

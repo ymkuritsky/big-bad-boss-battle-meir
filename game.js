@@ -194,6 +194,52 @@
       helperSpeed: 1.75,
       maxDamage: 1,
       hiddenConfusion: 0.1
+    },
+    21: {
+      aiDelayMin: 190,
+      aiDelayRandom: 130,
+      initialPowerDelay: 900,
+      approachDistance: 150,
+      basicChance: 0.82,
+      botSummonChance: 0.74,
+      botAttackChance: 0.8,
+      laserChance: 0.62,
+      flyChance: 0.28,
+      mouthSummonChance: 0.74,
+      mouthBiteChance: 0.82,
+      mouthKickChance: 0.62,
+      powerDelayMin: 900,
+      powerDelayRandom: 520,
+      bossSpeed: 1.32,
+      helperSpeed: 2,
+      maxDamage: 1,
+      hiddenConfusion: 0.08
+    }
+  };
+  const CITY_BOSS_TUNING = {
+    26: BOSS_LEVEL_TUNING[2],
+    27: BOSS_LEVEL_TUNING[3],
+    28: DESERT_BOSS_TUNING[9],
+    29: DESERT_BOSS_TUNING[10],
+    30: {
+      aiDelayMin: 160,
+      aiDelayRandom: 120,
+      initialPowerDelay: 800,
+      approachDistance: 125,
+      basicChance: 0.86,
+      botSummonChance: 0.78,
+      botAttackChance: 0.86,
+      laserChance: 0.68,
+      flyChance: 0.34,
+      mouthSummonChance: 0.78,
+      mouthBiteChance: 0.86,
+      mouthKickChance: 0.68,
+      powerDelayMin: 820,
+      powerDelayRandom: 480,
+      bossSpeed: 1.42,
+      helperSpeed: 2.18,
+      maxDamage: 1,
+      hiddenConfusion: 0.06
     }
   };
 
@@ -602,6 +648,42 @@
   const CHARACTER_ORDER = ["mayor", "tats", "fary", "apple", "yapping", "freddy", "benji", "frost", "ness", "crayon", "hoodie", "phantom"];
   const MENU_ORDER = ["mayor", "tats", "fary", "apple", "yapping", "freddy", "benji", "frost", "ness"];
   const STORY_BOSSES = ["mayor", "yapping"];
+  const CHARACTER_VOICE_CLIPS = {
+    mayor: {
+      default: "assets/voices/mayor-default.mp3",
+      win: "assets/voices/mayor-win.mp3",
+      lose: "assets/voices/mayor-lose.mp3"
+    },
+    kingDock: {
+      default: "assets/voices/king-dock-default.mp3"
+    },
+    spaceRobot: {
+      default: "assets/voices/final-robot-default.mp3"
+    }
+  };
+  const CHARACTER_VOICE_FALLBACKS = {
+    mayor: { pitch: 0.58, rate: 0.86, prefer: /male|daniel|fred|google us english/i },
+    kingDock: { pitch: 0.48, rate: 0.78, prefer: /male|daniel|fred|google us english/i },
+    spaceRobot: { pitch: 0.42, rate: 0.72, prefer: /male|daniel|fred|google us english/i },
+    yapping: { pitch: 1.35, rate: 1.25, prefer: /female|samantha|zira|google us english/i },
+    tats: { pitch: 0.9, rate: 1.05, prefer: /male|daniel|google us english/i },
+    fary: { pitch: 1.15, rate: 1.02, prefer: /female|samantha|zira|google us english/i },
+    apple: { pitch: 1.32, rate: 1.18, prefer: /female|samantha|zira|google us english/i },
+    benji: { pitch: 1.18, rate: 1.12, prefer: /male|google us english/i },
+    freddy: { pitch: 1.04, rate: 1.08, prefer: /male|google us english/i },
+    frost: { pitch: 0.82, rate: 0.95, prefer: /male|daniel|google us english/i },
+    ness: { pitch: 1.12, rate: 1.1, prefer: /female|samantha|zira|google us english/i }
+  };
+  const ACTION_SHORTCUTS = {
+    Walk: "Q",
+    Run: "E",
+    Jump: "Space",
+    Punch: "J",
+    Kick: "K",
+    Duck: "S",
+    Dodge: "L",
+    Hide: "H"
+  };
   const WORLDS = {
     superville: {
       id: "superville",
@@ -642,9 +724,25 @@
       startLevel: 15,
       endLevel: 20,
       unlock: "Beat Water World Levels 11, 12, 13, and 14."
+    },
+    finalShowdownPartTwo: {
+      id: "finalShowdownPartTwo",
+      name: "Underground Showdown Part Two",
+      levels: "Level 21",
+      startLevel: 21,
+      endLevel: 21,
+      unlock: "Win Part 1 of the Last Level."
+    },
+    megaCity: {
+      id: "megaCity",
+      name: "Mega City",
+      levels: "Levels 26-30",
+      startLevel: 26,
+      endLevel: 30,
+      unlock: "Win Underground Showdown Part Two."
     }
   };
-  const WORLD_ORDER = ["superville", "candyland", "abandonedDesert", "waterWorld", "outerSpace"];
+  const WORLD_ORDER = ["superville", "candyland", "abandonedDesert", "waterWorld", "outerSpace", "finalShowdownPartTwo", "megaCity"];
   const WATER_WORLD_POWERS = {
     mayor: { id: "waterBoots", name: "Water Boots", icon: "boots", maxCharges: 3 },
     tats: { id: "tidalPunch", name: "Tidal Punch", icon: "fist", maxCharges: 3 },
@@ -677,6 +775,18 @@
       name: "You Won Part 1 of the Last Level!",
       eyebrow: "Medal Earned",
       description: "You beat Level 20: Final Showdown."
+    },
+    finalShowdownPart2: {
+      id: "finalShowdownPart2",
+      name: "One Part Left And You're Done The Game!",
+      eyebrow: "Medal Earned",
+      description: "You beat Underground Showdown Part Two. One part left and you're done the game."
+    },
+    wholeGameComplete: {
+      id: "wholeGameComplete",
+      name: "You Finished The Whole Game!",
+      eyebrow: "Final Trophy",
+      description: "You beat Level 30 and finished the whole game."
     }
   };
   const SUPERCHARGED_NAMES = {
@@ -719,6 +829,7 @@
     animalChooser: document.getElementById("animalChooser"),
     controlDock: document.getElementById("controlDock"),
     pauseButton: document.getElementById("pauseButton"),
+    musicButton: document.getElementById("musicButton"),
     pauseOverlay: document.getElementById("pauseOverlay"),
     resumeButton: document.getElementById("resumeButton"),
     restartButton: document.getElementById("restartButton"),
@@ -756,7 +867,8 @@
     ctx: null,
     volume: 0,
     musicTimer: null,
-    musicStep: 0
+    musicStep: 0,
+    musicOn: true
   };
 
   function animal(name, feature, flags = {}) {
@@ -786,6 +898,8 @@
       unlockedWorlds: ["superville"],
       unlockedPackages: [],
       unlockedTrophies: [],
+      hiddenStars: {},
+      bossBook: [],
       bossAttempts: { mayor: 0, yapping: 0 },
       mayorWinStreak: 0,
       candylandWinStreak: 0,
@@ -800,11 +914,15 @@
       const unlockedWorlds = normalizeWorlds(Array.isArray(parsed.unlockedWorlds) ? parsed.unlockedWorlds : fallback.unlockedWorlds, unlocked);
       if (unlockedTrophies.includes("kingOfBattle") && !unlockedWorlds.includes("waterWorld")) unlockedWorlds.push("waterWorld");
       if (unlockedTrophies.includes("finalShowdownPart1") && !unlockedWorlds.includes("outerSpace")) unlockedWorlds.push("outerSpace");
+      if (unlockedTrophies.includes("finalShowdownPart1") && !unlockedWorlds.includes("finalShowdownPartTwo")) unlockedWorlds.push("finalShowdownPartTwo");
+      if (unlockedTrophies.includes("finalShowdownPart2") && !unlockedWorlds.includes("megaCity")) unlockedWorlds.push("megaCity");
       return {
         unlocked,
         unlockedWorlds,
         unlockedPackages: normalizePackages(Array.isArray(parsed.unlockedPackages) ? parsed.unlockedPackages : fallback.unlockedPackages),
         unlockedTrophies,
+        hiddenStars: parsed.hiddenStars || fallback.hiddenStars,
+        bossBook: Array.isArray(parsed.bossBook) ? parsed.bossBook : fallback.bossBook,
         bossAttempts: Object.assign(fallback.bossAttempts, parsed.bossAttempts || {}),
         mayorWinStreak: Number.isFinite(Number(parsed.mayorWinStreak)) ? Math.max(0, Number(parsed.mayorWinStreak)) : 0,
         candylandWinStreak: Number.isFinite(Number(parsed.candylandWinStreak)) ? Math.max(0, Number(parsed.candylandWinStreak)) : 0,
@@ -975,11 +1093,13 @@
     const basics = [
       ["Basic buttons", "Every fighter has Kick, Punch, Jump, Run, Walk, Duck, Dodge, and Hide. Hide only works near trees or benches, and it lasts up to 20 seconds."],
       ["Hearts", "Most fighters have 3 pink hearts. Most hits take half a heart. Giant Punch, Laser Ray, Bite, or two robot chainsaws at once take 1 whole heart."],
-      ["Timer and levels", "Each level lasts 2 minutes. If nobody loses all hearts, whoever has more hearts wins the level. Superville has Levels 1, 2, and 3. Candyland has Levels 4, 5, and 6. Abandoned Desert has Levels 7, 8, 9, and 10. Water World has Levels 11, 12, 13, and 14. Outer Space has Levels 15, 16, 17, 18, 19, and 20."],
-      ["Worlds", "Candyland unlocks after you beat Yapping Yonatan through Levels 1, 2, and 3. Abandoned Desert unlocks after you beat Candyland Levels 4, 5, and 6 twice. The Candyland wins do not need to be in a row. Water World unlocks after you beat King Dock in Abandoned Desert. Outer Space unlocks after you beat Water World Levels 11, 12, 13, and 14."],
+      ["Timer and levels", "Each level lasts 2 minutes. If nobody loses all hearts, whoever has more hearts wins the level. Superville has Levels 1, 2, and 3. Candyland has Levels 4, 5, and 6. Abandoned Desert has Levels 7, 8, 9, and 10. Water World has Levels 11, 12, 13, and 14. Outer Space has Levels 15, 16, 17, 18, 19, and 20. Underground Showdown Part Two is Level 21. Mega City has Levels 26, 27, 28, 29, and 30."],
+      ["Worlds", "Candyland unlocks after you beat Yapping Yonatan through Levels 1, 2, and 3. Abandoned Desert unlocks after you beat Candyland Levels 4, 5, and 6 twice. The Candyland wins do not need to be in a row. Water World unlocks after you beat King Dock in Abandoned Desert. Outer Space unlocks after you beat Water World Levels 11, 12, 13, and 14. Underground Showdown Part Two unlocks after you win Part 1 of the Last Level. Mega City unlocks after you win Underground Showdown Part Two."],
       ["King Dock hearts, laser, Rack Creatures, and boxes", "King Dock is very huge, has 10 hearts, and the player starts with 10 hearts in his boss worlds. He can fire one giant hand laser. When you hit King Dock, his heart flies to you and heals you up to your max hearts. Every real hit also makes special prize boxes spread out around him. King Dock can control seven Rack Creatures at a time, but any hit destroys a creature. Sometimes King Dock drops a trap box from above for no reason. Trap boxes say BOOBY TRAP on them. Watch for little traps around trap boxes, like pit cracks and Rack Creatures dropping from above. Jump onto a landed prize box to get rewards like an iron sword, armor, heart, speed boost, or power refill. Beating King Dock earns the King of the Battle crown."],
       ["Water World", "Levels 11-14 take place on water and are meant to be pretty easy, like Levels 1-3. King Dock is the boss again, but he wears a water suit. Benji can use his five shark forms anywhere in Water World. Freddy can still choose fish. Other fighters get a simple water-themed power, like Mr. 67's Ice Feet for walking on water."],
       ["Outer Space", "Levels 15-17 have King Dock in an astronaut suit with MIM the red dragon helping him. Level 18 has two King Docks on Neptune. Level 19 moves to the asteroid field with stronger double King Docks. Level 20 is the Final Showdown against a giant robot with Mischievous Mayor inside. The robot has 50 hearts and a hidden weak spot."],
+      ["Underground Showdown Part Two", "Level 21 happens underground. Underground booby traps appear around the arena, and the boss digs under the ground, pops up near you, and has to be fought underground. The robot still has a hidden weak spot, but this fight is faster and harder."],
+      ["Mega City", "Levels 26-29 happen in a very big city like NYC against Mischievous Mayor. Mayor has 5 hearts and the player has 10 hearts. Level 30 brings back the 50-heart robot with MIM the dragon and a couple rock creatures helping it."],
       ["Supercharged Package", "Beat Mischievous Mayor two times in a row to unlock the Supercharged Package. Once it is unlocked, Candyland fighters get 5 hearts on Levels 4 and 5, then 10 hearts on Level 6. Supercharged names include Cheetah Racer, Mega Mommy, Ultimate Freddy, and Super Dad. Cheetah Racer only has Super Speed and Sharp Claws; Sharp Claws takes half a heart. Super Dad turns green and his fist becomes giant when he punches. Mega Mommy is all pink and gets Mega Grow, which makes her giant for a little while. The villains keep their Level 3 power in every Candyland level."],
       ["Powers", "Most powers can be used 3 times, then they recharge. Some special powers recharge after 1 use. Normal recharge is 30 seconds. Mischievous Mayor recharges in 20 seconds when he is the boss."]
     ];
@@ -1055,8 +1175,10 @@
         worldGrid.append(createWorldCard(id, selectState.world === id, () => {
           if (!isWorldUnlocked(id)) return;
           selectState.world = id;
-          if (id === "waterWorld" || id === "outerSpace") selectState.boss = "kingDock";
-          else if (selectState.boss === "kingDock") selectState.boss = "mayor";
+          if (id === "finalShowdownPartTwo") selectState.boss = "spaceRobot";
+          else if (id === "megaCity") selectState.boss = "mayor";
+          else if (id === "waterWorld" || id === "outerSpace") selectState.boss = "kingDock";
+          else if (selectState.boss === "kingDock" || selectState.boss === "spaceRobot") selectState.boss = "mayor";
           renderSelect();
         }));
       });
@@ -1074,7 +1196,7 @@
     els.bossArea.append(heading);
     const grid = document.createElement("div");
     grid.className = "select-grid";
-    const ids = selectState.mode === "story" ? ((selectState.world === "waterWorld" || selectState.world === "outerSpace") ? ["kingDock"] : STORY_BOSSES) : CHARACTER_ORDER;
+    const ids = selectState.mode === "story" ? (selectState.world === "finalShowdownPartTwo" ? ["spaceRobot"] : selectState.world === "megaCity" ? ["mayor"] : (selectState.world === "waterWorld" || selectState.world === "outerSpace") ? ["kingDock"] : STORY_BOSSES) : CHARACTER_ORDER;
     ids.forEach((id) => {
       const selectedId = selectState.mode === "story" ? selectState.boss : selectState.p2;
       grid.append(createSelectCard(id, selectedId === id, () => {
@@ -1105,6 +1227,10 @@
       message = "Water World is ready: Levels 11-14. King Dock returns in a water suit.";
     } else if (selectState.mode === "story" && selectState.world === "outerSpace") {
       message = "Outer Space is ready: Levels 15-20. King Dock gets an astronaut suit, then the Final Showdown robot appears.";
+    } else if (selectState.mode === "story" && selectState.world === "finalShowdownPartTwo") {
+      message = "Underground Showdown Part Two is ready: Level 21. The boss digs under the ground and booby traps are everywhere.";
+    } else if (selectState.mode === "story" && selectState.world === "megaCity") {
+      message = "Mega City is ready: Levels 26-29 have Mischievous Mayor, then Level 30 brings back the robot with MIM.";
     } else if (selectState.mode === "two") {
       message = "Player 1 can send a link, then start a local battle here.";
     }
@@ -1194,7 +1320,11 @@
 
   function characterSummary(id) {
     const character = CHARACTERS[id];
-    const hearts = selectState.world === "outerSpace"
+    const hearts = selectState.world === "megaCity"
+      ? (id === "mayor" ? "5, then 50 robot" : "10")
+      : selectState.world === "finalShowdownPartTwo"
+      ? (id === "spaceRobot" ? "75" : "25")
+      : selectState.world === "outerSpace"
       ? (id === "kingDock" ? "15-20, then 50 robot" : "15-20")
       : selectState.world === "waterWorld" ? (id === "kingDock" ? KING_DOCK_MAX_HEALTH : "10") : isSuperchargedSelection() ? "5-10" : maxHealthFor(id);
     const superchargedOnlyPowers = isSuperchargedSelection() ? SUPERCHARGED_POWER_SETS[id] : null;
@@ -1249,7 +1379,7 @@
 
   function startBattle() {
     initAudio();
-    const opponentId = selectState.mode === "story" && (selectState.world === "waterWorld" || selectState.world === "outerSpace") ? "kingDock" : selectState.mode === "story" ? selectState.boss : selectState.p2;
+    const opponentId = selectState.mode === "story" && selectState.world === "finalShowdownPartTwo" ? "spaceRobot" : selectState.mode === "story" && selectState.world === "megaCity" ? "mayor" : selectState.mode === "story" && (selectState.world === "waterWorld" || selectState.world === "outerSpace") ? "kingDock" : selectState.mode === "story" ? selectState.boss : selectState.p2;
     const startLevelNumber = selectState.mode === "story" ? WORLDS[selectState.world].startLevel : 1;
     const endLevelNumber = selectState.mode === "story" ? WORLDS[selectState.world].endLevel : 3;
     if (selectState.p1 === opponentId) {
@@ -1307,6 +1437,8 @@
       screenShakeUntil: 0,
       screenShakePower: 0,
       gameOver: false,
+      starsCollected: 0,
+      levelStarKey: "",
       unlocks: []
     };
 
@@ -1328,6 +1460,8 @@
     game.helpers = [];
     game.effects = [];
     game.pickups = [];
+    game.starsCollected = 0;
+    game.levelStarKey = `${game.world}:${level}`;
     game.kingDockBoxCount = 0;
     game.p1 = createFighter(game.p1Id, "p1", false, 270, 470, 1);
     game.p2 = createFighter(levelOpponentId, "p2", game.mode === "story", 1010, 470, -1);
@@ -1365,6 +1499,7 @@
       game.dangerWarningUntil = game.kingDockIntroUntil;
     }
     setupOuterSpaceLevel(level);
+    spawnLevelSurprises(level);
     game.gameOver = false;
     buttonInput.p1 = blankInput();
     buttonInput.p2 = blankInput();
@@ -1372,10 +1507,13 @@
     if (game.p1.id === "yapping") spawnMainMouth(game.p1);
     sayStartLine(game.p1);
     sayStartLine(game.p2);
+    scheduleNpcLine(level);
     renderControls(true);
   }
 
   function storyBossIdForLevel(level) {
+    if (game && game.mode === "story" && game.world === "megaCity") return level >= 30 ? "spaceRobot" : "mayor";
+    if (game && game.mode === "story" && game.world === "finalShowdownPartTwo") return "spaceRobot";
     if (game && game.mode === "story" && game.world === "outerSpace") return level >= 20 ? "spaceRobot" : "kingDock";
     if (game && game.mode === "story" && game.world === "abandonedDesert" && level >= 10) return "kingDock";
     if (game && game.mode === "story" && game.world === "waterWorld" && level >= 11) return "kingDock";
@@ -1383,11 +1521,30 @@
   }
 
   function isKingDockLevel(level) {
-    return game && game.mode === "story" && game.p2 && (game.p2.id === "kingDock" || game.p2.id === "spaceRobot") && (game.world === "abandonedDesert" || game.world === "waterWorld" || game.world === "outerSpace");
+    return game && game.mode === "story" && game.p2 && (game.p2.id === "kingDock" || game.p2.id === "spaceRobot") && (game.world === "abandonedDesert" || game.world === "waterWorld" || game.world === "outerSpace" || game.world === "finalShowdownPartTwo" || game.world === "megaCity");
   }
 
   function setupOuterSpaceLevel(level) {
-    if (!game || game.mode !== "story" || game.world !== "outerSpace") return;
+    if (!game || game.mode !== "story" || (game.world !== "outerSpace" && game.world !== "finalShowdownPartTwo" && game.world !== "megaCity")) return;
+    if (game.world === "finalShowdownPartTwo") {
+      game.p2.robotExposed = false;
+      game.p2.robotWeakSpotFound = false;
+      game.p2.nextUndergroundPopAt = performance.now() + 5200;
+      game.nextUndergroundTrapAt = performance.now() + 2800;
+      spawnUndergroundBoobyTraps(420, 420, performance.now());
+      spawnUndergroundBoobyTraps(900, 520, performance.now() + 500);
+      return;
+    }
+    if (game.world === "megaCity") {
+      if (level >= 30) {
+        game.p2.robotExposed = false;
+        game.p2.robotWeakSpotFound = false;
+        spawnMimDragon(game.p2);
+        spawnSpaceCreature(game.p2, "Rock Creature");
+        spawnSpaceCreature(game.p2, "Rock Creature");
+      }
+      return;
+    }
     if (level >= 15 && level <= 17) {
       spawnMimDragon(game.p2);
       return;
@@ -1406,6 +1563,99 @@
       spawnSpaceKingDock(game.p2, 830, 304, 10);
       spawnSpaceKingDock(game.p2, 1100, 520, 10);
     }
+  }
+
+  function spawnLevelSurprises(level) {
+    if (!game || game.mode !== "story") return;
+    const stars = starPositionsForLevel(level);
+    stars.forEach((spot, index) => {
+      game.pickups.push({
+        kind: "hiddenStar",
+        index,
+        x: spot.x,
+        y: spot.y,
+        z: 0,
+        born: performance.now(),
+        until: Infinity
+      });
+    });
+    const door = secretDoorForLevel(level);
+    game.pickups.push({
+      kind: "secretDoor",
+      x: door.x,
+      y: door.y,
+      z: 0,
+      born: performance.now(),
+      until: Infinity,
+      used: false
+    });
+    const power = worldPowerForLevel(level);
+    game.pickups.push({
+      kind: "worldPower",
+      label: power.label,
+      powerId: power.id,
+      color: power.color,
+      x: power.x,
+      y: power.y,
+      z: 0,
+      born: performance.now(),
+      until: Infinity,
+      used: false
+    });
+  }
+
+  function starPositionsForLevel(level) {
+    const seed = level * 97;
+    return [0, 1, 2].map((index) => ({
+      x: 160 + ((seed + index * 337) % 940),
+      y: 265 + ((seed * 3 + index * 181) % 310)
+    }));
+  }
+
+  function secretDoorForLevel(level) {
+    const world = worldIdForLevel(level);
+    if (world === "superville") return { x: 1110, y: 240 };
+    if (world === "candyland") return { x: 1040, y: 240 };
+    if (world === "abandonedDesert") return { x: 1120, y: 540 };
+    if (world === "waterWorld") return { x: 1040, y: 560 };
+    if (world === "outerSpace") return { x: 170, y: 560 };
+    if (world === "finalShowdownPartTwo") return { x: 1030, y: 560 };
+    if (world === "megaCity") return { x: 1110, y: 505 };
+    return { x: 1100, y: 540 };
+  }
+
+  function worldPowerForLevel(level) {
+    const world = worldIdForLevel(level);
+    if (world === "superville") return { id: "policeSiren", label: "SIREN", color: "#177bd1", x: 388, y: 330 };
+    if (world === "candyland") return { id: "candyBlaster", label: "CANDY", color: "#ff5fa8", x: 420, y: 340 };
+    if (world === "abandonedDesert") return { id: "sandTornado", label: "SAND", color: "#d88b3a", x: 520, y: 330 };
+    if (world === "waterWorld") return { id: "bubbleShield", label: "BUBBLE", color: "#45a6db", x: 490, y: 330 };
+    if (world === "outerSpace") return { id: "starBoost", label: "STAR", color: "#ffd84a", x: 560, y: 335 };
+    if (world === "finalShowdownPartTwo") return { id: "sewerShield", label: "SEWER", color: "#53d44e", x: 520, y: 380 };
+    if (world === "megaCity") return { id: "heroCape", label: "HERO", color: "#d91f2e", x: 500, y: 390 };
+    return { id: "superJump", label: "JUMP", color: "#ffd84a", x: 520, y: 330 };
+  }
+
+  function scheduleNpcLine(level) {
+    const line = npcLineForLevel(level);
+    if (!line) return;
+    setTimeout(() => {
+      if (!game || game.gameOver || game.level !== level) return;
+      showComicText(line, WIDTH / 2, 188, "#171216");
+      playEffect("tap");
+    }, 3800);
+  }
+
+  function npcLineForLevel(level) {
+    const world = worldIdForLevel(level);
+    if (world === "superville") return "The bank alarm is ringing!";
+    if (world === "candyland") return "The candy houses are melting!";
+    if (world === "abandonedDesert") return "Don't trust the cactus!";
+    if (world === "waterWorld") return "Big splash incoming!";
+    if (world === "outerSpace") return level >= 20 ? "Aim for the weak spot!" : "MIM is circling!";
+    if (world === "finalShowdownPartTwo") return "Watch the floor!";
+    if (world === "megaCity") return level >= 30 ? "This is the last level!" : "Traffic is going bananas!";
+    return "";
   }
 
   function createFighter(id, side, isBoss, x, y, facing) {
@@ -1477,7 +1727,9 @@
       aiNext: 0,
       aiPowerNext: 0,
       aiIntent: "",
-      bubble: null
+      bubble: null,
+      vx: 0,
+      vy: 0
     };
   }
 
@@ -1516,6 +1768,8 @@
   }
 
   function fighterMaxHealthForLevel(id, level, isBoss) {
+    if (worldIdForLevel(level) === "megaCity" && !isBoss) return level >= 30 ? 30 : 10;
+    if (worldIdForLevel(level) === "finalShowdownPartTwo" && !isBoss) return 25;
     if (worldIdForLevel(level) === "outerSpace" && !isBoss) return level >= 19 ? 20 : 15;
     if (worldIdForLevel(level) === "waterWorld" && !isBoss) return 10;
     if (worldIdForLevel(level) === "abandonedDesert" && level >= 10 && !isBoss) return 10;
@@ -1525,11 +1779,15 @@
   }
 
   function bossMaxHealthForLevel(level, id) {
+    if (id === "spaceRobot" && worldIdForLevel(level) === "megaCity") return 50;
+    if (id === "spaceRobot" && worldIdForLevel(level) === "finalShowdownPartTwo") return 75;
     if (id === "spaceRobot") return 50;
     if (id === "kingDock" && worldIdForLevel(level) === "outerSpace") {
       if (level >= 20) return 10;
       return level >= 19 ? 20 : 15;
     }
+    if (id === "mayor" && worldIdForLevel(level) === "megaCity") return 5;
+    if (id === "kingDock" && worldIdForLevel(level) === "megaCity") return KING_DOCK_MAX_HEALTH;
     if (id === "kingDock") return KING_DOCK_MAX_HEALTH;
     const world = worldIdForLevel(level);
     const worldBonus = world === "waterWorld" ? 3 : world === "abandonedDesert" ? 2 : world === "candyland" ? 1 : 0;
@@ -1547,6 +1805,14 @@
 
   function levelDifficultyLabel(level) {
     const world = worldIdForLevel(level);
+    if (world === "megaCity") {
+      if (level >= 30) return "The Last Level";
+      if (level === 29) return "Mischievous Mayor Almost Finished";
+      if (level === 28) return "Skyscraper Mayor Battle";
+      if (level === 27) return "Traffic Tower Battle";
+      return "Mega City Begins";
+    }
+    if (world === "finalShowdownPartTwo") return "Underground Showdown Part Two";
     if (world === "outerSpace") {
       if (level >= 20) return "Final Showdown";
       if (level === 19) return "Asteroid Field";
@@ -1580,6 +1846,8 @@
   }
 
   function stageLevelFor(level) {
+    if (level >= 26) return level >= 30 ? 5 : clamp(level - 25, 1, 4);
+    if (level >= 21) return 4;
     if (level >= 15) {
       if (level >= 19) return 3;
       if (level === 18) return 2;
@@ -1595,6 +1863,8 @@
   }
 
   function worldIdForLevel(level) {
+    if (level >= 26) return "megaCity";
+    if (level >= 21) return "finalShowdownPartTwo";
     if (level >= 15) return "outerSpace";
     if (level >= 11) return "waterWorld";
     if (level >= 7) return "abandonedDesert";
@@ -1609,7 +1879,27 @@
     return !!(game && game.mode === "story" && worldIdForLevel(game.level || 1) === "outerSpace");
   }
 
+  function isFinalShowdownPartTwoActive() {
+    return !!(game && game.mode === "story" && worldIdForLevel(game.level || 1) === "finalShowdownPartTwo");
+  }
+
   function makeObstacles(worldId = "superville") {
+    if (worldId === "megaCity") {
+      return [
+        { type: "bench", x: 245, y: 330, w: 150, h: 36 },
+        { type: "bench", x: 860, y: 565, w: 170, h: 38 },
+        { type: "tree", x: 1035, y: 320, r: 36 },
+        { type: "tree", x: 430, y: 560, r: 34 }
+      ];
+    }
+    if (worldId === "finalShowdownPartTwo") {
+      return [
+        { type: "bench", x: 260, y: 342, w: 132, h: 40, space: true },
+        { type: "bench", x: 910, y: 570, w: 150, h: 42, space: true },
+        { type: "tree", x: 1030, y: 330, r: 42, space: true },
+        { type: "tree", x: 430, y: 565, r: 38, space: true }
+      ];
+    }
     if (worldId === "outerSpace") {
       return [
         { type: "bench", x: 260, y: 342, w: 132, h: 40, space: true },
@@ -1648,7 +1938,7 @@
       return;
     }
     if (fighter.id === "spaceRobot") {
-      setBubble(fighter, "Find my weak spot if you can!", true, 7200);
+      setBubble(fighter, game && game.world === "finalShowdownPartTwo" ? "I can pop up anywhere!" : "Find my weak spot if you can!", true, 7200);
       return;
     }
     if (fighter.character.role === "villain") {
@@ -1659,6 +1949,14 @@
   }
 
   function kingDockWarningText(level, opponentId = "kingDock") {
+    if (game && game.world === "megaCity") {
+      if (opponentId === "spaceRobot" || level >= 30) return "Last level! The 50-heart robot is back with MIM and rock creatures!";
+      if (level >= 29) return "Mischievous Mayor is almost done!";
+      return "Mischievous Mayor is attacking the big city!";
+    }
+    if (game && game.world === "finalShowdownPartTwo") {
+      return "Underground booby traps! The boss can pop up anywhere!";
+    }
     if (game && game.world === "outerSpace") {
       if (opponentId === "spaceRobot" || level >= 20) return "The robot is very hard to defeat. It has a hidden weak spot!";
       if (level >= 19) return "Asteroid field! Two King Docks are stronger now!";
@@ -1728,6 +2026,7 @@
     }
 
     maybeShowLevel9Warning(now);
+    updateUndergroundShowdown(now);
     updateFighter(game.p1, dt);
     if (game.mode === "story") updateBossAI(game.p2, game.p1, dt);
     updateFighter(game.p2, dt);
@@ -1749,6 +2048,45 @@
     showComicText("DANGER!", WIDTH / 2, 188, "#d91f2e");
     setBubble(game.p2, "Something huge is coming...", true, 1900);
     playEffect("boom");
+  }
+
+  function updateUndergroundShowdown(now) {
+    if (!isFinalShowdownPartTwoActive() || !game.p2 || game.p2.health <= 0) return;
+    if (!game.nextUndergroundTrapAt || now >= game.nextUndergroundTrapAt) {
+      spawnUndergroundBoobyTraps(
+        clamp(game.p1.x + (Math.random() * 260 - 130), 130, WIDTH - 130),
+        clamp(game.p1.y + (Math.random() * 150 - 75), 250, HEIGHT - 120),
+        now
+      );
+      game.nextUndergroundTrapAt = now + 5200 + Math.random() * 2600;
+    }
+    if (!game.p2.nextUndergroundPopAt || now < game.p2.nextUndergroundPopAt || game.p2.undergroundUntil > now) return;
+    undergroundBossPop(game.p2, game.p1, now);
+    game.p2.nextUndergroundPopAt = now + 6200 + Math.random() * 2600;
+  }
+
+  function undergroundBossPop(boss, target, now) {
+    boss.undergroundUntil = now + 900;
+    boss.action = "burrow";
+    boss.actionUntil = now + 1250;
+    boss.x = clamp(target.x + (Math.random() < 0.5 ? -1 : 1) * (86 + Math.random() * 76), 130, WIDTH - 130);
+    boss.y = clamp(target.y + (Math.random() * 120 - 60), 245, HEIGHT - 100);
+    faceAttackTarget(boss, target, WIDTH);
+    game.effects.push({ kind: "burrow", x: boss.x, y: boss.y, born: now, until: now + 1050 });
+    spawnUndergroundBoobyTraps(boss.x, boss.y, now + 150);
+    setTimeout(() => {
+      if (!game || game.gameOver || boss.health <= 0) return;
+      boss.undergroundUntil = 0;
+      boss.action = "robotStomp";
+      boss.actionUntil = performance.now() + 700;
+      showComicText("POP UP!", boss.x, boss.y - boss.z - 120, boss.character.accent);
+      setBubble(boss, "Underground attack!", true, 1000);
+      if (distancePoint(target.x, target.y, boss.x, boss.y) < 150 && canBeHit(target)) {
+        target.knockdownUntil = Math.max(target.knockdownUntil, performance.now() + 900);
+        applyDamage(target, 0.5, boss, "UNDERGROUND POP!");
+      }
+      playEffect("boom");
+    }, 920);
   }
 
   function updateEffects() {
@@ -1779,6 +2117,9 @@
       if (pickup.until <= now) return false;
       if (pickup.kind === "pitTrap") return updatePitTrap(pickup, now);
       if (pickup.kind === "fallingBatTrap") return updateFallingBatTrap(pickup, now);
+      if (pickup.kind === "hiddenStar") return updateHiddenStar(pickup, now);
+      if (pickup.kind === "secretDoor") return updateSecretDoor(pickup, now);
+      if (pickup.kind === "worldPower") return updateWorldPower(pickup, now);
       if (pickup.kind !== "rewardBox") return true;
       if (game.p1.health <= 0) return true;
       const close = distancePoint(game.p1.x, game.p1.y, pickup.x, pickup.y) < 62;
@@ -1864,12 +2205,14 @@
       fighter.flyingUntil = 0;
       fighter.z = 0;
     }
+    const wasAirborne = fighter.z > 0;
     if (!fighter.treeClimbUntil && (fighter.z > 0 || fighter.vz > 0)) {
       fighter.z += fighter.vz * dt;
       fighter.vz -= 760 * dt;
       if (fighter.z <= 0 && !isFlying(fighter)) {
         fighter.z = 0;
         fighter.vz = 0;
+        if (wasAirborne) addGroundPuff(fighter.x, fighter.y, "land");
       }
       if (isFlying(fighter)) {
         const maxZ = flyingHeightFor(fighter);
@@ -1917,17 +2260,99 @@
     }
     if (now < fighter.dodgeUntil) speed *= 2.2;
     if (fighter.isBoss && game && game.mode === "story") speed *= bossTuning().bossSpeed;
+    if ((dx || dy) && speed > RUN_SPEED * 0.9 && now > (fighter.nextFootDustAt || 0)) {
+      addGroundPuff(fighter.x - fighter.facing * 12, fighter.y + 8, "dust");
+      fighter.nextFootDustAt = now + (fighter.moveMode === "run" ? 170 : 280);
+    }
 
-    fighter.x += dx * speed * dt;
-    fighter.y += dy * speed * dt;
+    const targetVx = dx * speed;
+    const targetVy = dy * speed;
+    const response = dx || dy ? 13 : 9;
+    fighter.vx += (targetVx - (fighter.vx || 0)) * Math.min(1, dt * response);
+    fighter.vy += (targetVy - (fighter.vy || 0)) * Math.min(1, dt * response);
+    if (!dx && Math.abs(fighter.vx) < 4) fighter.vx = 0;
+    if (!dy && Math.abs(fighter.vy) < 4) fighter.vy = 0;
+    fighter.x += fighter.vx * dt;
+    fighter.y += fighter.vy * dt;
     fighter.x = clamp(fighter.x, 95, WIDTH - 95);
     const canSwim = isWaterWorldActive() || (animalForm && animalForm.swim) || !!sharkForm;
     fighter.y = clamp(fighter.y, 210, canSwim ? HEIGHT - 58 : HEIGHT - 124);
   }
 
+  function addGroundPuff(x, y, style = "dust") {
+    if (!game || !game.effects) return;
+    const now = performance.now();
+    game.effects.push({
+      kind: "groundPuff",
+      x,
+      y,
+      style,
+      born: now,
+      until: now + (style === "land" ? 460 : 320)
+    });
+  }
+
+  function updateHiddenStar(pickup) {
+    if (distancePoint(game.p1.x, game.p1.y, pickup.x, pickup.y) > 58) return true;
+    game.starsCollected = Math.min(3, (game.starsCollected || 0) + 1);
+    if (!progress.hiddenStars) progress.hiddenStars = {};
+    const best = Math.max(Number(progress.hiddenStars[game.levelStarKey]) || 0, game.starsCollected);
+    progress.hiddenStars[game.levelStarKey] = best;
+    saveProgress();
+    showComicText(`STAR ${game.starsCollected}/3`, pickup.x, pickup.y - 55, "#ffd84a");
+    if (game.starsCollected >= 3) showComicText("ALL STARS!", WIDTH / 2, 178, "#ffd84a");
+    playEffect("speed");
+    return false;
+  }
+
+  function updateSecretDoor(pickup) {
+    if (pickup.used || distancePoint(game.p1.x, game.p1.y, pickup.x, pickup.y) > 64) return true;
+    pickup.used = true;
+    game.p1.shieldHits = Math.max(game.p1.shieldHits, 1);
+    game.p1.speedBoostUntil = Math.max(game.p1.speedBoostUntil, performance.now() + 9000);
+    showComicText("SECRET ROOM!", pickup.x, pickup.y - 80, "#7d43d6");
+    setBubble(game.p1, "Secret bonus!", false, 1200);
+    playEffect("shield");
+    return false;
+  }
+
+  function updateWorldPower(pickup) {
+    if (pickup.used || distancePoint(game.p1.x, game.p1.y, pickup.x, pickup.y) > 62) return true;
+    pickup.used = true;
+    applyWorldPower(pickup);
+    return false;
+  }
+
+  function applyWorldPower(pickup) {
+    const now = performance.now();
+    const target = game.p2;
+    showComicText(`${pickup.label} POWER!`, pickup.x, pickup.y - 68, pickup.color);
+    if (pickup.powerId === "policeSiren") {
+      target.knockdownUntil = Math.max(target.knockdownUntil, now + 1400);
+      showComicText("SIREN STUN!", target.x, target.y - target.z - 110, pickup.color);
+    } else if (pickup.powerId === "candyBlaster") {
+      applyDamage(target, 1, game.p1, "CANDY BLAST!");
+    } else if (pickup.powerId === "sandTornado") {
+      target.trappedUntil = Math.max(target.trappedUntil, now + 1600);
+      showComicText("SAND SPIN!", target.x, target.y - target.z - 110, pickup.color);
+    } else if (pickup.powerId === "bubbleShield" || pickup.powerId === "sewerShield") {
+      game.p1.shieldHits = Math.max(game.p1.shieldHits, 2);
+    } else if (pickup.powerId === "starBoost" || pickup.powerId === "heroCape") {
+      game.p1.speedBoostUntil = Math.max(game.p1.speedBoostUntil, now + 12000);
+      game.p1.damageBonusUntil = Math.max(game.p1.damageBonusUntil, now + 12000);
+    } else {
+      game.p1.vz = Math.max(game.p1.vz, 650);
+      game.p1.z = Math.max(game.p1.z, 20);
+    }
+    playEffect("speed");
+  }
+
   function bossTuning() {
-    if (game && game.mode === "story" && worldIdForLevel(game.level || 1) === "outerSpace") {
-      return SPACE_BOSS_TUNING[Math.min(20, Math.max(15, game.level || 15))] || SPACE_BOSS_TUNING[15];
+    if (game && game.mode === "story" && worldIdForLevel(game.level || 1) === "megaCity") {
+      return CITY_BOSS_TUNING[Math.min(30, Math.max(26, game.level || 26))] || CITY_BOSS_TUNING[26];
+    }
+    if (game && game.mode === "story" && (worldIdForLevel(game.level || 1) === "outerSpace" || worldIdForLevel(game.level || 1) === "finalShowdownPartTwo")) {
+      return SPACE_BOSS_TUNING[Math.min(21, Math.max(15, game.level || 15))] || SPACE_BOSS_TUNING[15];
     }
     if (game && game.mode === "story" && worldIdForLevel(game.level || 1) === "waterWorld") {
       return WATER_BOSS_TUNING[Math.min(14, Math.max(11, game.level || 11))] || WATER_BOSS_TUNING[11];
@@ -2018,9 +2443,45 @@
   }
 
   function aiUsePower(boss, powerId) {
+    if (boss.isBoss && game && game.mode === "story" && !isHelperPower(powerId)) {
+      const now = performance.now();
+      if (boss.pendingTellUntil && now < boss.pendingTellUntil) return;
+      boss.pendingTellUntil = now + 520;
+      showBossTell(boss, powerId);
+      setTimeout(() => {
+        if (!game || game.gameOver || boss.health <= 0) return;
+        usePower(boss, powerId);
+      }, 520);
+      const tuning = bossTuning();
+      boss.aiPowerNext = now + tuning.powerDelayMin + Math.random() * tuning.powerDelayRandom;
+      return;
+    }
     usePower(boss, powerId);
     const tuning = bossTuning();
     boss.aiPowerNext = performance.now() + tuning.powerDelayMin + Math.random() * tuning.powerDelayRandom;
+  }
+
+  function showBossTell(boss, powerId) {
+    const tell = bossTellForPower(powerId);
+    showComicText(tell.text, boss.x, boss.y - boss.z - 150, tell.color);
+    setBubble(boss, tell.bubble, true, 700);
+    game.effects.push({
+      kind: "bossTell",
+      x: boss.x,
+      y: boss.y - boss.z - 82,
+      color: tell.color,
+      born: performance.now(),
+      until: performance.now() + 520
+    });
+    playEffect("tap");
+  }
+
+  function bossTellForPower(powerId) {
+    if (/laser|Blast/i.test(powerId)) return { text: "EYES FLASH!", bubble: "Laser charging!", color: "#d91f2e" };
+    if (/Slam|Stomp/i.test(powerId)) return { text: "STOMP TELL!", bubble: "Big stomp!", color: "#8a5a3d" };
+    if (/trap|Bats|ghost/i.test(powerId)) return { text: "TRICK TELL!", bubble: "Something sneaky!", color: "#7d43d6" };
+    if (/Roar|mouth/i.test(powerId)) return { text: "ROAR TELL!", bubble: "Loud attack!", color: "#ff5fa8" };
+    return { text: "BOSS TELL!", bubble: "Watch out!", color: "#ffd84a" };
   }
 
   function updateHelpers(dt) {
@@ -2200,7 +2661,8 @@
 
   function updateSpaceCreature(helper, owner, target, dt) {
     const now = performance.now();
-    const speed = game.level >= 19 ? 245 : 185;
+    const rock = helper.name === "Rock Creature";
+    const speed = rock ? 155 : game.level >= 19 ? 245 : 185;
     helper.x += helper.facing * speed * dt;
     helper.y += Math.sin(now / 180 + helper.phase) * 38 * dt;
     helper.z = 34 + Math.sin(now / 130 + helper.phase) * 18;
@@ -2213,7 +2675,7 @@
       showComicText("DODGED", target.x, target.y - target.z - 96, "#111");
       return;
     }
-    applyDamage(target, 0.5, owner, helper.name === "Whack Creature" ? "WHACK!" : "RAT BUMP!");
+    applyDamage(target, rock ? 1 : 0.5, owner, rock ? "ROCK SMASH!" : helper.name === "Whack Creature" ? "WHACK!" : "RAT BUMP!");
   }
 
   function followOwner(helper, owner, dt) {
@@ -3594,7 +4056,7 @@
       index: game.helpers.filter((helper) => helper.kind === "spaceCreature").length,
       x: clamp(owner.x + side * (58 + Math.random() * 70), 90, WIDTH - 90),
       y: clamp(owner.y + (Math.random() * 120 - 60), 230, HEIGHT - 92),
-      z: 42 + Math.random() * 45,
+      z: name === "Rock Creature" ? 18 + Math.random() * 18 : 42 + Math.random() * 45,
       facing: side,
       phase: Math.random() * Math.PI * 2,
       action: "",
@@ -4167,11 +4629,34 @@
       triggerHitFeedback(target, source, actualLost);
       playEffect(actualLost >= 1 ? "bigHit" : "hit");
     }
+    maybeStartBossPhaseTwo(target, oldHealth);
     const hitLine = target.character.role === "villain" ? "Oh, that hurts. How dare you!" : (Math.random() < 0.5 ? "Please don't do that!" : "Stop right there!");
     setBubble(target, hitLine, true, 1300);
     maybeStealKingDockHeart(target, source, actualLost);
     maybeSpawnKingDockBox(target, source, actualLost);
     maybeReduceBossHelpers(target, oldHealth);
+  }
+
+  function maybeStartBossPhaseTwo(target, oldHealth) {
+    if (!target || !target.isBoss || target.phaseTwoStarted) return;
+    if (oldHealth > target.maxHealth / 2 && target.health <= target.maxHealth / 2 && target.health > 0) {
+      target.phaseTwoStarted = true;
+      target.aiNext = Math.max(0, target.aiNext - 600);
+      target.aiPowerNext = Math.max(0, target.aiPowerNext - 900);
+      showComicText("PHASE 2!", target.x, target.y - target.z - 145, "#d91f2e");
+      setBubble(target, funnyPhaseLine(target.id), true, 1600);
+      game.screenShakeUntil = performance.now() + 420;
+      game.screenShakePower = 8;
+      playEffect("boom");
+    }
+  }
+
+  function funnyPhaseLine(id) {
+    if (id === "mayor") return "Now I'm extra mischievous!";
+    if (id === "kingDock") return "King Dock is not done!";
+    if (id === "spaceRobot") return "Robot mode: silly serious!";
+    if (id === "yapping") return "More yapping!";
+    return "I'm powered up!";
   }
 
   function robotWeakSpotHit(target, source) {
@@ -4344,6 +4829,36 @@
     showComicText("TRAPS!", boxX, boxY - 118, "#7d43d6");
   }
 
+  function spawnUndergroundBoobyTraps(x, y, now) {
+    if (!game || !game.pickups) return;
+    const trapX = clamp(x + (Math.random() * 130 - 65), 115, WIDTH - 115);
+    const trapY = clamp(y + (Math.random() * 90 - 45), 245, HEIGHT - 118);
+    const secondX = clamp(x + (Math.random() < 0.5 ? -1 : 1) * (90 + Math.random() * 70), 115, WIDTH - 115);
+    const secondY = clamp(y + (Math.random() * 110 - 55), 245, HEIGHT - 118);
+    game.pickups.push({
+      kind: "pitTrap",
+      x: trapX,
+      y: trapY,
+      z: 0,
+      r: 54,
+      born: now,
+      armedAt: now + 520,
+      until: now + 10500,
+      triggered: false
+    }, {
+      kind: "pitTrap",
+      x: secondX,
+      y: secondY,
+      z: 0,
+      r: 44,
+      born: now,
+      armedAt: now + 900,
+      until: now + 10500,
+      triggered: false
+    });
+    showComicText("UNDERGROUND TRAPS!", x, y - 118, "#ff477e");
+  }
+
   function collectRewardBox(fighter, pickup) {
     const now = performance.now();
     if (pickup.item === "ironSword") {
@@ -4461,7 +4976,7 @@
     game.carry.p1 = game.p1.health;
     maybeUnlockAfterLevel();
     if (game.level >= game.worldEndLevel) {
-      const title = game.world === "abandonedDesert" ? "King of the Battle!" : game.world === "waterWorld" ? "Water World Complete!" : game.world === "outerSpace" ? "Final Showdown Complete!" : "Game Complete";
+      const title = game.world === "abandonedDesert" ? "King of the Battle!" : game.world === "waterWorld" ? "Water World Complete!" : game.world === "outerSpace" ? "Final Showdown Complete!" : game.world === "finalShowdownPartTwo" ? "Part Two Complete!" : game.world === "megaCity" ? "Whole Game Complete!" : "Game Complete";
       finishGame(true, title, worldCompleteText());
       return;
     }
@@ -4489,6 +5004,8 @@
   }
 
   function worldCompleteText() {
+    if (game.world === "megaCity") return "You finished the whole game!";
+    if (game.world === "finalShowdownPartTwo") return "One part left and you're done the game!";
     if (game.world === "outerSpace") return "You won Part 1 of the Last Level!";
     if (game.world === "waterWorld") return "You beat Water World Levels 11, 12, 13, and 14.";
     if (game.world === "abandonedDesert") return "You beat King Dock and became King of the Battle.";
@@ -4525,7 +5042,16 @@
       }
       if (game.world === "outerSpace" && game.level >= 20) {
         if (awardTrophy("finalShowdownPart1")) game.unlocks.push("trophy:finalShowdownPart1");
+        if (unlockWorld("finalShowdownPartTwo")) game.unlocks.push("world:finalShowdownPartTwo");
       }
+      if (game.world === "finalShowdownPartTwo" && game.level >= 21) {
+        if (awardTrophy("finalShowdownPart2")) game.unlocks.push("trophy:finalShowdownPart2");
+        if (unlockWorld("megaCity")) game.unlocks.push("world:megaCity");
+      }
+      if (game.world === "megaCity" && game.level >= 30) {
+        if (awardTrophy("wholeGameComplete")) game.unlocks.push("trophy:wholeGameComplete");
+      }
+      addBossBookEntry(game.p2 && game.p2.id ? game.p2.id : game.bossId, game.level);
     }
 
     setTimeout(() => {
@@ -4575,6 +5101,9 @@
     }
     if (typeof unlockId === "string" && unlockId.startsWith("trophy:")) {
       return createTrophyUnlockItem(unlockId.slice(7));
+    }
+    if (typeof unlockId === "string" && unlockId.startsWith("bossBook:")) {
+      return createBossBookUnlockItem(unlockId.slice(9));
     }
     const id = CHARACTERS[unlockId] ? unlockId : CHARACTER_ORDER.find((key) => CHARACTERS[key].name === unlockId);
     const item = document.createElement("div");
@@ -4704,9 +5233,10 @@
     if (!game) return;
     const remaining = Math.max(0, (game.endsAt - performance.now()) / 1000);
     const supercharged = isSuperchargedLevel(game.level) ? `<br><span class="timer-note">Supercharged</span>` : "";
+    const stars = game.mode === "story" ? `<br><span style="font-size:11px">Stars ${game.starsCollected || 0}/3</span>` : "";
     const hudHtml = `
       ${hudPanel(game.p1)}
-      <div class="timer-chip">${formatClock(remaining)}<br><span style="font-size:12px">Level ${game.level}</span><br><span style="font-size:11px">${levelDifficultyLabel(game.level)}</span>${supercharged}</div>
+      <div class="timer-chip">${formatClock(remaining)}<br><span style="font-size:12px">Level ${game.level}</span><br><span style="font-size:11px">${levelDifficultyLabel(game.level)}</span>${supercharged}${stars}</div>
       ${hudPanel(game.p2)}
     `;
     if (hudHtml !== lastHudHtml) {
@@ -4768,6 +5298,11 @@
     title.textContent = fighter.side === "p1" ? "Player 1" : "Player 2";
     panel.append(title);
 
+    const keyboardHint = document.createElement("div");
+    keyboardHint.className = "keyboard-hint";
+    keyboardHint.textContent = fighter.side === "p1" ? "Move: WASD or Arrows | Powers: 1-9" : "Move: Arrows";
+    panel.append(keyboardHint);
+
     const dpad = document.createElement("div");
     dpad.className = "dpad";
     dpad.append(
@@ -4782,11 +5317,11 @@
     const mainActions = document.createElement("div");
     mainActions.className = "main-actions";
     mainActions.append(
-      tapButton("Walk", "walk", () => { fighter.moveMode = "walk"; renderControls(true); }, fighter.moveMode === "walk"),
-      tapButton("Run", "run", () => { fighter.moveMode = "run"; renderControls(true); }, fighter.moveMode === "run"),
-      tapButton("Jump", "jump", () => performBasic(fighter, "jump")),
-      tapButton("Punch", "punch", () => performBasic(fighter, "punch")),
-      tapButton("Kick", "kick", () => performBasic(fighter, "kick"))
+      tapButton("Walk", "walk", () => { fighter.moveMode = "walk"; renderControls(true); }, fighter.moveMode === "walk", ACTION_SHORTCUTS.Walk),
+      tapButton("Run", "run", () => { fighter.moveMode = "run"; renderControls(true); }, fighter.moveMode === "run", ACTION_SHORTCUTS.Run),
+      tapButton("Jump", "jump", () => performBasic(fighter, "jump"), false, ACTION_SHORTCUTS.Jump),
+      tapButton("Punch", "punch", () => performBasic(fighter, "punch"), false, ACTION_SHORTCUTS.Punch),
+      tapButton("Kick", "kick", () => performBasic(fighter, "kick"), false, ACTION_SHORTCUTS.Kick)
     );
     actions.append(mainActions);
 
@@ -4798,17 +5333,17 @@
     const utilityRow = document.createElement("div");
     utilityRow.className = "utility-row";
     utilityRow.append(
-      tapButton("Duck", "duck", () => performBasic(fighter, "duck")),
-      tapButton("Dodge", "dodge", () => performBasic(fighter, "dodge")),
-      tapButton("Hide", "hide", () => performBasic(fighter, "hide"))
+      tapButton("Duck", "duck", () => performBasic(fighter, "duck"), false, ACTION_SHORTCUTS.Duck),
+      tapButton("Dodge", "dodge", () => performBasic(fighter, "dodge"), false, ACTION_SHORTCUTS.Dodge),
+      tapButton("Hide", "hide", () => performBasic(fighter, "hide"), false, ACTION_SHORTCUTS.Hide)
     );
     utilityDrawer.append(utilityRow);
     actions.append(utilityDrawer);
 
     const powerRow = document.createElement("div");
     powerRow.className = "power-row";
-    fighterPowers(fighter).forEach((power) => {
-      powerRow.append(powerButton(fighter, power));
+    fighterPowers(fighter).forEach((power, index) => {
+      powerRow.append(powerButton(fighter, power, index));
     });
     if (fighter.controllingBots) {
       powerRow.append(
@@ -4911,9 +5446,10 @@
     return button;
   }
 
-  function tapButton(label, icon, handler, active = false) {
+  function tapButton(label, icon, handler, active = false, shortcut = "") {
     const button = baseControlButton(label, icon);
     if (active) button.classList.add("active");
+    if (shortcut) addShortcutBadge(button, shortcut);
     button.addEventListener("click", (event) => {
       event.preventDefault();
       initAudio();
@@ -4922,8 +5458,9 @@
     return button;
   }
 
-  function powerButton(fighter, power) {
+  function powerButton(fighter, power, index = -1) {
     const button = baseControlButton(power.name, power.icon);
+    if (fighter.side === "p1" && index >= 0 && index < 9) addShortcutBadge(button, String(index + 1));
     if (power.noRecharge) {
       const activeCategory = (fighter.id === "freddy" && fighter.animalCategory === power.id.replace("freddy", "").toLowerCase()) ||
         (fighter.id === "benji" && power.id === "benjiSharks" && fighter.sharkChooserOpen);
@@ -5034,6 +5571,16 @@
     ctx.save();
     const level = game ? game.level : 1;
     const world = worldIdForLevel(level);
+    if (world === "megaCity") {
+      drawMegaCityBackground(level);
+      ctx.restore();
+      return;
+    }
+    if (world === "finalShowdownPartTwo") {
+      drawUndergroundShowdownBackground(level);
+      ctx.restore();
+      return;
+    }
     if (world === "outerSpace") {
       drawOuterSpaceBackground(level);
       ctx.restore();
@@ -5074,9 +5621,14 @@
     drawCloud(790, 135, 0.9);
     if (level >= 2) drawCloud(1015, 132, 1.2);
     if (level >= 3) drawStormMarks();
-    drawHouse(120, 172, "#f5d15a", false);
-    drawHouse(280, 170, "#ff9277", false);
-    drawHouse(455, 164, "#6aa5ff", true);
+    if (level === 1) {
+      drawBank(96, 154);
+      drawPoliceCar(380, 202, 1);
+    } else {
+      drawHouse(120, 172, "#f5d15a", false);
+      drawHouse(280, 170, "#ff9277", false);
+      drawHouse(455, 164, "#6aa5ff", true);
+    }
     drawHouse(790, 165, "#ffed9d", false);
     drawMansion(965, 162);
 
@@ -5099,7 +5651,98 @@
     ctx.stroke();
     ctx.fillStyle = levelLook.tint;
     ctx.fillRect(56, 104, WIDTH - 112, HEIGHT - 160);
+    drawStorySetPieceLabel();
     ctx.restore();
+  }
+
+  function createBossBookUnlockItem(entryKey) {
+    const [id, levelPart] = entryKey.split(":");
+    const character = CHARACTERS[id];
+    const level = levelPart ? levelPart.replace("level", "") : "?";
+    const item = document.createElement("div");
+    item.className = "unlock-item trophy-item";
+    const canvas = document.createElement("canvas");
+    canvas.width = 180;
+    canvas.height = 104;
+    const text = document.createElement("div");
+    text.className = "unlock-copy";
+    const eyebrow = document.createElement("span");
+    eyebrow.textContent = "Boss Book Card";
+    const name = document.createElement("strong");
+    name.textContent = character ? character.name : id;
+    const powers = document.createElement("p");
+    powers.textContent = `Level ${level}. Weakness: watch the tell, dodge, then attack. Funniest move: ${bossBookFunnyMove(id)}.`;
+    text.append(eyebrow, name, powers);
+    item.append(canvas, text);
+    requestAnimationFrame(() => {
+      const bctx = canvas.getContext("2d");
+      if (character) drawPortrait(bctx, id, false, false);
+      else {
+        bctx.fillStyle = "#fff0b8";
+        bctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
+      bctx.strokeStyle = "#171216";
+      bctx.lineWidth = 5;
+      bctx.strokeRect(0, 0, canvas.width, canvas.height);
+      bctx.fillStyle = "rgba(255,240,184,0.88)";
+      bctx.fillRect(0, 0, canvas.width, 31);
+      bctx.fillStyle = "#d91f2e";
+      bctx.font = "900 15px Trebuchet MS";
+      bctx.textAlign = "center";
+      bctx.fillText("BOSS BOOK", canvas.width / 2, 22);
+    });
+    return item;
+  }
+
+  function bossBookFunnyMove(id) {
+    if (id === "mayor") return "dramatic bank trouble";
+    if (id === "kingDock") return "giant boss roar";
+    if (id === "spaceRobot") return "robot stomp";
+    if (id === "yapping") return "too much yapping";
+    return "surprise attack";
+  }
+
+  function addBossBookEntry(id, level) {
+    if (!id || !CHARACTERS[id]) return;
+    progress.bossBook = Array.isArray(progress.bossBook) ? progress.bossBook : [];
+    const key = `${id}:level${level}`;
+    if (!progress.bossBook.includes(key)) {
+      progress.bossBook.push(key);
+      saveProgress();
+      game.unlocks.push(`bossBook:${key}`);
+    } else {
+      saveProgress();
+    }
+  }
+
+  function drawStorySetPieceLabel() {
+    if (!game || game.mode !== "story") return;
+    const label = storySetPieceLabel(game.level);
+    if (!label) return;
+    ctx.save();
+    ctx.fillStyle = "rgba(255,254,247,0.9)";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 3;
+    roundRect(ctx, 70, 232, 270, 34, 8);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#171216";
+    ctx.font = "900 15px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText(label, 205, 254);
+    ctx.restore();
+  }
+
+  function storySetPieceLabel(level) {
+    const world = worldIdForLevel(level);
+    if (world === "superville" && level === 1) return "Stop the bank robbery";
+    if (world === "candyland") return "Protect the candy houses";
+    if (world === "abandonedDesert") return "Survive the desert hideout";
+    if (world === "waterWorld") return "Battle across Water World";
+    if (world === "outerSpace") return level >= 20 ? "Final Showdown Part 1" : "Space mission battle";
+    if (world === "finalShowdownPartTwo") return "Underground trap fight";
+    if (world === "megaCity") return level >= 30 ? "Last level in Mega City" : "Save the big city";
+    return "";
   }
 
   function drawOuterSpaceBackground(level) {
@@ -5109,7 +5752,8 @@
       17: { sky: "#161432", ground: "#bfa66f", horizon: "#776a99", planet: "Saturn", planetColor: "#e2c36c", accent: "#8ed8ff" },
       18: { sky: "#071d42", ground: "#2b78b8", horizon: "#123c78", planet: "Neptune", planetColor: "#2f8dff", accent: "#9eeeff" },
       19: { sky: "#070912", ground: "#4b4e5e", horizon: "#272b3a", planet: "Asteroids", planetColor: "#b8b0a4", accent: "#ffd84a" },
-      20: { sky: "#03040c", ground: "#3a303d", horizon: "#1c1a28", planet: "Final Showdown", planetColor: "#d91f2e", accent: "#ffd84a" }
+      20: { sky: "#03040c", ground: "#3a303d", horizon: "#1c1a28", planet: "Final Showdown", planetColor: "#d91f2e", accent: "#ffd84a" },
+      21: { sky: "#06000f", ground: "#23203c", horizon: "#111827", planet: "Part Two", planetColor: "#7d43d6", accent: "#ff477e" }
     }[level] || { sky: "#10152f", ground: "#c7ccd8", horizon: "#8a91a8", planet: "Space", planetColor: "#d9dce8", accent: "#fff6ba" };
 
     ctx.fillStyle = look.sky;
@@ -5127,6 +5771,7 @@
     else if (level >= 19) drawAsteroidBelt(level);
     else drawPlanetSky(945, 166, level === 16 ? 62 : 58, look.planetColor, look.accent);
     if (level === 16) drawMarsFire();
+    drawStorySetPieceLabel();
 
     ctx.fillStyle = look.horizon;
     ctx.fillRect(56, 390, WIDTH - 112, 72);
@@ -5161,6 +5806,180 @@
     ctx.textAlign = "left";
     ctx.fillText(look.planet, 76, 138);
     ctx.strokeText(look.planet, 76, 138);
+  }
+
+  function addShortcutBadge(button, text) {
+    const badge = document.createElement("span");
+    badge.className = "shortcut-badge";
+    badge.textContent = text;
+    button.append(badge);
+  }
+
+  function drawUndergroundShowdownBackground(level) {
+    ctx.fillStyle = "#140d12";
+    ctx.fillRect(0, 0, WIDTH, HEIGHT);
+    roundRect(ctx, 48, 96, WIDTH - 96, HEIGHT - 144, 8);
+    ctx.fillStyle = "#3b241d";
+    ctx.fill();
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 8;
+    ctx.stroke();
+
+    ctx.fillStyle = "#5a3627";
+    ctx.fillRect(56, 104, WIDTH - 112, 126);
+    ctx.fillStyle = "#271918";
+    ctx.fillRect(56, 230, WIDTH - 112, HEIGHT - 278);
+    ctx.fillStyle = "#6f4631";
+    ctx.beginPath();
+    ctx.moveTo(56, 430);
+    for (let x = 56; x <= WIDTH - 56; x += 74) {
+      ctx.quadraticCurveTo(x + 36, 402 + Math.sin((x + level * 55) / 70) * 20, x + 74, 430);
+    }
+    ctx.lineTo(WIDTH - 56, HEIGHT - 48);
+    ctx.lineTo(56, HEIGHT - 48);
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    ctx.stroke();
+
+    ctx.strokeStyle = "rgba(255,216,74,0.34)";
+    ctx.lineWidth = 8;
+    for (let i = 0; i < 5; i += 1) {
+      const x = 110 + i * 235;
+      ctx.beginPath();
+      ctx.moveTo(x, 118);
+      ctx.lineTo(x + 42, 218);
+      ctx.lineTo(x + 12, 340);
+      ctx.stroke();
+    }
+
+    ctx.fillStyle = "#8a5a3d";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 4;
+    for (let i = 0; i < 17; i += 1) {
+      const x = 95 + ((i * 97 + 21) % 1080);
+      const y = 270 + ((i * 53) % 335);
+      ctx.beginPath();
+      ctx.ellipse(x, y, 24 + (i % 3) * 9, 12 + (i % 2) * 5, i * 0.4, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    }
+
+    ctx.fillStyle = "#ff477e";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 4;
+    ctx.font = "900 22px Trebuchet MS";
+    ctx.textAlign = "left";
+    ctx.fillText("Underground Showdown Part Two", 76, 138);
+    ctx.strokeText("Underground Showdown Part Two", 76, 138);
+    drawStorySetPieceLabel();
+  }
+
+  function drawMegaCityBackground(level) {
+    const final = level >= 30;
+    ctx.fillStyle = final ? "#080914" : "#17324f";
+    ctx.fillRect(0, 0, WIDTH, HEIGHT);
+    roundRect(ctx, 48, 96, WIDTH - 96, HEIGHT - 144, 8);
+    ctx.fillStyle = final ? "#151827" : "#67b7e8";
+    ctx.fill();
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 8;
+    ctx.stroke();
+
+    const buildingColors = final ? ["#1c2035", "#26213b", "#30264b"] : ["#4b607a", "#637d99", "#3e536c"];
+    for (let i = 0; i < 13; i += 1) {
+      const w = 72 + (i % 3) * 26;
+      const h = 165 + (i % 5) * 38 + (final ? 52 : 0);
+      const x = 64 + i * 92;
+      const y = 404 - h * 0.35;
+      ctx.fillStyle = buildingColors[i % buildingColors.length];
+      ctx.strokeStyle = "#171216";
+      ctx.lineWidth = 4;
+      ctx.fillRect(x, y, w, h);
+      ctx.strokeRect(x, y, w, h);
+      ctx.fillStyle = final && i % 2 ? "#ff477e" : "#ffd84a";
+      for (let row = 0; row < 4; row += 1) {
+        for (let col = 0; col < 3; col += 1) {
+          if ((row + col + i + level) % 2 === 0) ctx.fillRect(x + 14 + col * 19, y + 18 + row * 28, 10, 14);
+        }
+      }
+    }
+
+    ctx.fillStyle = "#32333a";
+    ctx.fillRect(56, 452, WIDTH - 112, HEIGHT - 500);
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    ctx.strokeRect(56, 452, WIDTH - 112, HEIGHT - 500);
+    ctx.strokeStyle = "#ffd84a";
+    ctx.lineWidth = 7;
+    ctx.setLineDash([34, 28]);
+    ctx.beginPath();
+    ctx.moveTo(76, 560);
+    ctx.lineTo(WIDTH - 76, 560);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    for (let i = 0; i < 5; i += 1) {
+      drawCityTaxi(145 + i * 220, 490 + (i % 2) * 92, i % 2 ? -1 : 1);
+    }
+    if (final) {
+      ctx.fillStyle = "rgba(217,31,46,0.22)";
+      ctx.fillRect(56, 104, WIDTH - 112, HEIGHT - 160);
+      drawLightningBolt(935, 122, 1.2);
+      drawLightningBolt(255, 150, 0.9);
+    }
+
+    ctx.fillStyle = final ? "#ff477e" : "#ffd84a";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 4;
+    ctx.font = "900 22px Trebuchet MS";
+    ctx.textAlign = "left";
+    ctx.fillText(final ? "Mega City: The Last Level" : "Mega City", 76, 138);
+    ctx.strokeText(final ? "Mega City: The Last Level" : "Mega City", 76, 138);
+    drawStorySetPieceLabel();
+  }
+
+  function drawCityTaxi(x, y, facing) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(facing, 1);
+    ctx.fillStyle = "#ffd84a";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 4;
+    roundRect(ctx, -44, -24, 88, 38, 8);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#bcecff";
+    ctx.fillRect(-20, -42, 40, 20);
+    ctx.strokeRect(-20, -42, 40, 20);
+    ctx.fillStyle = "#171216";
+    [-28, 28].forEach((wheelX) => {
+      ctx.beginPath();
+      ctx.arc(wheelX, 18, 10, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    ctx.restore();
+  }
+
+  function drawLightningBolt(x, y, scale) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(scale, scale);
+    ctx.fillStyle = "#ffd84a";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(-26, 76);
+    ctx.lineTo(2, 66);
+    ctx.lineTo(-14, 138);
+    ctx.lineTo(46, 42);
+    ctx.lineTo(14, 54);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
   }
 
   function drawStarField(level) {
@@ -5322,6 +6141,7 @@
       }
       ctx.stroke();
     }
+    drawStorySetPieceLabel();
   }
 
   function drawWaterCoral(x, y, scale, color) {
@@ -5477,6 +6297,7 @@
     if (stage >= 3) drawDustStormMarks();
     ctx.fillStyle = levelLook.tint;
     ctx.fillRect(56, 104, WIDTH - 112, HEIGHT - 160);
+    drawStorySetPieceLabel();
   }
 
   function drawDesertSun(x, y, stage) {
@@ -5801,6 +6622,7 @@
     if (stage >= 3) drawCandyLightning();
     ctx.fillStyle = levelLook.tint;
     ctx.fillRect(56, 104, WIDTH - 112, HEIGHT - 160);
+    drawStorySetPieceLabel();
   }
 
   function drawCandyCloud(x, y, scale) {
@@ -6020,6 +6842,68 @@
     ctx.restore();
   }
 
+  function drawBank(x, y) {
+    ctx.save();
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 4;
+    ctx.fillStyle = "#efe7d1";
+    ctx.fillRect(x, y, 230, 90);
+    ctx.strokeRect(x, y, 230, 90);
+    ctx.fillStyle = "#d9d2c8";
+    ctx.beginPath();
+    ctx.moveTo(x - 12, y);
+    ctx.lineTo(x + 115, y - 48);
+    ctx.lineTo(x + 242, y);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#ffd84a";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 3;
+    roundRect(ctx, x + 56, y - 34, 118, 28, 6);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#171216";
+    ctx.font = "900 18px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText("BANK", x + 115, y - 14);
+    ctx.fillStyle = "#fffef7";
+    for (let i = 0; i < 4; i += 1) {
+      ctx.fillRect(x + 20 + i * 52, y + 20, 28, 42);
+      ctx.strokeRect(x + 20 + i * 52, y + 20, 28, 42);
+    }
+    ctx.fillStyle = "#171216";
+    ctx.fillRect(x + 99, y + 38, 34, 52);
+    ctx.restore();
+  }
+
+  function drawPoliceCar(x, y, facing) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(facing, 1);
+    ctx.fillStyle = "#fffef7";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 4;
+    roundRect(ctx, -48, -26, 96, 42, 8);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#177bd1";
+    ctx.fillRect(-16, -42, 32, 18);
+    ctx.strokeRect(-16, -42, 32, 18);
+    ctx.fillStyle = "#d91f2e";
+    ctx.fillRect(-7, -52, 14, 10);
+    ctx.fillStyle = "#171216";
+    ctx.font = "900 12px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText("POLICE", 0, -2);
+    [-30, 30].forEach((wheelX) => {
+      ctx.beginPath();
+      ctx.arc(wheelX, 19, 10, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    ctx.restore();
+  }
+
   function drawMansion(x, y) {
     ctx.save();
     ctx.strokeStyle = "#171216";
@@ -6212,11 +7096,84 @@
       drawRewardBox(pickup);
       return;
     }
+    if (pickup.kind === "hiddenStar") {
+      drawHiddenStar(pickup);
+      return;
+    }
+    if (pickup.kind === "secretDoor") {
+      drawSecretDoor(pickup);
+      return;
+    }
+    if (pickup.kind === "worldPower") {
+      drawWorldPower(pickup);
+      return;
+    }
     if (pickup.kind === "pitTrap") {
       drawPitTrap(pickup);
       return;
     }
     if (pickup.kind === "fallingBatTrap") drawFallingBatTrap(pickup);
+  }
+
+  function drawHiddenStar(pickup) {
+    const pulse = Math.sin(performance.now() / 180 + pickup.index) * 3;
+    ctx.save();
+    ctx.translate(pickup.x, pickup.y - 28);
+    ctx.rotate(performance.now() / 900 + pickup.index);
+    ctx.fillStyle = "#ffd84a";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    for (let i = 0; i < 10; i += 1) {
+      const r = i % 2 ? 11 + pulse : 24 + pulse;
+      const angle = -Math.PI / 2 + i * Math.PI / 5;
+      const x = Math.cos(angle) * r;
+      const y = Math.sin(angle) * r;
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawSecretDoor(pickup) {
+    ctx.save();
+    ctx.translate(pickup.x, pickup.y);
+    ctx.fillStyle = "#7d43d6";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 4;
+    roundRect(ctx, -28, -70, 56, 78, 8);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#ffd84a";
+    ctx.beginPath();
+    ctx.arc(14, -28, 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "#fffef7";
+    ctx.font = "900 11px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText("SECRET", 0, -80);
+    ctx.restore();
+  }
+
+  function drawWorldPower(pickup) {
+    const pulse = Math.sin(performance.now() / 140) * 4;
+    ctx.save();
+    ctx.translate(pickup.x, pickup.y - 28);
+    ctx.fillStyle = pickup.color;
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.arc(0, 0, 26 + pulse, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#fffef7";
+    ctx.font = "900 10px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText(pickup.label, 0, 4);
+    ctx.restore();
   }
 
   function drawPitTrap(pickup) {
@@ -8813,6 +9770,32 @@
 
   function drawSpaceCreature(helper) {
     ctx.save();
+    if (helper.name === "Rock Creature") {
+      ctx.globalAlpha = 0.95;
+      ctx.fillStyle = "#7f746b";
+      ctx.strokeStyle = "#171216";
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(-34, -24);
+      ctx.lineTo(-14, -52);
+      ctx.lineTo(24, -48);
+      ctx.lineTo(46, -18);
+      ctx.lineTo(32, 16);
+      ctx.lineTo(-18, 20);
+      ctx.lineTo(-48, -2);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "#d9d2c8";
+      ctx.beginPath();
+      ctx.arc(-12, -18, 5, 0, Math.PI * 2);
+      ctx.arc(18, -20, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#171216";
+      ctx.fillRect(-20, 2, 38, 6);
+      ctx.restore();
+      return;
+    }
     const now = performance.now();
     const flap = Math.sin(now / 110 + helper.phase) * 8;
     ctx.globalAlpha = 0.82;
@@ -8911,6 +9894,30 @@
         ctx.lineWidth = 8;
         ctx.beginPath();
         ctx.arc(effect.x, effect.y, effect.r * progress, 0, Math.PI * 2);
+        ctx.stroke();
+      } else if (effect.kind === "groundPuff") {
+        ctx.fillStyle = effect.style === "land" ? "rgba(255,255,255,0.42)" : "rgba(90,65,42,0.32)";
+        ctx.strokeStyle = "rgba(23,18,22,0.18)";
+        ctx.lineWidth = 2;
+        const count = effect.style === "land" ? 7 : 4;
+        for (let i = 0; i < count; i += 1) {
+          const angle = (Math.PI * 2 * i) / count;
+          const r = 8 + progress * (effect.style === "land" ? 42 : 24);
+          ctx.beginPath();
+          ctx.ellipse(effect.x + Math.cos(angle) * r, effect.y + Math.sin(angle) * r * 0.35, 8 + progress * 10, 4 + progress * 5, angle * 0.3, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+        }
+      } else if (effect.kind === "bossTell") {
+        ctx.strokeStyle = effect.color;
+        ctx.lineWidth = 7;
+        ctx.beginPath();
+        ctx.arc(effect.x, effect.y, 34 + progress * 42, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.strokeStyle = "#fffef7";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(effect.x, effect.y, 16 + progress * 25, 0, Math.PI * 2);
         ctx.stroke();
       } else if (effect.kind === "waterBurst") {
         ctx.strokeStyle = effect.color;
@@ -9374,27 +10381,85 @@
     const h = pctx.canvas.height;
     pctx.clearRect(0, 0, w, h);
     pctx.save();
-    pctx.fillStyle = locked ? "#d7d2cb" : id === "outerSpace" ? "#10152f" : id === "waterWorld" ? "#bcecff" : id === "abandonedDesert" ? "#f2cf86" : id === "candyland" ? "#ffe1f1" : "#d9f4ff";
+    pctx.fillStyle = locked ? "#d7d2cb" : id === "megaCity" ? "#17324f" : id === "finalShowdownPartTwo" ? "#12001f" : id === "outerSpace" ? "#10152f" : id === "waterWorld" ? "#bcecff" : id === "abandonedDesert" ? "#f2cf86" : id === "candyland" ? "#ffe1f1" : "#d9f4ff";
     pctx.fillRect(0, 0, w, h);
     pctx.strokeStyle = "#171216";
     pctx.lineWidth = 4;
-    if (id === "outerSpace") {
-      pctx.fillStyle = "#10152f";
+    if (id === "megaCity") {
+      pctx.fillStyle = "#67b7e8";
       pctx.fillRect(0, 0, w, h);
-      pctx.fillStyle = "#fffef7";
+      const colors = ["#4b607a", "#637d99", "#3e536c"];
+      for (let i = 0; i < 6; i += 1) {
+        const bx = 10 + i * 43;
+        const bh = 66 + (i % 3) * 18;
+        pctx.fillStyle = colors[i % colors.length];
+        pctx.fillRect(bx, 42 - (i % 2) * 12, 34, bh);
+        pctx.strokeRect(bx, 42 - (i % 2) * 12, 34, bh);
+        pctx.fillStyle = "#ffd84a";
+        pctx.fillRect(bx + 8, 56, 7, 10);
+        pctx.fillRect(bx + 21, 78, 7, 10);
+      }
+      pctx.fillStyle = "#32333a";
+      pctx.fillRect(0, 104, w, h - 104);
+      pctx.strokeStyle = "#ffd84a";
+      pctx.lineWidth = 4;
+      pctx.setLineDash([14, 10]);
+      pctx.beginPath();
+      pctx.moveTo(0, 126);
+      pctx.lineTo(w, 126);
+      pctx.stroke();
+      pctx.setLineDash([]);
+      pctx.fillStyle = "#ff477e";
+      pctx.font = "900 19px Trebuchet MS";
+      pctx.textAlign = "center";
+      pctx.fillText("LEVELS 26-30", w / 2, 31);
+    } else if (id === "finalShowdownPartTwo") {
+      pctx.fillStyle = "#2a1714";
+      pctx.fillRect(0, 0, w, h);
+      pctx.fillStyle = "#5a3627";
+      pctx.fillRect(0, 84, w, h - 84);
+      pctx.strokeStyle = "#171216";
+      pctx.lineWidth = 3;
+      for (let i = 0; i < 8; i += 1) {
+        const x = 20 + i * 34;
+        pctx.beginPath();
+        pctx.ellipse(x, 106 + (i % 3) * 14, 18, 8, i * 0.5, 0, Math.PI * 2);
+        pctx.fillStyle = i % 2 ? "#8a5a3d" : "#6f4631";
+        pctx.fill();
+        pctx.stroke();
+      }
+      pctx.strokeStyle = "#ffd84a";
+      pctx.lineWidth = 5;
+      for (let i = 0; i < 4; i += 1) {
+        const x = 32 + i * 62;
+        pctx.beginPath();
+        pctx.moveTo(x, 0);
+        pctx.lineTo(x + 16, 46);
+        pctx.lineTo(x + 2, 82);
+        pctx.stroke();
+      }
+      pctx.fillStyle = "#ff477e";
+      pctx.font = "900 17px Trebuchet MS";
+      pctx.textAlign = "center";
+      pctx.fillText("UNDERGROUND", w / 2, 42);
+      pctx.fillText("PART 2", w / 2, 64);
+    } else if (id === "outerSpace") {
+      pctx.fillStyle = id === "finalShowdownPartTwo" ? "#12001f" : "#10152f";
+      pctx.fillRect(0, 0, w, h);
+      pctx.fillStyle = id === "finalShowdownPartTwo" ? "#ff9df2" : "#fffef7";
       for (let i = 0; i < 28; i += 1) {
         pctx.beginPath();
         pctx.arc((i * 43 + 17) % w, 14 + (i * 31) % 82, i % 5 === 0 ? 2.5 : 1.4, 0, Math.PI * 2);
         pctx.fill();
       }
-      pctx.fillStyle = "#d9dce8";
+      pctx.fillStyle = id === "finalShowdownPartTwo" ? "#7d43d6" : "#d9dce8";
       pctx.strokeStyle = "#171216";
       pctx.lineWidth = 3;
       pctx.beginPath();
       pctx.arc(58, 43, 27, 0, Math.PI * 2);
       pctx.fill();
       pctx.stroke();
-      pctx.strokeStyle = "#ffd84a";
+      pctx.strokeStyle = id === "finalShowdownPartTwo" ? "#ff477e" : "#ffd84a";
       pctx.lineWidth = 4;
       pctx.beginPath();
       pctx.ellipse(165, 50, 48, 13, -0.18, 0, Math.PI * 2);
@@ -9413,10 +10478,10 @@
         pctx.fill();
         pctx.stroke();
       }
-      pctx.fillStyle = "#d91f2e";
+      pctx.fillStyle = id === "finalShowdownPartTwo" ? "#ff477e" : "#d91f2e";
       pctx.font = "900 18px Trebuchet MS";
       pctx.textAlign = "center";
-      pctx.fillText("FINAL", 218, 40);
+      pctx.fillText(id === "finalShowdownPartTwo" ? "PART 2" : "FINAL", 218, 40);
     } else if (id === "waterWorld") {
       pctx.fillStyle = "#44bdea";
       pctx.fillRect(0, 0, w, h);
@@ -9602,12 +10667,14 @@
   function drawTrophyCard(pctx, id) {
     const w = pctx.canvas.width;
     const h = pctx.canvas.height;
-    const finalMedal = id === "finalShowdownPart1";
+    const finalMedal = id === "finalShowdownPart1" || id === "finalShowdownPart2" || id === "wholeGameComplete";
+    const partTwoMedal = id === "finalShowdownPart2";
+    const wholeGameMedal = id === "wholeGameComplete";
     pctx.clearRect(0, 0, w, h);
     pctx.save();
-    pctx.fillStyle = finalMedal ? "#10152f" : "#171216";
+    pctx.fillStyle = wholeGameMedal ? "#17324f" : partTwoMedal ? "#12001f" : finalMedal ? "#10152f" : "#171216";
     pctx.fillRect(0, 0, w, h);
-    pctx.fillStyle = finalMedal ? "#d91f2e" : "#7d43d6";
+    pctx.fillStyle = wholeGameMedal ? "#ffd84a" : partTwoMedal ? "#7d43d6" : finalMedal ? "#d91f2e" : "#7d43d6";
     pctx.fillRect(0, 0, w, 36);
     pctx.strokeStyle = "#171216";
     pctx.lineWidth = 4;
@@ -9621,7 +10688,7 @@
       pctx.arc(0, 0, 46, 0, Math.PI * 2);
       pctx.fill();
       pctx.stroke();
-      pctx.fillStyle = "#d91f2e";
+      pctx.fillStyle = wholeGameMedal ? "#49d275" : partTwoMedal ? "#7d43d6" : "#d91f2e";
       pctx.beginPath();
       pctx.moveTo(-18, 38);
       pctx.lineTo(-38, 75);
@@ -9660,7 +10727,8 @@
     pctx.fillStyle = "#171216";
     pctx.font = "900 13px Trebuchet MS";
     pctx.textAlign = "center";
-    pctx.fillText(id === "kingOfBattle" ? "KING OF THE BATTLE" : finalMedal ? "PART 1 WON" : "BATTLE CROWN", 0, 45);
+    pctx.font = partTwoMedal || wholeGameMedal ? "900 10px Trebuchet MS" : "900 13px Trebuchet MS";
+    pctx.fillText(id === "kingOfBattle" ? "KING OF THE BATTLE" : wholeGameMedal ? "WHOLE GAME DONE" : partTwoMedal ? "ONE PART LEFT" : finalMedal ? "PART 1 WON" : "BATTLE CROWN", 0, 45);
     pctx.restore();
   }
 
@@ -10219,14 +11287,16 @@
 
   function startBattleMusic() {
     stopBattleMusic();
-    if (!audio.ctx || audio.volume <= 0) return;
-    const pattern = [92, 92, 92, 116, 116, 116, 92, 92, 92, 92, 70, 70, 78, 78];
+    updateMusicButton();
+    if (!audio.ctx || audio.volume <= 0 || !audio.musicOn) return;
+    const pattern = [330, 247, 262, 294, 262, 247, 220, 220, 262, 330, 294, 262, 247, 262, 294, 330];
     audio.musicTimer = setInterval(() => {
-      if (!game || game.paused || game.gameOver || audio.volume <= 0) return;
+      if (!game || game.paused || game.gameOver || audio.volume <= 0 || !audio.musicOn) return;
       const freq = pattern[audio.musicStep % pattern.length];
-      playTone(freq, 0.12, "sawtooth", 0.035);
+      playTone(freq, 0.1, "square", 0.026);
+      if (audio.musicStep % 4 === 0) playTone(freq / 2, 0.08, "triangle", 0.018);
       audio.musicStep += 1;
-    }, 170);
+    }, 132);
   }
 
   function stopBattleMusic() {
@@ -10234,10 +11304,23 @@
     audio.musicTimer = null;
   }
 
+  function toggleMusic() {
+    audio.musicOn = !audio.musicOn;
+    updateMusicButton();
+    if (audio.musicOn && game && !game.paused && !game.gameOver) startBattleMusic();
+    else stopBattleMusic();
+  }
+
+  function updateMusicButton() {
+    if (!els.musicButton) return;
+    els.musicButton.textContent = audio.musicOn ? "Music On" : "Music Off";
+    els.musicButton.setAttribute("aria-pressed", audio.musicOn ? "true" : "false");
+  }
+
   function playWinSound() {
     if (!audio.ctx || audio.volume <= 0) return;
     [330, 392, 523, 659].forEach((freq, i) => setTimeout(() => playTone(freq, 0.18, "square", 0.08), i * 130));
-    speakText("Hooray! Hooray!", 1.25, 1.4);
+    speakCharacterLine(game && game.p1 ? game.p1.id : "apple", "Hooray! Hooray!", "win");
   }
 
   function playLoseSound() {
@@ -10246,16 +11329,34 @@
   }
 
   function speakMayor(text) {
-    if (!("speechSynthesis" in window) || audio.volume <= 0) return;
+    if (audio.volume <= 0) return;
     if (!/ha ha|beat|take|scared|bank|bots|flying|laser|how dare/i.test(text)) return;
-    speakText(text, 0.58, 0.86);
+    speakCharacterLine("mayor", text);
   }
 
-  function speakText(text, pitch, rate) {
+  function speakCharacterLine(characterId, text, mood = "default") {
+    if (audio.volume <= 0) return;
+    const clips = CHARACTER_VOICE_CLIPS[characterId];
+    const clip = clips && (clips[mood] || clips.default);
+    if (clip) {
+      const voice = new Audio(clip);
+      voice.volume = clamp(audio.volume, 0, 1);
+      voice.play().catch(() => speakText(text, characterId));
+      return;
+    }
+    speakText(text, characterId);
+  }
+
+  function speakText(text, characterIdOrPitch, rateOverride) {
     if (!("speechSynthesis" in window) || audio.volume <= 0) return;
+    const voiceConfig = typeof characterIdOrPitch === "string"
+      ? CHARACTER_VOICE_FALLBACKS[characterIdOrPitch] || { pitch: 1, rate: 1 }
+      : { pitch: characterIdOrPitch, rate: rateOverride };
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.pitch = pitch;
-    utterance.rate = rate;
+    const voices = speechSynthesis.getVoices ? speechSynthesis.getVoices() : [];
+    if (voiceConfig.prefer) utterance.voice = voices.find((voice) => voiceConfig.prefer.test(`${voice.name} ${voice.lang}`)) || null;
+    utterance.pitch = voiceConfig.pitch;
+    utterance.rate = voiceConfig.rate;
     utterance.volume = clamp(audio.volume, 0, 1);
     speechSynthesis.cancel();
     speechSynthesis.speak(utterance);
@@ -10269,6 +11370,7 @@
     els.startBattleButton.addEventListener("click", startBattle);
     els.sendLinkButton.addEventListener("click", sendLink);
     els.pauseButton.addEventListener("click", pauseGame);
+    els.musicButton.addEventListener("click", toggleMusic);
     els.resumeButton.addEventListener("click", resumeGame);
     els.restartButton.addEventListener("click", restartCurrentLevel);
     els.playAgainButton.addEventListener("click", () => openSelect(selectState.mode));
@@ -10276,7 +11378,7 @@
     els.volumeSlider.addEventListener("input", () => {
       initAudio();
       audio.volume = Number(els.volumeSlider.value);
-      if (audio.volume > 0 && game && !audio.musicTimer) startBattleMusic();
+      if (audio.volume > 0 && game && !audio.musicTimer && audio.musicOn) startBattleMusic();
       if (audio.volume <= 0) stopBattleMusic();
     });
     window.addEventListener("keydown", (event) => {
@@ -10286,10 +11388,21 @@
         event.preventDefault();
         performBasic(game.p1, "jump");
       }
+      if (event.code === "KeyQ") { game.p1.moveMode = "walk"; renderControls(true); }
+      if (event.code === "KeyE") { game.p1.moveMode = "run"; renderControls(true); }
       if (event.code === "KeyJ") performBasic(game.p1, "punch");
       if (event.code === "KeyK") performBasic(game.p1, "kick");
       if (event.code === "KeyL") performBasic(game.p1, "dodge");
       if (event.code === "KeyH") performBasic(game.p1, "hide");
+      if (event.code === "KeyS" && !keys.KeyW && !keys.ArrowUp && !keys.ArrowDown) performBasic(game.p1, "duck");
+      if (/^Digit[1-9]$/.test(event.code) || /^Numpad[1-9]$/.test(event.code)) {
+        const index = Number(event.code.replace("Digit", "").replace("Numpad", "")) - 1;
+        const power = fighterPowers(game.p1)[index];
+        if (power) {
+          event.preventDefault();
+          usePower(game.p1, power.id);
+        }
+      }
       if (event.code === "Slash" && game.mode === "two") performBasic(game.p2, "punch");
       if (event.code === "Period" && game.mode === "two") performBasic(game.p2, "kick");
       if (event.code === "Enter" && game.mode === "two") performBasic(game.p2, "jump");
@@ -10302,6 +11415,14 @@
     window.addEventListener("pointercancel", clearHoldInputs);
     window.addEventListener("blur", clearHoldInputs);
     window.addEventListener("pointerdown", initAudio, { once: true });
+    els.views.battle.addEventListener("touchstart", preventBattleGesture, { passive: false });
+    els.views.battle.addEventListener("touchmove", preventBattleGesture, { passive: false });
+  }
+
+  function preventBattleGesture(event) {
+    if (!els.views.battle.classList.contains("active")) return;
+    if (event.target.closest("button, details, summary, input")) return;
+    event.preventDefault();
   }
 
   function clearHoldInputs() {
