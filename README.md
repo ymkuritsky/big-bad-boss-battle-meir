@@ -182,16 +182,9 @@ iPhone and iPad:
 
 ## Better Voices
 
-The game gives every main character a different browser voice style during short dialogue. For even better voices, recorded/generated voice clips can be added under `assets/voices/`.
+The game includes generated voice clips under `assets/voices/` for the most common character lines, including the Mayor, King Dock, the Final Showdown Robot, and each hero's starting line. The game uses those clips first, then falls back to built-in character voice styles when a line does not have a matching audio file.
 
-Current expected optional files:
-- `assets/voices/mayor-default.mp3`
-- `assets/voices/mayor-win.mp3`
-- `assets/voices/mayor-lose.mp3`
-- `assets/voices/king-dock-default.mp3`
-- `assets/voices/final-robot-default.mp3`
-
-If those files are missing, the game falls back to the built-in character voice styles.
+More generated or recorded `.wav` files can be added later using the same character-and-line naming pattern.
 
 If the check says nothing, that means the game script is okay.
 

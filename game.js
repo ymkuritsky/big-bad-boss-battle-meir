@@ -650,16 +650,78 @@
   const STORY_BOSSES = ["mayor", "yapping"];
   const CHARACTER_VOICE_CLIPS = {
     mayor: {
-      default: "assets/voices/mayor-default.mp3",
-      win: "assets/voices/mayor-win.mp3",
-      lose: "assets/voices/mayor-lose.mp3"
+      default: "assets/voices/mayor-default.wav",
+      win: "assets/voices/mayor-win.wav",
+      lose: "assets/voices/mayor-lose.wav",
+      "i-want-to-rob-this-bank": "assets/voices/mayor-i-want-to-rob-this-bank.wav",
+      "oh-that-hurts": "assets/voices/mayor-oh-that-hurts.wav",
+      "now-i-m-extra-mischievous": "assets/voices/mayor-now-i-m-extra-mischievous.wav"
     },
     kingDock: {
-      default: "assets/voices/king-dock-default.mp3"
+      default: "assets/voices/king-dock-who-is-responsible.wav",
+      "who-is-responsible": "assets/voices/king-dock-who-is-responsible.wav",
+      "my-astronaut-suit-is-ready": "assets/voices/king-dock-my-astronaut-suit-is-ready.wav",
+      "my-water-suit-is-ready": "assets/voices/king-dock-my-water-suit-is-ready.wav",
+      "king-dock-is-not-done": "assets/voices/king-dock-king-dock-is-not-done.wav"
     },
     spaceRobot: {
-      default: "assets/voices/final-robot-default.mp3"
+      default: "assets/voices/final-robot-find-my-weak-spot-if-you-can.wav",
+      "find-my-weak-spot-if-you-can": "assets/voices/final-robot-find-my-weak-spot-if-you-can.wav",
+      "i-can-pop-up-anywhere": "assets/voices/final-robot-i-can-pop-up-anywhere.wav",
+      "robot-mode-silly-serious": "assets/voices/final-robot-robot-mode-silly-serious.wav",
+      "robot-blast": "assets/voices/final-robot-robot-blast.wav",
+      "robot-stomp": "assets/voices/final-robot-robot-stomp.wav"
+    },
+    yapping: {
+      "i-need-to-stop-you": "assets/voices/yapping-i-need-to-stop-you.wav"
+    },
+    tats: {
+      "i-need-to-stop-you": "assets/voices/tats-i-need-to-stop-you.wav",
+      win: "assets/voices/tats-hooray-hooray.wav"
+    },
+    fary: {
+      "i-need-to-stop-you": "assets/voices/fary-i-need-to-stop-you.wav",
+      win: "assets/voices/fary-hooray-hooray.wav"
+    },
+    apple: {
+      "i-need-to-stop-you": "assets/voices/apple-i-need-to-stop-you.wav",
+      win: "assets/voices/apple-hooray-hooray.wav"
+    },
+    benji: {
+      "i-need-to-stop-you": "assets/voices/benji-i-need-to-stop-you.wav",
+      win: "assets/voices/benji-hooray-hooray.wav"
+    },
+    freddy: {
+      "i-need-to-stop-you": "assets/voices/freddy-i-need-to-stop-you.wav",
+      win: "assets/voices/freddy-hooray-hooray.wav"
+    },
+    frost: {
+      "i-need-to-stop-you": "assets/voices/frost-i-need-to-stop-you.wav",
+      win: "assets/voices/frost-hooray-hooray.wav"
+    },
+    ness: {
+      "i-need-to-stop-you": "assets/voices/ness-i-need-to-stop-you.wav",
+      win: "assets/voices/ness-hooray-hooray.wav"
+    },
+    crayon: {
+      "i-need-to-stop-you": "assets/voices/crayon-i-need-to-stop-you.wav"
+    },
+    hoodie: {
+      "i-need-to-stop-you": "assets/voices/hoodie-i-need-to-stop-you.wav"
+    },
+    phantom: {
+      "i-need-to-stop-you": "assets/voices/phantom-i-need-to-stop-you.wav"
     }
+  };
+  const CHARACTER_CLIP_PROFILES = {
+    mayor: { rate: 0.94 },
+    kingDock: { rate: 0.86 },
+    spaceRobot: { rate: 0.72 },
+    yapping: { rate: 1.18 },
+    apple: { rate: 1.12 },
+    benji: { rate: 1.08 },
+    frost: { rate: 0.92 },
+    phantom: { rate: 0.84 }
   };
   const CHARACTER_VOICE_FALLBACKS = {
     mayor: { pitch: 0.58, rate: 0.86, prefer: /male|daniel|fred|google us english/i },
@@ -11480,12 +11542,22 @@
     speakCharacterLine("mayor", text, "line");
   }
 
+  function voiceClipKeyForText(text) {
+    return String(text)
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+  }
+
   function speakCharacterLine(characterId, text, mood = "default") {
     if (audio.volume <= 0) return;
     const clips = CHARACTER_VOICE_CLIPS[characterId];
-    const clip = clips && (clips[mood] || (mood === "default" ? clips.default : ""));
+    const textKey = voiceClipKeyForText(text);
+    const clip = clips && (clips[mood] || clips[textKey] || (mood === "default" ? clips.default : ""));
     if (clip) {
       const voice = new Audio(clip);
+      const clipProfile = CHARACTER_CLIP_PROFILES[characterId] || {};
+      voice.playbackRate = clipProfile.rate || 1;
       voice.volume = clamp(audio.volume, 0, 1);
       voice.play().catch(() => speakText(text, characterId));
       return;
