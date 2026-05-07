@@ -24,6 +24,10 @@
     { id: "heart", label: "HEART +1!", bubble: "Heart prize!", color: "#ff5fa8" },
     { id: "speed", label: "SPEED!", bubble: "Speed prize!", color: "#70f0ff" }
   ];
+  const LATE_ROBOT_PRIZES = [
+    { id: "weakSpotHint", label: "WEAK SPOT!", bubble: "Weak spot: left ribs!", color: "#ffd84a" },
+    ...ROBOT_PRIZES
+  ];
 
   const BOSS_LEVEL_TUNING = {
     1: {
@@ -1172,7 +1176,7 @@
       ["Water World", "Levels 11-14 take place on water and are meant to be pretty easy, like Levels 1-3. King Dock is the boss again, but he wears a water suit. Benji can use his five shark forms anywhere in Water World. Freddy can still choose fish. Other fighters get a simple water-themed power, like Mr. 67's Ice Feet for walking on water."],
       ["Outer Space", "Levels 15-17 have King Dock in an astronaut suit with MIM the red dragon helping him. Level 18 has two King Docks on Neptune. Level 19 moves to the asteroid field with stronger double King Docks. Level 20 is the Final Showdown against a giant robot with Mischievous Mayor inside. The robot has 50 hearts and a hidden weak spot. Each hit on the robot drops a good prize box; jump on it after it lands to get a donut boost, power refill, iron sword, armor, heart, or speed."],
       ["Underground Showdown Part Two", "Level 21 happens underground. Underground booby traps appear around the arena, and the boss digs under the ground, pops up near you, and has to be fought underground. The robot still has a hidden weak spot, but this fight is faster and harder. Robot prize boxes are always good and can help you survive."],
-      ["Mega City", "Levels 26-29 happen in a very big city like NYC against Mischievous Mayor. Mayor has 5 hearts and the player has 10 hearts. Level 30 brings back the 50-heart robot with MIM the dragon and a couple rock creatures helping it. Hitting the robot makes good prize boxes fall out."],
+      ["Mega City", "Levels 26-29 happen in a very big city like NYC against Mischievous Mayor. Mayor has 5 hearts and the player has 10 hearts. Level 30 brings back the 50-heart robot with MIM the dragon and a couple rock creatures helping it. Hitting the robot makes good prize boxes fall out, and one late-game box can reveal where the robot's weak spot is."],
       ["Supercharged Package", "Beat Mischievous Mayor two times in a row to unlock the Supercharged Package. Once it is unlocked, Candyland fighters get 5 hearts on Levels 4 and 5, then 10 hearts on Level 6. Supercharged names include Cheetah Racer, Mega Mommy, Ultimate Freddy, and Super Dad. Cheetah Racer only has Super Speed and Sharp Claws; Sharp Claws takes half a heart. Super Dad turns green and his fist becomes giant when he punches. Mega Mommy is all pink and gets Mega Grow, which makes her giant for a little while. The villains keep their Level 3 power in every Candyland level."],
       ["Powers", "Most powers can be used 3 times, then they recharge. Some special powers recharge after 1 use. Normal recharge is 30 seconds. Mischievous Mayor recharges in 20 seconds when he is the boss."]
     ];
@@ -4951,7 +4955,8 @@
 
   function spawnRobotRewardBox(x, y, now) {
     const boxCount = game.robotBoxCount || 0;
-    const prize = ROBOT_PRIZES[boxCount % ROBOT_PRIZES.length];
+    const prizePool = robotPrizePoolForLevel(game.level);
+    const prize = prizePool[boxCount % prizePool.length];
     game.robotBoxCount = boxCount + 1;
     game.pickups.push({
       kind: "rewardBox",
@@ -4979,6 +4984,10 @@
     });
     showComicText("ROBOT PRIZE!", x, y - 126, "#ffd84a");
     playEffect("shield");
+  }
+
+  function robotPrizePoolForLevel(level) {
+    return level >= 30 ? LATE_ROBOT_PRIZES : ROBOT_PRIZES;
   }
 
   function activeRewardBoxCount() {
@@ -5057,6 +5066,10 @@
 
   function collectRewardBox(fighter, pickup) {
     const now = performance.now();
+    if (pickup.item === "weakSpotHint") {
+      showRobotWeakSpotHint(fighter);
+      return;
+    }
     if (pickup.item === "donut") {
       fighter.maxHealth = Math.min(14, (fighter.maxHealth || fighter.health) + 1);
       fighter.health = Math.min(fighter.maxHealth, Math.round((fighter.health + 2) * 2) / 2);
@@ -5116,7 +5129,26 @@
   }
 
   function rewardPrizeFor(item) {
-    return ROBOT_PRIZES.find((prize) => prize.id === item) || KING_DOCK_PRIZES.find((prize) => prize.id === item) || KING_DOCK_PRIZES[0];
+    return LATE_ROBOT_PRIZES.find((prize) => prize.id === item) || KING_DOCK_PRIZES.find((prize) => prize.id === item) || KING_DOCK_PRIZES[0];
+  }
+
+  function showRobotWeakSpotHint(fighter) {
+    const robot = game && game.p2 && game.p2.id === "spaceRobot" ? game.p2 : null;
+    setBubble(fighter, "Weak spot: left ribs!", false, 1800);
+    showComicText("LEFT RIBS!", fighter.x, fighter.y - fighter.z - 112, "#ffd84a");
+    if (robot) {
+      showComicText("HIT HERE!", robot.x - 112, robot.y - robot.z - 146, "#ffd84a");
+      game.effects.push({
+        kind: "circle",
+        x: robot.x - 118,
+        y: robot.y - robot.z - 74,
+        r: 54,
+        color: "#ffd84a",
+        born: performance.now(),
+        until: performance.now() + 1900
+      });
+    }
+    playEffect("shield");
   }
 
   function maybeReduceBossHelpers(target, oldHealth) {
