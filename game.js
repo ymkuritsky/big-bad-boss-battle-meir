@@ -5742,7 +5742,7 @@
   function baseControlButton(label, icon) {
     const button = document.createElement("button");
     button.type = "button";
-    button.className = `control-button${label.length <= 5 ? " icon-only" : ""}`;
+    button.className = "control-button";
     const canvas = document.createElement("canvas");
     canvas.width = 32;
     canvas.height = 32;
@@ -5755,7 +5755,7 @@
 
   function summaryControl(label, icon) {
     const summary = document.createElement("summary");
-    summary.className = `control-button drawer-summary${label.length <= 5 ? " icon-only" : ""}`;
+    summary.className = "control-button drawer-summary";
     const canvas = document.createElement("canvas");
     canvas.width = 32;
     canvas.height = 32;
