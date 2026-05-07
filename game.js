@@ -11201,6 +11201,10 @@
       c.beginPath(); c.moveTo(6, 16); c.lineTo(16, 8); c.moveTo(6, 16); c.lineTo(16, 24); c.moveTo(7, 16); c.lineTo(26, 16); c.stroke();
     } else if (icon === "arrowRight") {
       c.beginPath(); c.moveTo(26, 16); c.lineTo(16, 8); c.moveTo(26, 16); c.lineTo(16, 24); c.moveTo(25, 16); c.lineTo(6, 16); c.stroke();
+    } else if (icon === "walk") {
+      c.beginPath(); c.arc(15, 7, 3, 0, Math.PI * 2); c.moveTo(15, 10); c.lineTo(13, 18); c.lineTo(8, 27); c.moveTo(13, 18); c.lineTo(22, 27); c.moveTo(14, 13); c.lineTo(7, 18); c.moveTo(15, 13); c.lineTo(23, 15); c.stroke();
+    } else if (icon === "run") {
+      c.beginPath(); c.moveTo(3, 10); c.lineTo(10, 10); c.moveTo(2, 17); c.lineTo(8, 17); c.moveTo(4, 24); c.lineTo(11, 24); c.arc(18, 7, 3, 0, Math.PI * 2); c.moveTo(18, 10); c.lineTo(14, 17); c.lineTo(8, 26); c.moveTo(14, 17); c.lineTo(25, 25); c.moveTo(16, 13); c.lineTo(25, 12); c.stroke();
     } else if (icon === "fist" || icon === "punch") {
       c.strokeRect(8, 10, 16, 13); c.beginPath(); c.moveTo(10, 10); c.lineTo(10, 5); c.moveTo(16, 10); c.lineTo(16, 5); c.moveTo(22, 10); c.lineTo(22, 6); c.stroke();
     } else if (icon === "kick") {

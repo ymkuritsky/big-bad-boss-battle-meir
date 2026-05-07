@@ -730,6 +730,8 @@ button {
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 24px);
   gap: 3px;
+  align-self: start;
+  min-width: 0;
 }
 
 .dpad .up { grid-column: 2; }
@@ -795,9 +797,11 @@ button {
   position: relative;
   min-width: 46px;
   min-height: 30px;
+  max-width: 100%;
   display: inline-grid;
   grid-template-columns: auto 1fr;
   align-items: center;
+  justify-content: center;
   gap: 4px;
   padding: 4px 6px;
   border: 3px solid var(--ink);
@@ -809,11 +813,35 @@ button {
   line-height: 1;
   text-transform: uppercase;
   box-shadow: 3px 3px 0 rgba(0,0,0,0.12);
+  overflow: visible;
 }
 
 .control-button.icon-only {
   grid-template-columns: 1fr;
   place-items: center;
+  width: 100%;
+  min-width: 30px;
+  aspect-ratio: 1 / 1;
+  padding: 3px;
+}
+
+.control-button span:not(.shortcut-badge):not(.cooldown) {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.control-button.icon-only > span:not(.shortcut-badge):not(.cooldown) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .control-button.active,
@@ -829,6 +857,7 @@ button {
 }
 
 .control-button canvas {
+  display: block;
   width: 20px;
   height: 20px;
 }
@@ -1113,7 +1142,9 @@ button {
   }
 
   .dpad {
-    grid-template-rows: repeat(3, 25px);
+    grid-template-columns: repeat(3, 24px);
+    grid-template-rows: repeat(3, 24px);
+    justify-content: center;
     gap: 3px;
   }
 
