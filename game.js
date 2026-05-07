@@ -5742,7 +5742,7 @@
   function baseControlButton(label, icon) {
     const button = document.createElement("button");
     button.type = "button";
-    button.className = `control-button${label.length <= 4 ? " icon-only" : ""}`;
+    button.className = `control-button${label.length <= 5 ? " icon-only" : ""}`;
     const canvas = document.createElement("canvas");
     canvas.width = 32;
     canvas.height = 32;
@@ -5755,7 +5755,7 @@
 
   function summaryControl(label, icon) {
     const summary = document.createElement("summary");
-    summary.className = `control-button drawer-summary${label.length <= 4 ? " icon-only" : ""}`;
+    summary.className = `control-button drawer-summary${label.length <= 5 ? " icon-only" : ""}`;
     const canvas = document.createElement("canvas");
     canvas.width = 32;
     canvas.height = 32;
@@ -10439,25 +10439,25 @@
     const levelMatch = isLevelTitle ? text.match(/^Level (\d+):?\s*(.*)$/) : null;
     const levelNumber = levelMatch ? Number(levelMatch[1]) : 0;
     const levelLabel = levelMatch && levelMatch[2] ? levelMatch[2] : "";
-    const boxW = isLevelTitle ? 720 : 520;
-    const boxH = isLevelTitle ? 214 : 128;
-    ctx.fillStyle = "rgba(255,255,255,0.92)";
+    const boxW = isLevelTitle ? 560 : 520;
+    const boxH = isLevelTitle ? 132 : 128;
+    ctx.fillStyle = isLevelTitle ? "rgba(255,255,255,0.76)" : "rgba(255,255,255,0.92)";
     ctx.strokeStyle = "#171216";
-    ctx.lineWidth = isLevelTitle ? 8 : 6;
+    ctx.lineWidth = isLevelTitle ? 5 : 6;
     roundRect(ctx, WIDTH / 2 - boxW / 2, HEIGHT / 2 - boxH / 2, boxW, boxH, 8);
     ctx.fill();
     ctx.stroke();
     ctx.fillStyle = "#d91f2e";
-    ctx.font = isLevelTitle ? "900 74px Trebuchet MS" : "900 42px Trebuchet MS";
+    ctx.font = isLevelTitle ? "900 50px Trebuchet MS" : "900 42px Trebuchet MS";
     ctx.textAlign = "center";
-    ctx.fillText(isLevelTitle ? `Level ${levelNumber}` : text, WIDTH / 2, HEIGHT / 2 - (isLevelTitle ? 26 : -14));
+    ctx.fillText(isLevelTitle ? `Level ${levelNumber}` : text, WIDTH / 2, HEIGHT / 2 - (isLevelTitle ? 18 : -14));
     if (isLevelTitle) {
       ctx.fillStyle = "#171216";
-      ctx.font = "900 30px Trebuchet MS";
-      ctx.fillText(levelLabel, WIDTH / 2, HEIGHT / 2 + 24);
-      ctx.font = "900 18px Trebuchet MS";
+      ctx.font = "900 20px Trebuchet MS";
+      ctx.fillText(levelLabel, WIDTH / 2, HEIGHT / 2 + 18);
+      ctx.font = "900 14px Trebuchet MS";
       const bossHearts = game && game.p2 ? `${game.p2.maxHealth} boss hearts` : "Boss powers up";
-      ctx.fillText(`${bossHearts} - Get Ready!`, WIDTH / 2, HEIGHT / 2 + 62);
+      ctx.fillText(`${bossHearts} - Get Ready!`, WIDTH / 2, HEIGHT / 2 + 46);
     }
     ctx.restore();
   }
