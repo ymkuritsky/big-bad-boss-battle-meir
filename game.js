@@ -650,67 +650,67 @@
   const STORY_BOSSES = ["mayor", "yapping"];
   const CHARACTER_VOICE_CLIPS = {
     mayor: {
-      default: "assets/voices/mayor-default.wav",
-      win: "assets/voices/mayor-win.wav",
-      lose: "assets/voices/mayor-lose.wav",
-      "i-want-to-rob-this-bank": "assets/voices/mayor-i-want-to-rob-this-bank.wav",
-      "oh-that-hurts": "assets/voices/mayor-oh-that-hurts.wav",
-      "now-i-m-extra-mischievous": "assets/voices/mayor-now-i-m-extra-mischievous.wav"
+      default: "assets/voices/mayor-default.mp3",
+      win: "assets/voices/mayor-win.mp3",
+      lose: "assets/voices/mayor-lose.mp3",
+      "i-want-to-rob-this-bank": "assets/voices/mayor-i-want-to-rob-this-bank.mp3",
+      "oh-that-hurts": "assets/voices/mayor-oh-that-hurts.mp3",
+      "now-i-m-extra-mischievous": "assets/voices/mayor-now-i-m-extra-mischievous.mp3"
     },
     kingDock: {
-      default: "assets/voices/king-dock-who-is-responsible.wav",
-      "who-is-responsible": "assets/voices/king-dock-who-is-responsible.wav",
-      "my-astronaut-suit-is-ready": "assets/voices/king-dock-my-astronaut-suit-is-ready.wav",
-      "my-water-suit-is-ready": "assets/voices/king-dock-my-water-suit-is-ready.wav",
-      "king-dock-is-not-done": "assets/voices/king-dock-king-dock-is-not-done.wav"
+      default: "assets/voices/king-dock-who-is-responsible.mp3",
+      "who-is-responsible": "assets/voices/king-dock-who-is-responsible.mp3",
+      "my-astronaut-suit-is-ready": "assets/voices/king-dock-my-astronaut-suit-is-ready.mp3",
+      "my-water-suit-is-ready": "assets/voices/king-dock-my-water-suit-is-ready.mp3",
+      "king-dock-is-not-done": "assets/voices/king-dock-king-dock-is-not-done.mp3"
     },
     spaceRobot: {
-      default: "assets/voices/final-robot-find-my-weak-spot-if-you-can.wav",
-      "find-my-weak-spot-if-you-can": "assets/voices/final-robot-find-my-weak-spot-if-you-can.wav",
-      "i-can-pop-up-anywhere": "assets/voices/final-robot-i-can-pop-up-anywhere.wav",
-      "robot-mode-silly-serious": "assets/voices/final-robot-robot-mode-silly-serious.wav",
-      "robot-blast": "assets/voices/final-robot-robot-blast.wav",
-      "robot-stomp": "assets/voices/final-robot-robot-stomp.wav"
+      default: "assets/voices/final-robot-find-my-weak-spot-if-you-can.mp3",
+      "find-my-weak-spot-if-you-can": "assets/voices/final-robot-find-my-weak-spot-if-you-can.mp3",
+      "i-can-pop-up-anywhere": "assets/voices/final-robot-i-can-pop-up-anywhere.mp3",
+      "robot-mode-silly-serious": "assets/voices/final-robot-robot-mode-silly-serious.mp3",
+      "robot-blast": "assets/voices/final-robot-robot-blast.mp3",
+      "robot-stomp": "assets/voices/final-robot-robot-stomp.mp3"
     },
     yapping: {
-      "i-need-to-stop-you": "assets/voices/yapping-i-need-to-stop-you.wav"
+      "i-need-to-stop-you": "assets/voices/yapping-i-need-to-stop-you.mp3"
     },
     tats: {
-      "i-need-to-stop-you": "assets/voices/tats-i-need-to-stop-you.wav",
-      win: "assets/voices/tats-hooray-hooray.wav"
+      "i-need-to-stop-you": "assets/voices/tats-i-need-to-stop-you.mp3",
+      win: "assets/voices/tats-hooray-hooray.mp3"
     },
     fary: {
-      "i-need-to-stop-you": "assets/voices/fary-i-need-to-stop-you.wav",
-      win: "assets/voices/fary-hooray-hooray.wav"
+      "i-need-to-stop-you": "assets/voices/fary-i-need-to-stop-you.mp3",
+      win: "assets/voices/fary-hooray-hooray.mp3"
     },
     apple: {
-      "i-need-to-stop-you": "assets/voices/apple-i-need-to-stop-you.wav",
-      win: "assets/voices/apple-hooray-hooray.wav"
+      "i-need-to-stop-you": "assets/voices/apple-i-need-to-stop-you.mp3",
+      win: "assets/voices/apple-hooray-hooray.mp3"
     },
     benji: {
-      "i-need-to-stop-you": "assets/voices/benji-i-need-to-stop-you.wav",
-      win: "assets/voices/benji-hooray-hooray.wav"
+      "i-need-to-stop-you": "assets/voices/benji-i-need-to-stop-you.mp3",
+      win: "assets/voices/benji-hooray-hooray.mp3"
     },
     freddy: {
-      "i-need-to-stop-you": "assets/voices/freddy-i-need-to-stop-you.wav",
-      win: "assets/voices/freddy-hooray-hooray.wav"
+      "i-need-to-stop-you": "assets/voices/freddy-i-need-to-stop-you.mp3",
+      win: "assets/voices/freddy-hooray-hooray.mp3"
     },
     frost: {
-      "i-need-to-stop-you": "assets/voices/frost-i-need-to-stop-you.wav",
-      win: "assets/voices/frost-hooray-hooray.wav"
+      "i-need-to-stop-you": "assets/voices/frost-i-need-to-stop-you.mp3",
+      win: "assets/voices/frost-hooray-hooray.mp3"
     },
     ness: {
-      "i-need-to-stop-you": "assets/voices/ness-i-need-to-stop-you.wav",
-      win: "assets/voices/ness-hooray-hooray.wav"
+      "i-need-to-stop-you": "assets/voices/ness-i-need-to-stop-you.mp3",
+      win: "assets/voices/ness-hooray-hooray.mp3"
     },
     crayon: {
-      "i-need-to-stop-you": "assets/voices/crayon-i-need-to-stop-you.wav"
+      "i-need-to-stop-you": "assets/voices/crayon-i-need-to-stop-you.mp3"
     },
     hoodie: {
-      "i-need-to-stop-you": "assets/voices/hoodie-i-need-to-stop-you.wav"
+      "i-need-to-stop-you": "assets/voices/hoodie-i-need-to-stop-you.mp3"
     },
     phantom: {
-      "i-need-to-stop-you": "assets/voices/phantom-i-need-to-stop-you.wav"
+      "i-need-to-stop-you": "assets/voices/phantom-i-need-to-stop-you.mp3"
     }
   };
   const CHARACTER_CLIP_PROFILES = {

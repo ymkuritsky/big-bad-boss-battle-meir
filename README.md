@@ -182,9 +182,9 @@ iPhone and iPad:
 
 ## Better Voices
 
-The game includes generated voice clips under `assets/voices/` for the most common character lines, including the Mayor, King Dock, the Final Showdown Robot, and each hero's starting line. The game uses those clips first, then falls back to built-in character voice styles when a line does not have a matching audio file.
+The game includes ElevenLabs generated voice clips under `assets/voices/` for the most common character lines, including the Mayor, King Dock, the Final Showdown Robot, and each hero's starting line. The game uses those clips first, then falls back to built-in character voice styles when a line does not have a matching audio file.
 
-More generated or recorded `.wav` files can be added later using the same character-and-line naming pattern.
+More generated or recorded `.mp3` files can be added later using the same character-and-line naming pattern.
 
 If the check says nothing, that means the game script is okay.
 
