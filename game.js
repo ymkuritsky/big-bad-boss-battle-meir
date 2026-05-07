@@ -933,7 +933,8 @@
     volume: 0.35,
     musicTimer: null,
     musicStep: 0,
-    musicOn: true
+    musicOn: true,
+    voice: null
   };
 
   function animal(name, feature, flags = {}) {
@@ -1570,7 +1571,11 @@
     if (game.p2.id === "yapping") spawnMainMouth(game.p2);
     if (game.p1.id === "yapping") spawnMainMouth(game.p1);
     sayStartLine(game.p1);
-    sayStartLine(game.p2);
+    const startVoiceGame = game;
+    setTimeout(() => {
+      if (!game || game !== startVoiceGame || game.gameOver) return;
+      sayStartLine(game.p2);
+    }, 950);
     scheduleNpcLine(level);
     renderControls(true);
   }
@@ -11555,18 +11560,36 @@
     const textKey = voiceClipKeyForText(text);
     const clip = clips && (clips[mood] || clips[textKey] || (mood === "default" ? clips.default : ""));
     if (clip) {
+      stopCurrentVoice();
       const voice = new Audio(clip);
       const clipProfile = CHARACTER_CLIP_PROFILES[characterId] || {};
       voice.playbackRate = clipProfile.rate || 1;
       voice.volume = clamp(audio.volume, 0, 1);
-      voice.play().catch(() => speakText(text, characterId));
+      audio.voice = voice;
+      voice.onended = () => {
+        if (audio.voice === voice) audio.voice = null;
+      };
+      voice.play().catch(() => {
+        if (audio.voice === voice) audio.voice = null;
+        speakText(text, characterId);
+      });
       return;
     }
     speakText(text, characterId);
   }
 
+  function stopCurrentVoice() {
+    if (audio.voice) {
+      audio.voice.pause();
+      audio.voice.currentTime = 0;
+      audio.voice = null;
+    }
+    if ("speechSynthesis" in window) speechSynthesis.cancel();
+  }
+
   function speakText(text, characterIdOrPitch, rateOverride) {
     if (!("speechSynthesis" in window) || audio.volume <= 0) return;
+    stopCurrentVoice();
     const voiceConfig = typeof characterIdOrPitch === "string"
       ? CHARACTER_VOICE_FALLBACKS[characterIdOrPitch] || { pitch: 1, rate: 1 }
       : { pitch: characterIdOrPitch, rate: rateOverride };
@@ -11576,7 +11599,6 @@
     utterance.pitch = voiceConfig.pitch;
     utterance.rate = voiceConfig.rate;
     utterance.volume = clamp(audio.volume, 0, 1);
-    speechSynthesis.cancel();
     speechSynthesis.speak(utterance);
   }
 
