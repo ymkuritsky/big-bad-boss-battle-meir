@@ -16,6 +16,14 @@
     { id: "speed", label: "SPEED!", bubble: "Speed prize!", color: "#70f0ff" },
     { id: "powerRefill", label: "POWER UP!", bubble: "Power prize!", color: "#a98bff" }
   ];
+  const ROBOT_PRIZES = [
+    { id: "donut", label: "DONUT +2!", bubble: "Donut boost!", color: "#ffb0d2" },
+    { id: "powerRefill", label: "POWER UP!", bubble: "Power prize!", color: "#a98bff" },
+    { id: "ironSword", label: "IRON SWORD!", bubble: "Iron sword!", color: "#d9edf2" },
+    { id: "armor", label: "ARMOR!", bubble: "Armor!", color: "#ffd84a" },
+    { id: "heart", label: "HEART +1!", bubble: "Heart prize!", color: "#ff5fa8" },
+    { id: "speed", label: "SPEED!", bubble: "Speed prize!", color: "#70f0ff" }
+  ];
 
   const BOSS_LEVEL_TUNING = {
     1: {
@@ -1162,9 +1170,9 @@
       ["Worlds", "Candyland unlocks after you beat Yapping Yonatan through Levels 1, 2, and 3. Abandoned Desert unlocks after you beat Candyland Levels 4, 5, and 6 twice. The Candyland wins do not need to be in a row. Water World unlocks after you beat King Dock in Abandoned Desert. Outer Space unlocks after you beat Water World Levels 11, 12, 13, and 14. Underground Showdown Part Two unlocks after you win Part 1 of the Last Level. Mega City unlocks after you win Underground Showdown Part Two."],
       ["King Dock hearts, laser, Rack Creatures, and boxes", "King Dock is very huge, has 10 hearts, and the player starts with 10 hearts in his boss worlds. He can fire one giant hand laser. When you hit King Dock, his heart flies to you and heals you up to your max hearts. Every real hit also makes special prize boxes spread out around him. King Dock can control seven Rack Creatures at a time, but any hit destroys a creature. Sometimes King Dock drops a trap box from above for no reason. Trap boxes say BOOBY TRAP on them. Watch for little traps around trap boxes, like pit cracks and Rack Creatures dropping from above. Jump onto a landed prize box to get rewards like an iron sword, armor, heart, speed boost, or power refill. Beating King Dock earns the King of the Battle crown."],
       ["Water World", "Levels 11-14 take place on water and are meant to be pretty easy, like Levels 1-3. King Dock is the boss again, but he wears a water suit. Benji can use his five shark forms anywhere in Water World. Freddy can still choose fish. Other fighters get a simple water-themed power, like Mr. 67's Ice Feet for walking on water."],
-      ["Outer Space", "Levels 15-17 have King Dock in an astronaut suit with MIM the red dragon helping him. Level 18 has two King Docks on Neptune. Level 19 moves to the asteroid field with stronger double King Docks. Level 20 is the Final Showdown against a giant robot with Mischievous Mayor inside. The robot has 50 hearts and a hidden weak spot."],
-      ["Underground Showdown Part Two", "Level 21 happens underground. Underground booby traps appear around the arena, and the boss digs under the ground, pops up near you, and has to be fought underground. The robot still has a hidden weak spot, but this fight is faster and harder."],
-      ["Mega City", "Levels 26-29 happen in a very big city like NYC against Mischievous Mayor. Mayor has 5 hearts and the player has 10 hearts. Level 30 brings back the 50-heart robot with MIM the dragon and a couple rock creatures helping it."],
+      ["Outer Space", "Levels 15-17 have King Dock in an astronaut suit with MIM the red dragon helping him. Level 18 has two King Docks on Neptune. Level 19 moves to the asteroid field with stronger double King Docks. Level 20 is the Final Showdown against a giant robot with Mischievous Mayor inside. The robot has 50 hearts and a hidden weak spot. Each hit on the robot drops a good prize box; jump on it after it lands to get a donut boost, power refill, iron sword, armor, heart, or speed."],
+      ["Underground Showdown Part Two", "Level 21 happens underground. Underground booby traps appear around the arena, and the boss digs under the ground, pops up near you, and has to be fought underground. The robot still has a hidden weak spot, but this fight is faster and harder. Robot prize boxes are always good and can help you survive."],
+      ["Mega City", "Levels 26-29 happen in a very big city like NYC against Mischievous Mayor. Mayor has 5 hearts and the player has 10 hearts. Level 30 brings back the 50-heart robot with MIM the dragon and a couple rock creatures helping it. Hitting the robot makes good prize boxes fall out."],
       ["Supercharged Package", "Beat Mischievous Mayor two times in a row to unlock the Supercharged Package. Once it is unlocked, Candyland fighters get 5 hearts on Levels 4 and 5, then 10 hearts on Level 6. Supercharged names include Cheetah Racer, Mega Mommy, Ultimate Freddy, and Super Dad. Cheetah Racer only has Super Speed and Sharp Claws; Sharp Claws takes half a heart. Super Dad turns green and his fist becomes giant when he punches. Mega Mommy is all pink and gets Mega Grow, which makes her giant for a little while. The villains keep their Level 3 power in every Candyland level."],
       ["Powers", "Most powers can be used 3 times, then they recharge. Some special powers recharge after 1 use. Normal recharge is 30 seconds. Mischievous Mayor recharges in 20 seconds when he is the boss."]
     ];
@@ -1479,6 +1487,7 @@
       effects: [],
       pickups: [],
       kingDockBoxCount: 0,
+      robotBoxCount: 0,
       obstacles: makeObstacles(selectState.mode === "story" ? selectState.world : "superville"),
       scores: { p1: 0, p2: 0 },
       carry: {
@@ -1528,6 +1537,7 @@
     game.starsCollected = 0;
     game.levelStarKey = `${game.world}:${level}`;
     game.kingDockBoxCount = 0;
+    game.robotBoxCount = 0;
     game.p1 = createFighter(game.p1Id, "p1", false, 270, 470, 1);
     game.p2 = createFighter(levelOpponentId, "p2", game.mode === "story", 1010, 470, -1);
     game.p1.maxHealth = fighterMaxHealthForLevel(game.p1.id, level, false);
@@ -4754,6 +4764,7 @@
       return;
     }
     if (target.id === "spaceRobot" && !target.robotExposed && source && source.side === "p1" && robotWeakSpotHit(target, source)) {
+      maybeSpawnRobotBox(target, source, 1);
       exposeSpaceRobot(target, source);
       return;
     }
@@ -4774,6 +4785,7 @@
     setBubble(target, hitLine, true, 1300);
     maybeStealKingDockHeart(target, source, actualLost);
     maybeSpawnKingDockBox(target, source, actualLost);
+    maybeSpawnRobotBox(target, source, actualLost);
     maybeReduceBossHelpers(target, oldHealth);
   }
 
@@ -4903,6 +4915,18 @@
     trimRewardBoxes(16);
   }
 
+  function maybeSpawnRobotBox(target, source, amount) {
+    const now = performance.now();
+    if (!game || target.id !== "spaceRobot" || target.health <= 0) return;
+    if (!source || source.side !== "p1") return;
+    if (amount <= 0) return;
+    if (activeRewardBoxCount() >= 18) trimRewardBoxes(15);
+    const side = Math.random() < 0.5 ? -1 : 1;
+    const x = clamp(target.x + side * (52 + Math.random() * 88), 120, WIDTH - 120);
+    const y = clamp(target.y + 32 + (Math.random() * 116 - 58), 250, HEIGHT - 132);
+    spawnRobotRewardBox(x, y, now);
+  }
+
   function spawnKingDockRewardBox(x, y, now, options = {}) {
     const boxCount = game.kingDockBoxCount || 0;
     const item = options.item || KING_DOCK_PRIZES[boxCount % KING_DOCK_PRIZES.length].id;
@@ -4922,6 +4946,38 @@
     });
     if (options.boobyTrap !== false) spawnKingDockBoxTraps(x, y, now);
     showComicText(options.drop ? "DROP BOX!" : options.specialPrize ? "SPECIAL PRIZE!" : "BOX!", x, y - (options.drop ? 126 : 82), "#ffd84a");
+    playEffect("shield");
+  }
+
+  function spawnRobotRewardBox(x, y, now) {
+    const boxCount = game.robotBoxCount || 0;
+    const prize = ROBOT_PRIZES[boxCount % ROBOT_PRIZES.length];
+    game.robotBoxCount = boxCount + 1;
+    game.pickups.push({
+      kind: "rewardBox",
+      item: prize.id,
+      x,
+      y,
+      z: 500,
+      vz: -85,
+      born: now,
+      until: now + 19000,
+      boobyTrap: false,
+      specialPrize: true,
+      droppedByRobot: true
+    });
+    game.effects.push({
+      kind: "line",
+      x1: x,
+      y1: y - 310,
+      x2: x,
+      y2: y - 75,
+      color: "#ffd84a",
+      width: 6,
+      born: now,
+      until: now + 360
+    });
+    showComicText("ROBOT PRIZE!", x, y - 126, "#ffd84a");
     playEffect("shield");
   }
 
@@ -5001,6 +5057,14 @@
 
   function collectRewardBox(fighter, pickup) {
     const now = performance.now();
+    if (pickup.item === "donut") {
+      fighter.maxHealth = Math.min(14, (fighter.maxHealth || fighter.health) + 1);
+      fighter.health = Math.min(fighter.maxHealth, Math.round((fighter.health + 2) * 2) / 2);
+      setBubble(fighter, "Donut boost!", false, 1000);
+      showComicText("DONUT +2!", fighter.x, fighter.y - fighter.z - 112, "#ff5fa8");
+      playEffect("win");
+      return;
+    }
     if (pickup.item === "ironSword") {
       fighter.damageBonusUntil = now + 22000;
       setBubble(fighter, "Iron sword!", false, 1000);
@@ -5041,7 +5105,7 @@
       renderControls(true);
       return;
     }
-    const prize = kingDockPrizeFor(pickup.item);
+    const prize = rewardPrizeFor(pickup.item);
     setBubble(fighter, prize.bubble, false, 1000);
     showComicText(prize.label, fighter.x, fighter.y - fighter.z - 112, prize.color);
     playEffect("shield");
@@ -5049,6 +5113,10 @@
 
   function kingDockPrizeFor(item) {
     return KING_DOCK_PRIZES.find((prize) => prize.id === item) || KING_DOCK_PRIZES[0];
+  }
+
+  function rewardPrizeFor(item) {
+    return ROBOT_PRIZES.find((prize) => prize.id === item) || KING_DOCK_PRIZES.find((prize) => prize.id === item) || KING_DOCK_PRIZES[0];
   }
 
   function maybeReduceBossHelpers(target, oldHealth) {
@@ -7189,7 +7257,7 @@
     ctx.save();
     ctx.translate(pickup.x, pickup.y - pickup.z);
     const pulse = Math.sin(performance.now() / 110) * 3;
-    const prize = kingDockPrizeFor(pickup.item);
+    const prize = rewardPrizeFor(pickup.item);
     ctx.fillStyle = prize.color;
     ctx.strokeStyle = "#171216";
     ctx.lineWidth = 5;
@@ -7214,11 +7282,11 @@
       if (pickup.specialPrize) {
         ctx.fillStyle = "#171216";
         ctx.font = "900 10px Trebuchet MS";
-        ctx.fillText("PRIZE", 0, -48);
+        ctx.fillText(pickup.droppedByRobot ? "ROBOT" : "PRIZE", 0, -48);
       }
       ctx.fillStyle = "#171216";
-      ctx.font = "900 24px Trebuchet MS";
-      ctx.fillText("?", 0, -11);
+      ctx.font = "900 22px Trebuchet MS";
+      ctx.fillText(pickup.item === "donut" ? "O" : "?", 0, -11);
     }
     ctx.fillStyle = "rgba(255,255,255,0.45)";
     ctx.fillRect(-18, -32, 36, 8);
