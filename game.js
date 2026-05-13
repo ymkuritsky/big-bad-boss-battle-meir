@@ -2095,6 +2095,36 @@
     });
   }
 
+  function addAttackSwing(fighter, type, color = "#ffd84a") {
+    if (!game || !fighter) return;
+    const now = performance.now();
+    const reach = type === "kick" ? 92 : 76;
+    game.effects.push({
+      kind: "swing",
+      x: fighter.x + fighter.facing * reach,
+      y: fighter.y - fighter.z - (type === "kick" ? 58 : 74),
+      facing: fighter.facing,
+      color,
+      type,
+      born: now,
+      until: now + 240
+    });
+  }
+
+  function addImpactBurst(x, y, color = "#ffd84a", big = false) {
+    if (!game) return;
+    const now = performance.now();
+    game.effects.push({
+      kind: "impactBurst",
+      x,
+      y,
+      color,
+      big,
+      born: now,
+      until: now + (big ? 360 : 260)
+    });
+  }
+
   function loop(now) {
     const dt = Math.min(0.05, (now - lastFrame) / 1000);
     lastFrame = now;
@@ -2933,6 +2963,7 @@
     if (type === "punch" || type === "kick") faceAttackTarget(fighter, target, range + 80);
     const damage = 0.5;
     hitHelpersNear(fighter, range);
+    if (type === "punch" || type === "kick") addAttackSwing(fighter, type, fighter.character.accent);
     if (isInFront(fighter, target, range) && canBeHit(target)) {
       const label = superDadGiantFist ? "GIANT FIST!" : megaMommyGiant ? "MEGA HIT!" : type === "kick" ? "WHACK!" : "POW!";
       applyDamage(target, damage, fighter, label);
@@ -3377,6 +3408,7 @@
     const range = traits.attackRange || (animalForm.strong ? 105 : animalForm.small ? 58 : 85);
     faceAttackTarget(fighter, target, range + 80);
     if (traits.chargeDistance && type === "kick") fighter.x += fighter.facing * traits.chargeDistance;
+    addAttackSwing(fighter, type, fighter.character.accent);
     const label = animalForm.feature === "bite" || animalForm.feature === "claws" || animalForm.strong
       ? (type === "kick" ? "CLAW!" : "BITE!")
       : type === "kick" ? "WHACK!" : "POW!";
@@ -4510,6 +4542,7 @@
     const range = traits.range || 126;
     faceAttackTarget(fighter, target, range + 110);
     if (traits.power === "dash" || type === "kick") fighter.x += fighter.facing * (inStream(fighter) ? 72 : 34);
+    addAttackSwing(fighter, type, "#45a6db");
     game.effects.push({
       kind: "splash",
       x: fighter.x + fighter.facing * 38,
@@ -4770,6 +4803,7 @@
     if (target.shieldHits > 0) {
       target.shieldHits -= 1;
       showComicText("BLOCK", target.x, target.y - target.z - 100, "#111");
+      addImpactBurst(target.x, target.y - target.z - 82, "#ffffff", false);
       playEffect("shield");
       return;
     }
@@ -4787,6 +4821,7 @@
     const hitColor = source && source.character && source.character.accent ? source.character.accent : "#111";
     showComicText(label, target.x, target.y - target.z - 100, hitColor);
     if (actualLost > 0) {
+      addImpactBurst(target.x, target.y - target.z - 78, hitColor, actualLost >= 1);
       triggerHitFeedback(target, source, actualLost);
       playEffect(actualLost >= 1 ? "bigHit" : "hit");
     }
@@ -10145,6 +10180,50 @@
         ctx.moveTo(effect.x1, effect.y1);
         ctx.lineTo(effect.x2, effect.y2);
         ctx.stroke();
+      } else if (effect.kind === "swing") {
+        const size = effect.type === "kick" ? 58 : 44;
+        ctx.translate(effect.x, effect.y);
+        ctx.scale(effect.facing || 1, 1);
+        ctx.strokeStyle = "#fffef7";
+        ctx.lineWidth = 13;
+        ctx.lineCap = "round";
+        ctx.beginPath();
+        ctx.arc(0, 0, size, -0.92, 0.65);
+        ctx.stroke();
+        ctx.strokeStyle = effect.color;
+        ctx.lineWidth = 7;
+        ctx.beginPath();
+        ctx.arc(0, 0, size, -0.92, 0.65);
+        ctx.stroke();
+        ctx.fillStyle = effect.color;
+        ctx.beginPath();
+        ctx.arc(size * 0.72, -size * 0.42, 7, 0, Math.PI * 2);
+        ctx.arc(size * 0.9, 0, 5, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (effect.kind === "impactBurst") {
+        const spikes = effect.big ? 12 : 8;
+        const inner = effect.big ? 16 : 10;
+        const outer = (effect.big ? 58 : 38) * (0.45 + progress * 0.85);
+        ctx.translate(effect.x, effect.y);
+        ctx.fillStyle = effect.color;
+        ctx.strokeStyle = "#171216";
+        ctx.lineWidth = effect.big ? 5 : 4;
+        ctx.beginPath();
+        for (let i = 0; i < spikes * 2; i += 1) {
+          const angle = -Math.PI / 2 + (i * Math.PI) / spikes;
+          const r = i % 2 === 0 ? outer : inner;
+          const x = Math.cos(angle) * r;
+          const y = Math.sin(angle) * r;
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = "#fffef7";
+        ctx.beginPath();
+        ctx.arc(0, 0, effect.big ? 13 : 8, 0, Math.PI * 2);
+        ctx.fill();
       } else if (effect.kind === "circle") {
         ctx.strokeStyle = effect.color;
         ctx.lineWidth = 8;
