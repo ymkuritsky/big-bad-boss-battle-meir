@@ -4830,7 +4830,7 @@
       distancePoint(source.x, source.y - source.z, leftRibX, leftRibY) < 310;
     if (preciseHit) return true;
 
-    const heroWeakSpotHit = ["apple", "tats", "ness"].includes(source.id) || source.supercharged || amount >= 1;
+    const heroWeakSpotHit = ["apple", "tats", "frost", "ness"].includes(source.id) || source.supercharged || amount >= 1;
     if (!heroWeakSpotHit) return false;
 
     const chestX = target.x - 18;
