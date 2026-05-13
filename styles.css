@@ -33,6 +33,20 @@ body {
     #f7efe1;
 }
 
+@supports (height: 100dvh) {
+  body {
+    min-height: 100dvh;
+  }
+
+  .view {
+    height: 100dvh;
+  }
+
+  .battle-shell {
+    min-height: 100dvh;
+  }
+}
+
 button,
 input {
   font: inherit;
@@ -638,8 +652,11 @@ button {
 }
 
 .control-dock {
-  position: absolute;
-  inset: auto 8px max(4px, env(safe-area-inset-bottom)) 8px;
+  position: fixed;
+  left: 8px;
+  right: 8px;
+  bottom: max(10px, env(safe-area-inset-bottom));
+  z-index: 20;
   display: flex;
   align-items: stretch;
   justify-content: center;
@@ -694,8 +711,8 @@ button {
   padding: 8px 10px;
   border: 3px solid rgba(23,18,22,0.9);
   border-radius: 8px;
-  background: rgba(255,255,255,0.72);
-  backdrop-filter: blur(2px);
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(4px);
   box-shadow: 3px 3px 0 rgba(0,0,0,0.12);
   pointer-events: auto;
   touch-action: none;
@@ -1137,7 +1154,9 @@ button {
   .control-dock {
     align-items: stretch;
     gap: 4px;
-    inset: auto 4px max(4px, env(safe-area-inset-bottom)) 4px;
+    left: 4px;
+    right: 4px;
+    bottom: max(8px, env(safe-area-inset-bottom));
   }
 
   .animal-chooser {
@@ -1161,8 +1180,8 @@ button {
     gap: 6px;
     overflow: visible;
     border-width: 2px;
-    background: rgba(255,255,255,0.72);
-    backdrop-filter: blur(2px);
+    background: rgba(255,255,255,0.94);
+    backdrop-filter: blur(4px);
     box-shadow: 2px 2px 0 rgba(0,0,0,0.12);
   }
 
@@ -1280,6 +1299,98 @@ button {
 
   .cooldown {
     font-size: 8px;
+  }
+}
+
+@media (max-width: 560px) {
+  .control-dock {
+    left: 3px;
+    right: 3px;
+    bottom: max(6px, env(safe-area-inset-bottom));
+  }
+
+  .control-panel {
+    grid-template-columns: 64px minmax(0, 1fr);
+    width: calc(100vw - 6px);
+    max-width: calc(100vw - 6px);
+    min-height: 86px;
+    max-height: none;
+    padding: 5px;
+    gap: 5px;
+  }
+
+  .control-panel.p2 {
+    grid-template-columns: minmax(0, 1fr) 64px;
+  }
+
+  .dpad {
+    grid-template-columns: repeat(3, 19px);
+    grid-template-rows: repeat(3, 19px);
+    gap: 2px;
+    align-self: center;
+  }
+
+  .actions {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: 39px 32px;
+    max-height: none;
+    gap: 4px;
+  }
+
+  .main-actions {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 3px;
+  }
+
+  .utility-drawer,
+  .power-drawer {
+    grid-row: 2;
+  }
+
+  .utility-drawer {
+    grid-column: 1;
+    width: calc(50% - 2px);
+    justify-self: start;
+  }
+
+  .power-drawer {
+    grid-column: 1;
+    width: calc(50% - 2px);
+    justify-self: end;
+  }
+
+  .control-button {
+    min-height: 32px;
+    padding: 2px 2px;
+    font-size: 6px;
+    grid-template-rows: 14px auto;
+  }
+
+  .control-button canvas {
+    width: 14px;
+    height: 14px;
+  }
+
+  .dpad .control-button {
+    min-height: 19px;
+    padding: 1px;
+  }
+
+  .dpad .control-button canvas {
+    width: 13px;
+    height: 13px;
+  }
+
+  .shortcut-badge {
+    top: -5px;
+    right: -4px;
+    min-width: 13px;
+    height: 13px;
+    font-size: 6px;
+  }
+
+  .drawer-summary {
+    min-height: 32px;
   }
 }
 
