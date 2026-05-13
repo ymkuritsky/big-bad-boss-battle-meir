@@ -1698,7 +1698,7 @@
   }
 
   function hasHiddenStars(level) {
-    return level > 3;
+    return false;
   }
 
   function secretDoorForLevel(level) {
