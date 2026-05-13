@@ -1650,18 +1650,20 @@
 
   function spawnLevelSurprises(level) {
     if (!game || game.mode !== "story") return;
-    const stars = starPositionsForLevel(level);
-    stars.forEach((spot, index) => {
-      game.pickups.push({
-        kind: "hiddenStar",
-        index,
-        x: spot.x,
-        y: spot.y,
-        z: 0,
-        born: performance.now(),
-        until: Infinity
+    if (hasHiddenStars(level)) {
+      const stars = starPositionsForLevel(level);
+      stars.forEach((spot, index) => {
+        game.pickups.push({
+          kind: "hiddenStar",
+          index,
+          x: spot.x,
+          y: spot.y,
+          z: 0,
+          born: performance.now(),
+          until: Infinity
+        });
       });
-    });
+    }
     const door = secretDoorForLevel(level);
     game.pickups.push({
       kind: "secretDoor",
@@ -1693,6 +1695,10 @@
       x: 160 + ((seed + index * 337) % 940),
       y: 265 + ((seed * 3 + index * 181) % 310)
     }));
+  }
+
+  function hasHiddenStars(level) {
+    return level > 3;
   }
 
   function secretDoorForLevel(level) {
@@ -5473,7 +5479,7 @@
     if (!game) return;
     const remaining = Math.max(0, (game.endsAt - performance.now()) / 1000);
     const supercharged = isSuperchargedLevel(game.level) ? `<br><span class="timer-note">Supercharged</span>` : "";
-    const stars = game.mode === "story" ? `<br><span style="font-size:11px">Stars ${game.starsCollected || 0}/3</span>` : "";
+    const stars = game.mode === "story" && hasHiddenStars(game.level) ? `<br><span style="font-size:11px">Stars ${game.starsCollected || 0}/3</span>` : "";
     const hudHtml = `
       ${hudPanel(game.p1)}
       <div class="timer-chip">${formatClock(remaining)}<br><span style="font-size:12px">Level ${game.level}</span><br><span style="font-size:11px">${levelDifficultyLabel(game.level)}</span>${supercharged}${stars}</div>
