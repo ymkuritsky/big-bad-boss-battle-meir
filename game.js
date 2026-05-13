@@ -11521,8 +11521,35 @@
 
   function isInFront(attacker, target, range) {
     const dx = target.x - attacker.x;
-    if (Math.sign(dx) !== attacker.facing && Math.abs(dx) > 32) return false;
-    return Math.abs(dx) < range && Math.abs(target.y - attacker.y) < 82 && Math.abs(target.z - attacker.z) < 90;
+    const extraReach = targetHitPadding(target);
+    const lane = targetHitLane(target);
+    const veryClose = Math.abs(dx) < 58 + extraReach && Math.abs(target.y - attacker.y) < lane;
+    if (!veryClose && Math.sign(dx) !== attacker.facing && Math.abs(dx) > 32) return false;
+    return Math.abs(dx) < range + extraReach &&
+      Math.abs(target.y - attacker.y) < lane &&
+      Math.abs(target.z - attacker.z) < targetHitHeight(target);
+  }
+
+  function targetHitPadding(target) {
+    if (!target) return 0;
+    if (target.id === "spaceRobot") return 128;
+    if (target.id === "kingDock") return 108;
+    if (target.isBoss) return 46;
+    return 18;
+  }
+
+  function targetHitLane(target) {
+    if (!target) return 90;
+    if (target.id === "spaceRobot" || target.id === "kingDock") return 152;
+    if (target.isBoss) return 122;
+    return 92;
+  }
+
+  function targetHitHeight(target) {
+    if (!target) return 94;
+    if (target.id === "spaceRobot" || target.id === "kingDock") return 135;
+    if (target.isBoss) return 112;
+    return 94;
   }
 
   function faceAttackTarget(attacker, target, range) {
