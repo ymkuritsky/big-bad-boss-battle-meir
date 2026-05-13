@@ -4773,7 +4773,7 @@
       playEffect("shield");
       return;
     }
-    if (target.id === "spaceRobot" && !target.robotExposed && source && source.side === "p1" && robotWeakSpotHit(target, source)) {
+    if (target.id === "spaceRobot" && !target.robotExposed && source && source.side === "p1" && robotWeakSpotHit(target, source, amount, label)) {
       maybeSpawnRobotBox(target, source, 1);
       exposeSpaceRobot(target, source);
       return;
@@ -4821,13 +4821,23 @@
     return "I'm powered up!";
   }
 
-  function robotWeakSpotHit(target, source) {
+  function robotWeakSpotHit(target, source, amount = 0, label = "") {
     const leftRibX = target.x - 118;
     const leftRibY = target.y - target.z - 74;
     const sourceY = source.y - source.z - 70;
-    return source.x < target.x - 54 &&
-      Math.abs(sourceY - leftRibY) < 170 &&
-      distancePoint(source.x, source.y - source.z, leftRibX, leftRibY) < 245;
+    const preciseHit = source.x < target.x - 18 &&
+      Math.abs(sourceY - leftRibY) < 210 &&
+      distancePoint(source.x, source.y - source.z, leftRibX, leftRibY) < 310;
+    if (preciseHit) return true;
+
+    const heroWeakSpotHit = ["apple", "tats", "ness"].includes(source.id) || source.supercharged || amount >= 1;
+    if (!heroWeakSpotHit) return false;
+
+    const chestX = target.x - 18;
+    const chestY = target.y - target.z - 52;
+    return Math.abs(source.x - chestX) < 390 &&
+      Math.abs(sourceY - chestY) < 260 &&
+      distancePoint(source.x, source.y - source.z, chestX, chestY) < 430;
   }
 
   function exposeSpaceRobot(target, source) {
