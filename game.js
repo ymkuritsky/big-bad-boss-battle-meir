@@ -5314,21 +5314,22 @@
     if (game.mode === "story") updateDesertWorldProgress(won);
 
     if (won && game.mode === "story") {
-      if (game.bossId === "mayor" && game.attemptNumber <= 3) {
+      const defeatedBossId = game.p2 && game.p2.id ? game.p2.id : storyBossIdForLevel(game.level);
+      if (defeatedBossId === "mayor" && game.attemptNumber <= 3) {
         if (unlockCharacter("crayon")) game.unlocks.push("crayon");
       }
-      if (game.bossId === "yapping" && game.p1.health >= 1) {
+      if (defeatedBossId === "yapping" && game.p1.health >= 1) {
         if (unlockCharacter("hoodie")) game.unlocks.push("hoodie");
       }
-      if (game.bossId === "yapping" && game.world === "superville" && game.level >= 3) {
+      if (defeatedBossId === "yapping" && game.world === "superville" && game.level >= 3) {
         if (unlockWorld("candyland")) game.unlocks.push("world:candyland");
       }
-      if (game.bossId === "kingDock" && game.world === "abandonedDesert" && game.level >= 10) {
+      if (defeatedBossId === "kingDock" && game.world === "abandonedDesert" && game.level >= 10) {
         awardTrophy("kingOfBattle");
         game.unlocks.push("trophy:kingOfBattle");
         if (unlockWorld("waterWorld")) game.unlocks.push("world:waterWorld");
       }
-      if (game.bossId === "kingDock" && game.world === "waterWorld" && game.level >= 14) {
+      if (defeatedBossId === "kingDock" && game.world === "waterWorld" && game.level >= 14) {
         if (unlockWorld("outerSpace")) game.unlocks.push("world:outerSpace");
       }
       if (game.world === "outerSpace" && game.level >= 20) {
@@ -5342,7 +5343,7 @@
       if (game.world === "megaCity" && game.level >= 30) {
         if (awardTrophy("wholeGameComplete")) game.unlocks.push("trophy:wholeGameComplete");
       }
-      addBossBookEntry(game.p2 && game.p2.id ? game.p2.id : game.bossId, game.level);
+      addBossBookEntry(defeatedBossId, game.level);
     }
 
     setTimeout(() => {
