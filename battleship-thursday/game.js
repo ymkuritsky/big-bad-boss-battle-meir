@@ -199,8 +199,8 @@
       updateFightPanel();
       return;
     }
-    els.fightMessage.textContent = `${state.character.name} used ${kind}. ${villain.name} ${villain.hit}!`;
-    drawScene(state.currentBox, kind);
+    els.fightMessage.textContent = `${state.character.name} used ${kind}. Then ${villain.name} ${villain.hit}!`;
+    drawScene(state.currentBox, `${kind}Counter`);
     updateFightPanel();
   }
 
@@ -455,9 +455,11 @@
 
     const heroStepX = state.heroOffsetX || 0;
     const heroStepY = state.heroOffsetY || 0;
-    const heroX = (action === "punch" || action === "kick" || action === "power" || action === "hero" ? 355 : action === "villain" ? 185 : 245) + heroStepX;
+    const baseAction = action.replace("Counter", "");
+    const isCounter = action.endsWith("Counter");
+    const heroX = (baseAction === "punch" || baseAction === "kick" || baseAction === "power" || baseAction === "hero" ? 355 : action === "villain" ? 185 : 245) + heroStepX;
     const heroY = 370 + heroStepY;
-    const villainX = action === "punch" || action === "kick" || action === "power" || action === "hero" ? 990 : action === "villain" ? 900 : 960;
+    const villainX = isCounter ? 900 : baseAction === "punch" || baseAction === "kick" || baseAction === "power" || baseAction === "hero" ? 990 : action === "villain" ? 900 : 960;
     const villainY = 320;
 
     c.save();
@@ -517,12 +519,14 @@
   }
 
   function drawBattleEffect(c, action, heroX, villainX, color) {
+    const baseAction = action.replace("Counter", "");
+    const isCounter = action.endsWith("Counter");
     c.save();
     c.lineWidth = 12;
     c.lineCap = "round";
     c.strokeStyle = action === "villain" ? "#d91f2e" : color;
     c.fillStyle = action === "villain" ? "#ffd84a" : "#fffef7";
-    if (action === "punch") {
+    if (baseAction === "punch") {
       c.beginPath();
       c.moveTo(heroX + 80, 315);
       c.lineTo(villainX - 120, 295);
@@ -531,13 +535,13 @@
       c.lineTo(villainX - 165, 330);
       c.stroke();
       drawImpactWord(c, "PUNCH!", 650, 270, color);
-    } else if (action === "kick") {
+    } else if (baseAction === "kick") {
       c.beginPath();
       c.moveTo(heroX + 70, 375);
       c.quadraticCurveTo(650, 260, villainX - 105, 360);
       c.stroke();
       drawImpactWord(c, "KICK!", 650, 270, color);
-    } else if (action === "power" || action === "hero") {
+    } else if (baseAction === "power" || action === "hero") {
       c.beginPath();
       c.arc(640, 315, 118, 0, Math.PI * 2);
       c.moveTo(558, 233);
@@ -553,6 +557,27 @@
       c.stroke();
       drawImpactWord(c, "OUCH!", 650, 270, "#d91f2e");
     }
+    c.restore();
+    if (isCounter) {
+      drawBossCounterEffect(c, heroX, villainX);
+    }
+  }
+
+  function drawBossCounterEffect(c, heroX, villainX) {
+    c.save();
+    c.lineWidth = 11;
+    c.lineCap = "round";
+    c.strokeStyle = "#d91f2e";
+    c.fillStyle = "#ffd84a";
+    c.beginPath();
+    c.moveTo(villainX - 80, 330);
+    c.quadraticCurveTo((heroX + villainX) / 2, 245, heroX + 65, 330);
+    c.stroke();
+    c.beginPath();
+    c.arc(heroX + 72, 330, 24, 0, Math.PI * 2);
+    c.fill();
+    c.stroke();
+    drawImpactWord(c, "BOSS HIT!", 650, 210, "#d91f2e");
     c.restore();
   }
 
