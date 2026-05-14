@@ -805,9 +805,9 @@
     finalShowdownPartTwo: {
       id: "finalShowdownPartTwo",
       name: "Underground Showdown Part Two",
-      levels: "Level 21",
+      levels: "Levels 21-24",
       startLevel: 21,
-      endLevel: 21,
+      endLevel: 24,
       unlock: "Win Part 1 of the Last Level."
     },
     megaCity: {
@@ -1170,12 +1170,12 @@
     const basics = [
       ["Basic buttons", "Every fighter has Kick, Punch, Jump, Run, Walk, Duck, Dodge, and Hide. Hide only works near trees or benches, and it lasts up to 20 seconds."],
       ["Hearts", "Most fighters have 3 pink hearts. Most hits take half a heart. Giant Punch, Laser Ray, Bite, or two robot chainsaws at once take 1 whole heart."],
-      ["Timer and levels", "Each level lasts 2 minutes. If nobody loses all hearts, whoever has more hearts wins the level. Superville has Levels 1, 2, and 3. Candyland has Levels 4, 5, and 6. Abandoned Desert has Levels 7, 8, 9, and 10. Water World has Levels 11, 12, 13, and 14. Outer Space has Levels 15, 16, 17, 18, 19, and 20. Underground Showdown Part Two is Level 21. Mega City has Levels 26, 27, 28, 29, and 30."],
+      ["Timer and levels", "Each level lasts 2 minutes. If nobody loses all hearts, whoever has more hearts wins the level. Superville has Levels 1, 2, and 3. Candyland has Levels 4, 5, and 6. Abandoned Desert has Levels 7, 8, 9, and 10. Water World has Levels 11, 12, 13, and 14. Outer Space has Levels 15, 16, 17, 18, 19, and 20. Underground Showdown Part Two has Levels 21, 22, 23, and 24. Mega City has Levels 26, 27, 28, 29, and 30."],
       ["Worlds", "Candyland unlocks after you beat Yapping Yonatan through Levels 1, 2, and 3. Abandoned Desert unlocks after you beat Candyland Levels 4, 5, and 6 twice. The Candyland wins do not need to be in a row. Water World unlocks after you beat King Dock in Abandoned Desert. Outer Space unlocks after you beat Water World Levels 11, 12, 13, and 14. Underground Showdown Part Two unlocks after you win Part 1 of the Last Level. Mega City unlocks after you win Underground Showdown Part Two."],
       ["King Dock hearts, laser, Rack Creatures, and boxes", "King Dock is very huge, has 10 hearts, and the player starts with 10 hearts in his boss worlds. He can fire one giant hand laser. When you hit King Dock, his heart flies to you and heals you up to your max hearts. Every real hit also makes special prize boxes spread out around him. King Dock can control seven Rack Creatures at a time, but any hit destroys a creature. Sometimes King Dock drops a trap box from above for no reason. Trap boxes say BOOBY TRAP on them. Watch for little traps around trap boxes, like pit cracks and Rack Creatures dropping from above. Jump onto a landed prize box to get rewards like an iron sword, armor, heart, speed boost, or power refill. Beating King Dock earns the King of the Battle crown."],
       ["Water World", "Levels 11-14 take place on water and are meant to be pretty easy, like Levels 1-3. King Dock is the boss again, but he wears a water suit. Benji can use his five shark forms anywhere in Water World. Freddy can still choose fish. Other fighters get a simple water-themed power, like Mr. 67's Ice Feet for walking on water."],
       ["Outer Space", "Levels 15-17 have King Dock in an astronaut suit with MIM the red dragon helping him. Level 18 has two King Docks on Neptune. Level 19 moves to the asteroid field with stronger double King Docks. Level 20 is the Final Showdown against a giant robot with Mischievous Mayor inside. The robot has 50 hearts and a hidden weak spot. Each hit on the robot drops a good prize box; jump on it after it lands to get a donut boost, power refill, iron sword, armor, heart, or speed."],
-      ["Underground Showdown Part Two", "Level 21 happens underground. Underground booby traps appear around the arena, and the boss digs under the ground, pops up near you, and has to be fought underground. The robot still has a hidden weak spot, but this fight is faster and harder. Robot prize boxes are always good and can help you survive."],
+      ["Underground Showdown Part Two", "Levels 21, 22, and 23 are Underground Part One fights with traps, tunnels, and the boss popping up from below. Level 24 is Underground Part Two and is harder. The robot still has a hidden weak spot, and robot prize boxes are always good and can help you survive."],
       ["Mega City", "Levels 26-29 happen in a very big city like NYC against Mischievous Mayor. Mayor has 5 hearts and the player has 10 hearts. Level 30 brings back the 50-heart robot with MIM the dragon and a couple rock creatures helping it. Hitting the robot makes good prize boxes fall out, and one late-game box can reveal where the robot's weak spot is."],
       ["Supercharged Package", "Beat Mischievous Mayor two times in a row to unlock the Supercharged Package. Once it is unlocked, Candyland fighters get 5 hearts on Levels 4 and 5, then 10 hearts on Level 6. Supercharged names include Cheetah Racer, Mega Mommy, Ultimate Freddy, and Super Dad. Cheetah Racer only has Super Speed and Sharp Claws; Sharp Claws takes half a heart. Super Dad turns green and his fist becomes giant when he punches. Mega Mommy is all pink and gets Mega Grow, which makes her giant for a little while. The villains keep their Level 3 power in every Candyland level."],
       ["Powers", "Most powers can be used 3 times, then they recharge. Some special powers recharge after 1 use. Normal recharge is 30 seconds. Mischievous Mayor recharges in 20 seconds when he is the boss."]
@@ -1305,7 +1305,7 @@
     } else if (selectState.mode === "story" && selectState.world === "outerSpace") {
       message = "Outer Space is ready: Levels 15-20. King Dock gets an astronaut suit, then the Final Showdown robot appears.";
     } else if (selectState.mode === "story" && selectState.world === "finalShowdownPartTwo") {
-      message = "Underground Showdown Part Two is ready: Level 21. The boss digs under the ground and booby traps are everywhere.";
+      message = "Underground Showdown Part Two is ready: Levels 21-24. Levels 21-23 are Part One underground fights; Level 24 is the harder Part Two.";
     } else if (selectState.mode === "story" && selectState.world === "megaCity") {
       message = "Mega City is ready: Levels 26-29 have Mischievous Mayor, then Level 30 brings back the robot with MIM.";
     } else if (selectState.mode === "two") {
@@ -1612,10 +1612,13 @@
     if (game.world === "finalShowdownPartTwo") {
       game.p2.robotExposed = false;
       game.p2.robotWeakSpotFound = false;
-      game.p2.nextUndergroundPopAt = performance.now() + 5200;
-      game.nextUndergroundTrapAt = performance.now() + 2800;
+      const finalPart = level >= 24;
+      game.p2.nextUndergroundPopAt = performance.now() + (finalPart ? 3800 : 5200);
+      game.nextUndergroundTrapAt = performance.now() + (finalPart ? 1900 : 2800);
       spawnUndergroundBoobyTraps(420, 420, performance.now());
       spawnUndergroundBoobyTraps(900, 520, performance.now() + 500);
+      if (level >= 22) spawnUndergroundBoobyTraps(650, 355, performance.now() + 900);
+      if (finalPart) spawnUndergroundBoobyTraps(1040, 380, performance.now() + 1200);
       return;
     }
     if (game.world === "megaCity") {
@@ -1869,7 +1872,7 @@
 
   function bossMaxHealthForLevel(level, id) {
     if (id === "spaceRobot" && worldIdForLevel(level) === "megaCity") return 50;
-    if (id === "spaceRobot" && worldIdForLevel(level) === "finalShowdownPartTwo") return 75;
+    if (id === "spaceRobot" && worldIdForLevel(level) === "finalShowdownPartTwo") return level >= 24 ? 75 : 60;
     if (id === "spaceRobot") return 50;
     if (id === "kingDock" && worldIdForLevel(level) === "outerSpace") {
       if (level >= 20) return 10;
@@ -1901,7 +1904,10 @@
       if (level === 27) return "Traffic Tower Battle";
       return "Mega City Begins";
     }
-    if (world === "finalShowdownPartTwo") return "Underground Showdown Part Two";
+    if (world === "finalShowdownPartTwo") {
+      if (level >= 24) return "Underground Showdown Part Two";
+      return `Underground Part One ${level - 20}`;
+    }
     if (world === "outerSpace") {
       if (level >= 20) return "Final Showdown";
       if (level === 19) return "Asteroid Field";
@@ -1936,7 +1942,7 @@
 
   function stageLevelFor(level) {
     if (level >= 26) return level >= 30 ? 5 : clamp(level - 25, 1, 4);
-    if (level >= 21) return 4;
+    if (level >= 21) return level >= 24 ? 4 : 3;
     if (level >= 15) {
       if (level >= 19) return 3;
       if (level === 18) return 2;
@@ -2044,7 +2050,9 @@
       return "Mischievous Mayor is attacking the big city!";
     }
     if (game && game.world === "finalShowdownPartTwo") {
-      return "Underground booby traps! The boss can pop up anywhere!";
+      return level >= 24
+        ? "Part Two! More underground traps and faster pop-ups!"
+        : "Underground Part One: traps, tunnels, and pop-up attacks!";
     }
     if (game && game.world === "outerSpace") {
       if (opponentId === "spaceRobot" || level >= 20) return "The robot is very hard to defeat. It has a hidden weak spot!";
@@ -2174,17 +2182,18 @@
 
   function updateUndergroundShowdown(now) {
     if (!isFinalShowdownPartTwoActive() || !game.p2 || game.p2.health <= 0) return;
+    const finalPart = game.level >= 24;
     if (!game.nextUndergroundTrapAt || now >= game.nextUndergroundTrapAt) {
       spawnUndergroundBoobyTraps(
         clamp(game.p1.x + (Math.random() * 260 - 130), 130, WIDTH - 130),
         clamp(game.p1.y + (Math.random() * 150 - 75), 250, HEIGHT - 120),
         now
       );
-      game.nextUndergroundTrapAt = now + 5200 + Math.random() * 2600;
+      game.nextUndergroundTrapAt = now + (finalPart ? 3800 : 5200) + Math.random() * (finalPart ? 1800 : 2600);
     }
     if (!game.p2.nextUndergroundPopAt || now < game.p2.nextUndergroundPopAt || game.p2.undergroundUntil > now) return;
     undergroundBossPop(game.p2, game.p1, now);
-    game.p2.nextUndergroundPopAt = now + 6200 + Math.random() * 2600;
+    game.p2.nextUndergroundPopAt = now + (finalPart ? 4500 : 6200) + Math.random() * (finalPart ? 1800 : 2600);
   }
 
   function undergroundBossPop(boss, target, now) {
@@ -5336,7 +5345,7 @@
         if (awardTrophy("finalShowdownPart1")) game.unlocks.push("trophy:finalShowdownPart1");
         if (unlockWorld("finalShowdownPartTwo")) game.unlocks.push("world:finalShowdownPartTwo");
       }
-      if (game.world === "finalShowdownPartTwo" && game.level >= 21) {
+      if (game.world === "finalShowdownPartTwo" && game.level >= 24) {
         if (awardTrophy("finalShowdownPart2")) game.unlocks.push("trophy:finalShowdownPart2");
         if (unlockWorld("megaCity")) game.unlocks.push("world:megaCity");
       }
@@ -6108,20 +6117,22 @@
   }
 
   function drawUndergroundShowdownBackground(level) {
-    ctx.fillStyle = "#140d12";
+    const finalPart = level >= 24;
+    const partLabel = finalPart ? "Underground Showdown Part Two" : `Underground Showdown Part One - Level ${level}`;
+    ctx.fillStyle = finalPart ? "#100711" : "#140d12";
     ctx.fillRect(0, 0, WIDTH, HEIGHT);
     roundRect(ctx, 48, 96, WIDTH - 96, HEIGHT - 144, 8);
-    ctx.fillStyle = "#3b241d";
+    ctx.fillStyle = finalPart ? "#412034" : "#3b241d";
     ctx.fill();
     ctx.strokeStyle = "#171216";
     ctx.lineWidth = 8;
     ctx.stroke();
 
-    ctx.fillStyle = "#5a3627";
+    ctx.fillStyle = finalPart ? "#6b2c48" : "#5a3627";
     ctx.fillRect(56, 104, WIDTH - 112, 126);
-    ctx.fillStyle = "#271918";
+    ctx.fillStyle = finalPart ? "#20131f" : "#271918";
     ctx.fillRect(56, 230, WIDTH - 112, HEIGHT - 278);
-    ctx.fillStyle = "#6f4631";
+    ctx.fillStyle = finalPart ? "#78425b" : "#6f4631";
     ctx.beginPath();
     ctx.moveTo(56, 430);
     for (let x = 56; x <= WIDTH - 56; x += 74) {
@@ -6135,7 +6146,7 @@
     ctx.lineWidth = 5;
     ctx.stroke();
 
-    ctx.strokeStyle = "rgba(255,216,74,0.34)";
+    ctx.strokeStyle = finalPart ? "rgba(255,71,126,0.48)" : "rgba(255,216,74,0.34)";
     ctx.lineWidth = 8;
     for (let i = 0; i < 5; i += 1) {
       const x = 110 + i * 235;
@@ -6158,13 +6169,13 @@
       ctx.stroke();
     }
 
-    ctx.fillStyle = "#ff477e";
+    ctx.fillStyle = finalPart ? "#ff477e" : "#ffd84a";
     ctx.strokeStyle = "#171216";
     ctx.lineWidth = 4;
     ctx.font = "900 22px Trebuchet MS";
     ctx.textAlign = "left";
-    ctx.fillText("Underground Showdown Part Two", 76, 138);
-    ctx.strokeText("Underground Showdown Part Two", 76, 138);
+    ctx.fillText(partLabel, 76, 138);
+    ctx.strokeText(partLabel, 76, 138);
     drawStorySetPieceLabel();
   }
 

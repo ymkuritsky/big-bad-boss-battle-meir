@@ -13,7 +13,7 @@ http://127.0.0.1:4173
 Version 1 is playable and deployed.
 
 Main features:
-- Story Mode with Superville Levels 1-3, unlockable Candyland Levels 4-6, unlockable Abandoned Desert Levels 7-10, unlockable Water World Levels 11-14, unlockable Outer Space Levels 15-20, unlockable Underground Showdown Part Two Level 21, and final Mega City Levels 26-30
+- Story Mode with Superville Levels 1-3, unlockable Candyland Levels 4-6, unlockable Abandoned Desert Levels 7-10, unlockable Water World Levels 11-14, unlockable Outer Space Levels 15-20, unlockable Underground Showdown Part Two Levels 21-24, and final Mega City Levels 26-30
 - Two Player Mode on the same device
 - Each world starts easy, gets harder, then ends with a super hard boss level
 - Pink heart health system
@@ -57,12 +57,13 @@ Main features:
 - Level 20 is the Final Showdown: a giant robot with 50 hearts has Mischievous Mayor inside, plus two side King Docks with 10 hearts each
 - The Final Showdown robot has a hidden weak spot; finding it crashes the robot open and leaves Mischievous Mayor with 3 hearts
 - Beating Level 20 earns the "You Won Part 1 of the Last Level!" medal
-- Beating Level 20 unlocks Underground Showdown Part Two: Level 21
-- Level 21 happens underground with underground booby traps everywhere
-- In Level 21, the boss digs under the ground, pops up near the player, and has to be fought underground
-- The Level 21 boss has 75 hearts and a faster boss tune
-- Beating Level 21 earns the "One Part Left And You're Done The Game!" trophy
-- Beating Level 21 unlocks Mega City Levels 26-30
+- Beating Level 20 unlocks Underground Showdown Part Two: Levels 21-24
+- Levels 21, 22, and 23 are Underground Part One fights with underground booby traps everywhere
+- Level 24 is Underground Part Two and is harder, with faster traps and faster boss pop-ups
+- In Levels 21-24, the boss digs under the ground, pops up near the player, and has to be fought underground
+- The Level 24 boss has 75 hearts and a faster boss tune
+- Beating Level 24 earns the "One Part Left And You're Done The Game!" trophy
+- Beating Level 24 unlocks Mega City Levels 26-30
 - Levels 26-30 are the last levels of the game and happen in a huge NYC-style city
 - Levels 26-29 are against Mischievous Mayor; Mayor has 5 hearts and the player has 10 hearts
 - Level 30 is the last level; the 50-heart Final Showdown Robot returns, and this time MIM the dragon plus a couple rock creatures help it
@@ -110,7 +111,7 @@ Story bosses:
 - Yapping Yonatan
 - King Dock in Abandoned Desert, Water World, and Outer Space
 - Mischievous Mayor in Mega City Levels 26-29
-- Final Showdown Robot on Level 20, Level 21, and the final Level 30
+- Final Showdown Robot on Level 20, Underground Levels 21-24, and the final Level 30
 
 ## Benji
 
