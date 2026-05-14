@@ -1,0 +1,284 @@
+:root {
+  color-scheme: light;
+  --ink: #171216;
+  --paper: #fffaf0;
+  --danger: #d91f2e;
+  --violet: #7d43d6;
+  --blue: #177bd1;
+  --green: #18a66a;
+  --gold: #ffd84a;
+  --pink: #ff5fa8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  overflow: hidden;
+  color: var(--ink);
+  font-family: "Trebuchet MS", "Comic Sans MS", Arial, sans-serif;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.84), rgba(255,255,255,0.45)),
+    radial-gradient(circle at 12% 18%, #ffd84a 0 9%, transparent 10%),
+    radial-gradient(circle at 82% 14%, #8ed8ff 0 8%, transparent 9%),
+    radial-gradient(circle at 78% 86%, #ff9bd1 0 11%, transparent 12%),
+    #f7efe1;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+.game-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.top-bar {
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px clamp(14px, 3vw, 34px);
+  border-bottom: 5px solid var(--ink);
+  background: rgba(255,255,255,0.84);
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(30px, 5vw, 64px);
+  line-height: 0.9;
+  text-transform: uppercase;
+  text-shadow: 4px 4px 0 var(--danger), -3px 3px 0 var(--violet);
+}
+
+.view {
+  display: none;
+  min-height: 0;
+}
+
+.view.active {
+  display: block;
+}
+
+.intro-panel,
+.board-layout,
+.scene-stage {
+  min-height: calc(100vh - 90px);
+}
+
+.intro-panel {
+  display: grid;
+  align-content: center;
+  gap: 18px;
+  padding: clamp(16px, 4vw, 46px);
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--danger);
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.character-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(200px, 1fr));
+  gap: clamp(14px, 3vw, 30px);
+}
+
+.character-card,
+.player-card,
+.board-panel,
+.scene-card {
+  border: 5px solid var(--ink);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.92);
+  box-shadow: 8px 8px 0 rgba(0,0,0,0.16);
+}
+
+.character-card {
+  min-height: 330px;
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  padding: 18px;
+  color: var(--ink);
+  text-align: center;
+}
+
+.character-card:hover,
+.comic-button:hover,
+.cell-button:hover {
+  transform: translateY(-2px);
+}
+
+.character-card strong {
+  font-size: clamp(26px, 4vw, 44px);
+  text-transform: uppercase;
+}
+
+.character-card span {
+  max-width: 360px;
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.board-layout {
+  display: grid;
+  grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
+  gap: clamp(14px, 3vw, 28px);
+  padding: clamp(14px, 3vw, 30px);
+}
+
+.player-card {
+  align-self: start;
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  padding: 14px;
+}
+
+.player-card h2 {
+  margin: 0;
+  font-size: 28px;
+  text-transform: uppercase;
+}
+
+.player-card p:last-child {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 900;
+  text-align: center;
+}
+
+.board-panel {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  padding: clamp(12px, 2vw, 22px);
+}
+
+.battle-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(72px, 1fr));
+  gap: clamp(8px, 1.5vw, 14px);
+}
+
+.cell-button {
+  aspect-ratio: 1 / 1;
+  display: grid;
+  place-items: center;
+  border: 4px solid var(--ink);
+  border-radius: 7px;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.65), rgba(255,255,255,0.08)),
+    #68c7ff;
+  color: var(--ink);
+  font-size: clamp(20px, 3vw, 38px);
+  font-weight: 900;
+  text-transform: uppercase;
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.16);
+}
+
+.cell-button.revealed {
+  background: #ffd84a;
+}
+
+.scene-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #130f1f;
+}
+
+#sceneCanvas {
+  width: min(100vw, calc((100vh - 90px) * 16 / 9));
+  max-height: calc(100vh - 90px);
+  border: 8px solid var(--ink);
+  background: #88d8ff;
+}
+
+.scene-card {
+  position: absolute;
+  left: clamp(12px, 3vw, 36px);
+  bottom: clamp(12px, 3vw, 30px);
+  width: min(480px, calc(100vw - 24px));
+  padding: 14px;
+}
+
+.scene-card h2 {
+  margin: 4px 0 8px;
+  font-size: clamp(26px, 4vw, 46px);
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.scene-card p {
+  margin: 0 0 12px;
+  font-size: 17px;
+  font-weight: 900;
+}
+
+.scene-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.comic-button {
+  border: 4px solid var(--ink);
+  border-radius: 7px;
+  padding: 10px 14px;
+  background: var(--gold);
+  color: var(--ink);
+  font-weight: 900;
+  text-transform: uppercase;
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.16);
+}
+
+.comic-button.violet {
+  background: var(--violet);
+  color: white;
+}
+
+.comic-button.small {
+  padding: 8px 12px;
+  background: #fff;
+}
+
+@media (max-width: 760px) {
+  body {
+    overflow: auto;
+  }
+
+  .character-grid,
+  .board-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .battle-grid {
+    grid-template-columns: repeat(4, minmax(58px, 1fr));
+  }
+
+  .player-card {
+    grid-template-columns: 120px 1fr;
+    justify-items: start;
+    text-align: left;
+  }
+
+  .player-card canvas {
+    width: 120px;
+    height: 98px;
+    grid-row: 1 / 4;
+  }
+}

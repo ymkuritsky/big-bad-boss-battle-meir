@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>Battleship Thursday</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="game-shell">
+      <header class="top-bar">
+        <h1>Battleship Thursday</h1>
+        <button id="resetButton" class="comic-button small">Reset</button>
+      </header>
+
+      <section id="characterView" class="view active">
+        <div class="intro-panel">
+          <p class="eyebrow">Choose Your Bone</p>
+          <div class="character-grid">
+            <button class="character-card" data-character="smiley">
+              <canvas width="220" height="180" aria-hidden="true"></canvas>
+              <strong>Smiley Bone</strong>
+              <span>A bone with a very big smile.</span>
+            </button>
+            <button class="character-card" data-character="phony">
+              <canvas width="220" height="180" aria-hidden="true"></canvas>
+              <strong>Phony</strong>
+              <span>A regular-ish bone, trickster, sometimes grumpy.</span>
+            </button>
+            <button class="character-card" data-character="grandmaBen">
+              <canvas width="220" height="180" aria-hidden="true"></canvas>
+              <strong>Grandma Ben</strong>
+              <span>A brave grandma with very big muscles.</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section id="boardView" class="view">
+        <div class="board-layout">
+          <aside class="player-card">
+            <canvas id="playerCanvas" width="220" height="180" aria-hidden="true"></canvas>
+            <p class="eyebrow">Playing As</p>
+            <h2 id="playerName">Smiley Bone</h2>
+            <p id="playerLine">Pick a mystery box.</p>
+          </aside>
+          <section class="board-panel">
+            <p class="eyebrow">Mystery Battleship Board</p>
+            <div id="battleGrid" class="battle-grid" aria-label="Battleship mystery board"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="sceneView" class="view">
+        <div class="scene-stage">
+          <canvas id="sceneCanvas" width="1280" height="720" aria-label="Mystery box scene"></canvas>
+          <div class="scene-card">
+            <p class="eyebrow">Box Revealed</p>
+            <h2 id="sceneTitle"></h2>
+            <p id="sceneText"></p>
+            <div class="scene-actions">
+              <button id="backToBoardButton" class="comic-button">Pick Another Box</button>
+              <button id="newCharacterButton" class="comic-button violet">Change Character</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="game.js"></script>
+  </body>
+</html>
