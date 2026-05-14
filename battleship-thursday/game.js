@@ -41,9 +41,33 @@
     { id: "c5", label: "C5", title: "Bartlebee's Deep Water", text: "Bartlebee, the mega rat creature, waits very far down with a giant club in his hand.", theme: "deep", villain: "bartlebee" }
   ];
 
+  const villains = {
+    tinyGuard: { name: "Tiny Harbor Guard", hearts: 3, hit: "throws a tiny anchor" },
+    fogPhantom: { name: "Fog Phantom", hearts: 3, hit: "swirls fog in your face" },
+    boneTrickster: { name: "Bone Island Trickster", hearts: 4, hit: "does a fake-out jump" },
+    stormBully: { name: "Storm Bell Bully", hearts: 4, hit: "rings the storm bell" },
+    kingDock: { name: "King Dock", hearts: 5, hit: "slams the dock trap" },
+    ratCreature: { name: "Rat Creature", hearts: 5, hit: "stomps the ship deck" },
+    subSneak: { name: "Submarine Sneak", hearts: 4, hit: "pops out with a splash" },
+    locustLord: { name: "Lord of Locusts", hearts: 6, hit: "sends out buzzing locusts" },
+    waveWizard: { name: "Wave Wizard", hearts: 4, hit: "throws a wrong-turn wave" },
+    ratPack: { name: "Rat Creature Pack", hearts: 6, hit: "charges together" },
+    quietSneak: { name: "Quiet Sneak", hearts: 4, hit: "jumps out silently" },
+    splashGobbler: { name: "Splash Gobbler", hearts: 4, hit: "gobbles up the splash" },
+    thursdayTrickster: { name: "Thursday Trickster", hearts: 5, hit: "hums a tricky song" },
+    mim: { name: "MIM the Red Dragon", hearts: 7, hit: "shoots fire breath" },
+    bartlebee: { name: "Bartlebee", hearts: 8, hit: "swings the giant club" }
+  };
+
   const state = {
     character: null,
-    revealed: new Set()
+    revealed: new Set(),
+    beaten: new Set(),
+    currentBox: null,
+    heroHp: 5,
+    villainHp: 0,
+    villainMaxHp: 0,
+    fighting: false
   };
 
   const els = {
@@ -60,6 +84,13 @@
     sceneCanvas: document.getElementById("sceneCanvas"),
     sceneTitle: document.getElementById("sceneTitle"),
     sceneText: document.getElementById("sceneText"),
+    fightPanel: document.getElementById("fightPanel"),
+    heroHearts: document.getElementById("heroHearts"),
+    villainHearts: document.getElementById("villainHearts"),
+    fightMessage: document.getElementById("fightMessage"),
+    punchButton: document.getElementById("punchButton"),
+    kickButton: document.getElementById("kickButton"),
+    powerButton: document.getElementById("powerButton"),
     backToBoardButton: document.getElementById("backToBoardButton"),
     newCharacterButton: document.getElementById("newCharacterButton")
   };
@@ -74,7 +105,7 @@
     state.character = characters[id];
     els.playerName.textContent = state.character.name;
     els.playerLine.textContent = state.character.line;
-    drawBone(els.playerCanvas.getContext("2d"), state.character, 1);
+    drawHero(els.playerCanvas.getContext("2d"), state.character, 1);
     renderBoard();
     showView("board");
   }
@@ -93,8 +124,10 @@
 
   function revealBox(box) {
     state.revealed.add(box.id);
+    state.currentBox = box;
     els.sceneTitle.textContent = "Mystery Box Opened";
     els.sceneText.textContent = `${state.character.name} found ${box.text}`;
+    startBoxResult(box);
     drawScene(box);
     showView("scene");
   }
@@ -102,8 +135,82 @@
   function resetGame() {
     state.character = null;
     state.revealed.clear();
+    state.beaten.clear();
+    state.currentBox = null;
+    state.fighting = false;
     showView("character");
     drawCharacterCards();
+  }
+
+  function startBoxResult(box) {
+    if (!box.villain) {
+      state.fighting = false;
+      els.fightPanel.classList.add("hidden");
+      els.backToBoardButton.disabled = false;
+      return;
+    }
+    const villain = villains[box.villain] || { name: "Mystery Villain", hearts: 4, hit: "does a mystery attack" };
+    state.heroHp = state.character.id === "grandmaBen" ? 7 : 5;
+    state.villainHp = villain.hearts;
+    state.villainMaxHp = villain.hearts;
+    state.fighting = true;
+    els.fightPanel.classList.remove("hidden");
+    els.fightMessage.textContent = `${villain.name} wants to fight!`;
+    els.backToBoardButton.disabled = true;
+    setAttackButtons(false);
+    updateFightPanel();
+  }
+
+  function attackVillain(kind) {
+    if (!state.fighting || !state.currentBox) {
+      return;
+    }
+    const villain = villains[state.currentBox.villain] || { name: "Mystery Villain", hearts: 4, hit: "does a mystery attack" };
+    const baseDamage = kind === "power" ? 3 : kind === "kick" ? 2 : 1;
+    const muscleBonus = state.character.id === "grandmaBen" && kind !== "punch" ? 1 : 0;
+    const damage = baseDamage + muscleBonus;
+    state.villainHp = Math.max(0, state.villainHp - damage);
+    if (state.villainHp === 0) {
+      state.fighting = false;
+      state.beaten.add(state.currentBox.id);
+      els.fightMessage.textContent = `${state.character.name} beat ${villain.name}!`;
+      els.sceneTitle.textContent = "Villain Defeated";
+      els.backToBoardButton.disabled = false;
+      setAttackButtons(true);
+      drawScene(state.currentBox, "hero");
+      updateFightPanel();
+      return;
+    }
+    state.heroHp = Math.max(0, state.heroHp - 1);
+    if (state.heroHp === 0) {
+      state.fighting = false;
+      els.fightMessage.textContent = `${villain.name} wins this round. Pick the box again for a rematch.`;
+      els.sceneTitle.textContent = "Try Again";
+      els.backToBoardButton.disabled = false;
+      setAttackButtons(true);
+      drawScene(state.currentBox, "villain");
+      updateFightPanel();
+      return;
+    }
+    els.fightMessage.textContent = `${state.character.name} used ${kind}. ${villain.name} ${villain.hit}!`;
+    drawScene(state.currentBox, kind);
+    updateFightPanel();
+  }
+
+  function updateFightPanel() {
+    const villain = state.currentBox?.villain ? villains[state.currentBox.villain] : null;
+    els.heroHearts.textContent = `Hero: ${heartText(state.heroHp)}`;
+    els.villainHearts.textContent = villain ? `${villain.name}: ${heartText(state.villainHp)}` : "No villain";
+  }
+
+  function setAttackButtons(disabled) {
+    els.punchButton.disabled = disabled;
+    els.kickButton.disabled = disabled;
+    els.powerButton.disabled = disabled;
+  }
+
+  function heartText(count) {
+    return count > 0 ? `${count} hearts` : "defeated";
   }
 
   function drawCharacterCards() {
@@ -118,10 +225,12 @@
     });
   }
 
-  function drawBone(ctx, character, scale = 1) {
+  function drawBone(ctx, character, scale = 1, clear = true) {
     const w = ctx.canvas.width;
     const h = ctx.canvas.height;
-    ctx.clearRect(0, 0, w, h);
+    if (clear) {
+      ctx.clearRect(0, 0, w, h);
+    }
     ctx.save();
     ctx.translate(w / 2, h / 2 + 18);
     ctx.scale(scale, scale);
@@ -160,10 +269,12 @@
     ctx.restore();
   }
 
-  function drawGrandmaBen(ctx, character, scale = 1) {
+  function drawGrandmaBen(ctx, character, scale = 1, clear = true) {
     const w = ctx.canvas.width;
     const h = ctx.canvas.height;
-    ctx.clearRect(0, 0, w, h);
+    if (clear) {
+      ctx.clearRect(0, 0, w, h);
+    }
     ctx.save();
     ctx.translate(w / 2, h / 2 + 22);
     ctx.scale(scale, scale);
@@ -235,7 +346,7 @@
     ctx.closePath();
   }
 
-  function drawScene(box) {
+  function drawScene(box, action = "") {
     const c = sceneCtx;
     const w = c.canvas.width;
     const h = c.canvas.height;
@@ -262,13 +373,55 @@
     c.save();
     c.translate(380, 432);
     c.scale(0.85, 0.85);
-    if (state.character.id === "grandmaBen") {
-      drawGrandmaBen(c, state.character, 1);
-    } else {
-      drawBone(c, state.character, 1);
-    }
+    drawHero(c, state.character, 1, false);
     c.restore();
+    if (action) {
+      drawActionEffect(c, action, colors.accent);
+    }
     drawComicLabel(c, "Mystery Box Opened", 66, 120, colors.accent);
+  }
+
+  function drawHero(ctx, character, scale = 1, clear = true) {
+    if (character.id === "grandmaBen") {
+      drawGrandmaBen(ctx, character, scale, clear);
+    } else {
+      drawBone(ctx, character, scale, clear);
+    }
+  }
+
+  function drawActionEffect(c, action, color) {
+    c.save();
+    c.strokeStyle = action === "villain" ? "#d91f2e" : color;
+    c.fillStyle = action === "hero" ? "#18a66a" : "#fffef7";
+    c.lineWidth = 10;
+    c.beginPath();
+    if (action === "punch") {
+      c.moveTo(520, 410);
+      c.lineTo(800, 350);
+      c.lineTo(758, 322);
+      c.moveTo(800, 350);
+      c.lineTo(762, 394);
+    } else if (action === "kick") {
+      c.moveTo(518, 475);
+      c.quadraticCurveTo(650, 358, 820, 420);
+    } else if (action === "power" || action === "hero") {
+      c.arc(650, 360, 96, 0, Math.PI * 2);
+      c.moveTo(586, 296);
+      c.lineTo(714, 424);
+      c.moveTo(714, 296);
+      c.lineTo(586, 424);
+    } else {
+      c.moveTo(930, 350);
+      c.quadraticCurveTo(710, 315, 500, 405);
+    }
+    c.stroke();
+    c.font = "900 42px Trebuchet MS";
+    c.textAlign = "center";
+    c.strokeStyle = "#171216";
+    c.lineWidth = 5;
+    c.strokeText("BAM!", 640, 250);
+    c.fillText("BAM!", 640, 250);
+    c.restore();
   }
 
   function sceneColors(theme) {
@@ -581,6 +734,9 @@
     card.addEventListener("click", () => chooseCharacter(card.dataset.character));
   });
   els.resetButton.addEventListener("click", resetGame);
+  els.punchButton.addEventListener("click", () => attackVillain("punch"));
+  els.kickButton.addEventListener("click", () => attackVillain("kick"));
+  els.powerButton.addEventListener("click", () => attackVillain("power"));
   els.backToBoardButton.addEventListener("click", () => {
     renderBoard();
     showView("board");
