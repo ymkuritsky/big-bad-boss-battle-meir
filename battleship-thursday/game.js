@@ -67,7 +67,9 @@
     heroHp: 5,
     villainHp: 0,
     villainMaxHp: 0,
-    fighting: false
+    fighting: false,
+    heroOffsetX: 0,
+    heroOffsetY: 0
   };
 
   const els = {
@@ -157,6 +159,8 @@
     state.villainHp = villain.hearts;
     state.villainMaxHp = villain.hearts;
     state.fighting = true;
+    state.heroOffsetX = 0;
+    state.heroOffsetY = 0;
     els.fightPanel.classList.remove("hidden");
     els.fightMessage.textContent = `${villain.name} wants to fight!`;
     els.backToBoardButton.disabled = true;
@@ -198,6 +202,26 @@
     els.fightMessage.textContent = `${state.character.name} used ${kind}. ${villain.name} ${villain.hit}!`;
     drawScene(state.currentBox, kind);
     updateFightPanel();
+  }
+
+  function moveHero(direction) {
+    if (!state.currentBox?.villain) {
+      return;
+    }
+    const step = 34;
+    if (direction === "left") {
+      state.heroOffsetX -= step;
+    } else if (direction === "right") {
+      state.heroOffsetX += step;
+    } else if (direction === "up") {
+      state.heroOffsetY -= step;
+    } else if (direction === "down") {
+      state.heroOffsetY += step;
+    }
+    state.heroOffsetX = clamp(state.heroOffsetX, -120, 260);
+    state.heroOffsetY = clamp(state.heroOffsetY, -92, 64);
+    els.fightMessage.textContent = `${state.character.name} moved ${direction}.`;
+    drawScene(state.currentBox);
   }
 
   function updateFightPanel() {
@@ -429,8 +453,10 @@
     drawHealthBar(c, 798, 44, 430, villain.name, state.villainHp, state.villainMaxHp || villain.hearts, "#d91f2e");
     drawComicLabel(c, "BATTLE!", 470, 118, colors.accent);
 
-    const heroX = action === "punch" || action === "kick" || action === "power" || action === "hero" ? 355 : action === "villain" ? 185 : 245;
-    const heroY = 370;
+    const heroStepX = state.heroOffsetX || 0;
+    const heroStepY = state.heroOffsetY || 0;
+    const heroX = (action === "punch" || action === "kick" || action === "power" || action === "hero" ? 355 : action === "villain" ? 185 : 245) + heroStepX;
+    const heroY = 370 + heroStepY;
     const villainX = action === "punch" || action === "kick" || action === "power" || action === "hero" ? 990 : action === "villain" ? 900 : 960;
     const villainY = 320;
 
@@ -1001,8 +1027,15 @@
     c.closePath();
   }
 
+  function clamp(value, min, max) {
+    return Math.min(max, Math.max(min, value));
+  }
+
   document.querySelectorAll(".character-card").forEach((card) => {
     card.addEventListener("click", () => chooseCharacter(card.dataset.character));
+  });
+  document.querySelectorAll(".move-button").forEach((button) => {
+    button.addEventListener("click", () => moveHero(button.dataset.move));
   });
   els.resetButton.addEventListener("click", resetGame);
   els.punchButton.addEventListener("click", () => attackVillain("punch"));
@@ -1013,6 +1046,19 @@
     showView("board");
   });
   els.newCharacterButton.addEventListener("click", () => showView("character"));
+  document.addEventListener("keydown", (event) => {
+    const keyMoves = {
+      ArrowUp: "up",
+      ArrowDown: "down",
+      ArrowLeft: "left",
+      ArrowRight: "right"
+    };
+    const direction = keyMoves[event.key];
+    if (direction && els.views.scene.classList.contains("active")) {
+      event.preventDefault();
+      moveHero(direction);
+    }
+  });
 
   drawCharacterCards();
 })();

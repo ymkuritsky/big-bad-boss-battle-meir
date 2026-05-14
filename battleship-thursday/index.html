@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
     <title>Battleship Thursday</title>
-    <link rel="stylesheet" href="styles.css?v=battle-arena-1" />
+    <link rel="stylesheet" href="styles.css?v=move-arrows-1" />
   </head>
   <body>
     <main class="game-shell">
@@ -65,6 +65,12 @@
                 <span id="villainHearts">Villain: 3</span>
               </div>
               <p id="fightMessage">Choose an attack.</p>
+              <div class="move-pad" aria-label="Move hero">
+                <button class="move-button up" data-move="up" aria-label="Move up">▲</button>
+                <button class="move-button left" data-move="left" aria-label="Move left">◀</button>
+                <button class="move-button right" data-move="right" aria-label="Move right">▶</button>
+                <button class="move-button down" data-move="down" aria-label="Move down">▼</button>
+              </div>
               <div class="attack-row">
                 <button id="punchButton" class="comic-button attack">Punch</button>
                 <button id="kickButton" class="comic-button attack">Kick</button>
@@ -80,6 +86,6 @@
       </section>
     </main>
 
-    <script src="game.js?v=battle-arena-1"></script>
+    <script src="game.js?v=move-arrows-1"></script>
   </body>
 </html>

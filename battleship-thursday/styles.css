@@ -218,14 +218,14 @@ h1 {
 
 .scene-stage.battle-mode .scene-card {
   left: 50%;
-  bottom: clamp(8px, 2vh, 18px);
-  width: min(1040px, calc(100vw - 24px));
+  bottom: 8px;
+  width: min(1120px, calc(100vw - 24px));
   transform: translateX(-50%);
   display: grid;
-  grid-template-columns: minmax(220px, 1fr) minmax(330px, 1.3fr) auto;
+  grid-template-columns: minmax(210px, 0.9fr) minmax(420px, 1.5fr) auto;
   align-items: center;
   gap: 12px;
-  padding: 10px;
+  padding: 8px;
 }
 
 .scene-card h2 {
@@ -248,7 +248,7 @@ h1 {
 
 .scene-stage.battle-mode .scene-card p {
   margin: 0;
-  font-size: 16px;
+  font-size: 15px;
 }
 
 .fight-panel {
@@ -273,6 +273,57 @@ h1 {
   gap: 8px;
 }
 
+.move-pad {
+  width: 142px;
+  display: grid;
+  grid-template-columns: repeat(3, 42px);
+  grid-template-rows: repeat(3, 34px);
+  gap: 4px;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.move-button {
+  width: 42px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 3px solid var(--ink);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 18px;
+  font-weight: 900;
+  line-height: 1;
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.16);
+  touch-action: manipulation;
+}
+
+.move-button.up {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.move-button.left {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.move-button.right {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+.move-button.down {
+  grid-column: 2;
+  grid-row: 3;
+}
+
+.move-button:hover {
+  transform: translateY(-1px);
+}
+
 .fight-title {
   display: block;
   font-size: 22px;
@@ -294,6 +345,44 @@ h1 {
 .fight-panel p {
   margin: 0;
   min-height: 22px;
+}
+
+.scene-stage.battle-mode .fight-panel {
+  grid-template-columns: minmax(142px, auto) minmax(0, 1fr);
+  align-items: center;
+  gap: 6px 10px;
+  margin: 0;
+  padding: 8px;
+}
+
+.scene-stage.battle-mode .fight-title,
+.scene-stage.battle-mode .heart-row,
+.scene-stage.battle-mode .fight-panel p,
+.scene-stage.battle-mode .attack-row {
+  grid-column: 2;
+}
+
+.scene-stage.battle-mode .fight-title {
+  font-size: 18px;
+}
+
+.scene-stage.battle-mode .heart-row span {
+  font-size: 13px;
+  padding: 5px 7px;
+}
+
+.scene-stage.battle-mode .fight-panel p {
+  font-size: 14px;
+}
+
+.scene-stage.battle-mode .move-pad {
+  grid-column: 1;
+  grid-row: 1 / span 4;
+}
+
+.scene-stage.battle-mode .comic-button.attack {
+  min-height: 44px;
+  font-size: 16px;
 }
 
 .comic-button.attack {
