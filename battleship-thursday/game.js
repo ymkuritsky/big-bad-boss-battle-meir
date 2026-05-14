@@ -82,6 +82,7 @@
     playerName: document.getElementById("playerName"),
     playerLine: document.getElementById("playerLine"),
     sceneCanvas: document.getElementById("sceneCanvas"),
+    sceneStage: document.querySelector(".scene-stage"),
     sceneTitle: document.getElementById("sceneTitle"),
     sceneText: document.getElementById("sceneText"),
     fightPanel: document.getElementById("fightPanel"),
@@ -125,8 +126,9 @@
   function revealBox(box) {
     state.revealed.add(box.id);
     state.currentBox = box;
-    els.sceneTitle.textContent = "Mystery Box Opened";
+    els.sceneTitle.textContent = box.villain ? "Battle Time" : "Mystery Box Opened";
     els.sceneText.textContent = `${state.character.name} found ${box.text}`;
+    els.sceneStage.classList.toggle("battle-mode", Boolean(box.villain));
     startBoxResult(box);
     drawScene(box);
     showView("scene");
@@ -138,6 +140,7 @@
     state.beaten.clear();
     state.currentBox = null;
     state.fighting = false;
+    els.sceneStage.classList.remove("battle-mode");
     showView("character");
     drawCharacterCards();
   }
@@ -347,6 +350,10 @@
   }
 
   function drawScene(box, action = "") {
+    if (box.villain) {
+      drawBattleArena(box, action);
+      return;
+    }
     const c = sceneCtx;
     const w = c.canvas.width;
     const h = c.canvas.height;
@@ -381,12 +388,276 @@
     drawComicLabel(c, "Mystery Box Opened", 66, 120, colors.accent);
   }
 
+  function drawBattleArena(box, action = "") {
+    const c = sceneCtx;
+    const w = c.canvas.width;
+    const h = c.canvas.height;
+    const colors = sceneColors(box.theme);
+    const villain = villains[box.villain] || { name: "Mystery Villain", hearts: 4 };
+    c.clearRect(0, 0, w, h);
+
+    c.fillStyle = colors.sky;
+    c.fillRect(0, 0, w, h);
+    c.fillStyle = "rgba(255,255,255,0.22)";
+    for (let x = -80; x < w; x += 190) {
+      c.beginPath();
+      c.arc(x, 100 + Math.sin(x) * 20, 72, 0, Math.PI * 2);
+      c.fill();
+    }
+
+    c.fillStyle = colors.water;
+    c.fillRect(0, 360, w, 360);
+    c.fillStyle = "#2f2a34";
+    c.fillRect(0, 418, w, 302);
+    c.strokeStyle = "#171216";
+    c.lineWidth = 10;
+    c.beginPath();
+    c.moveTo(0, 418);
+    c.lineTo(w, 418);
+    c.stroke();
+    c.strokeStyle = "rgba(255,255,255,0.65)";
+    c.lineWidth = 4;
+    for (let y = 456; y < h; y += 42) {
+      c.beginPath();
+      for (let x = 0; x <= w; x += 74) {
+        c.quadraticCurveTo(x + 37, y - 12, x + 74, y);
+      }
+      c.stroke();
+    }
+
+    drawHealthBar(c, 52, 44, 430, `${state.character.name}`, state.heroHp, state.character.id === "grandmaBen" ? 7 : 5, state.character.accent);
+    drawHealthBar(c, 798, 44, 430, villain.name, state.villainHp, state.villainMaxHp || villain.hearts, "#d91f2e");
+    drawComicLabel(c, "BATTLE!", 470, 118, colors.accent);
+
+    const heroX = action === "punch" || action === "kick" || action === "power" || action === "hero" ? 355 : action === "villain" ? 185 : 245;
+    const heroY = 370;
+    const villainX = action === "punch" || action === "kick" || action === "power" || action === "hero" ? 990 : action === "villain" ? 900 : 960;
+    const villainY = 320;
+
+    c.save();
+    c.translate(heroX, heroY);
+    c.scale(1.08, 1.08);
+    drawHero(c, state.character, 1, false);
+    c.restore();
+
+    c.save();
+    c.translate(villainX, villainY);
+    const villainScale = box.villain === "bartlebee" ? 1.1 : 1;
+    c.scale(villainScale, villainScale);
+    drawVillain(c, box.villain, 0, 0);
+    c.restore();
+
+    drawBattleDistanceLine(c, heroX, villainX);
+    if (action) {
+      drawBattleEffect(c, action, heroX, villainX, colors.accent);
+    }
+  }
+
+  function drawHealthBar(c, x, y, width, label, hp, maxHp, color) {
+    const safeMax = Math.max(1, maxHp);
+    const pct = Math.max(0, hp) / safeMax;
+    c.save();
+    c.fillStyle = "#fffef7";
+    c.strokeStyle = "#171216";
+    c.lineWidth = 6;
+    roundRect(c, x, y, width, 78, 8);
+    c.fill();
+    c.stroke();
+    c.fillStyle = "#171216";
+    c.font = "900 22px Trebuchet MS";
+    c.textAlign = "left";
+    c.fillText(label.toUpperCase(), x + 16, y + 29);
+    c.fillStyle = "#f2d7d7";
+    roundRect(c, x + 16, y + 42, width - 32, 18, 5);
+    c.fill();
+    if (pct > 0) {
+      c.fillStyle = color;
+      roundRect(c, x + 16, y + 42, (width - 32) * pct, 18, 5);
+      c.fill();
+    }
+    c.restore();
+  }
+
+  function drawBattleDistanceLine(c, heroX, villainX) {
+    c.save();
+    c.strokeStyle = "rgba(255,255,255,0.72)";
+    c.lineWidth = 5;
+    c.setLineDash([18, 16]);
+    c.beginPath();
+    c.moveTo(heroX + 80, 418);
+    c.lineTo(villainX - 100, 418);
+    c.stroke();
+    c.restore();
+  }
+
+  function drawBattleEffect(c, action, heroX, villainX, color) {
+    c.save();
+    c.lineWidth = 12;
+    c.lineCap = "round";
+    c.strokeStyle = action === "villain" ? "#d91f2e" : color;
+    c.fillStyle = action === "villain" ? "#ffd84a" : "#fffef7";
+    if (action === "punch") {
+      c.beginPath();
+      c.moveTo(heroX + 80, 315);
+      c.lineTo(villainX - 120, 295);
+      c.lineTo(villainX - 160, 265);
+      c.moveTo(villainX - 120, 295);
+      c.lineTo(villainX - 165, 330);
+      c.stroke();
+      drawImpactWord(c, "PUNCH!", 650, 270, color);
+    } else if (action === "kick") {
+      c.beginPath();
+      c.moveTo(heroX + 70, 375);
+      c.quadraticCurveTo(650, 260, villainX - 105, 360);
+      c.stroke();
+      drawImpactWord(c, "KICK!", 650, 270, color);
+    } else if (action === "power" || action === "hero") {
+      c.beginPath();
+      c.arc(640, 315, 118, 0, Math.PI * 2);
+      c.moveTo(558, 233);
+      c.lineTo(722, 397);
+      c.moveTo(722, 233);
+      c.lineTo(558, 397);
+      c.stroke();
+      drawImpactWord(c, action === "hero" ? "WIN!" : "POWER!", 640, 260, color);
+    } else {
+      c.beginPath();
+      c.moveTo(villainX - 90, 302);
+      c.quadraticCurveTo(700, 260, heroX + 65, 320);
+      c.stroke();
+      drawImpactWord(c, "OUCH!", 650, 270, "#d91f2e");
+    }
+    c.restore();
+  }
+
+  function drawImpactWord(c, text, x, y, color) {
+    c.save();
+    c.font = "900 56px Trebuchet MS";
+    c.textAlign = "center";
+    c.lineWidth = 7;
+    c.strokeStyle = "#171216";
+    c.fillStyle = color;
+    c.strokeText(text, x, y);
+    c.fillText(text, x, y);
+    c.restore();
+  }
+
   function drawHero(ctx, character, scale = 1, clear = true) {
+    if (!clear) {
+      drawHeroFigure(ctx, character, scale);
+      return;
+    }
     if (character.id === "grandmaBen") {
       drawGrandmaBen(ctx, character, scale, clear);
     } else {
       drawBone(ctx, character, scale, clear);
     }
+  }
+
+  function drawHeroFigure(ctx, character, scale = 1) {
+    if (character.id === "grandmaBen") {
+      drawGrandmaBenFigure(ctx, character, scale);
+    } else {
+      drawBoneFigure(ctx, character, scale);
+    }
+  }
+
+  function drawBoneFigure(ctx, character, scale = 1) {
+    ctx.save();
+    ctx.scale(scale, scale);
+    ctx.lineWidth = 8;
+    ctx.strokeStyle = "#171216";
+    ctx.fillStyle = character.color;
+    boneShape(ctx);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#171216";
+    ctx.beginPath();
+    ctx.arc(-22, -18, 5, 0, Math.PI * 2);
+    ctx.arc(22, -18, 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.lineWidth = 5;
+    ctx.lineCap = "round";
+    ctx.beginPath();
+    if (character.id === "smiley") {
+      ctx.arc(0, -6, 30, 0.15, Math.PI - 0.15);
+    } else {
+      ctx.moveTo(-26, 18);
+      ctx.quadraticCurveTo(0, 8, 26, 18);
+      ctx.moveTo(-35, -36);
+      ctx.lineTo(-9, -28);
+      ctx.moveTo(35, -36);
+      ctx.lineTo(9, -28);
+    }
+    ctx.stroke();
+    ctx.fillStyle = character.accent;
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.arc(0, 48, 15, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawGrandmaBenFigure(ctx, character, scale = 1) {
+    ctx.save();
+    ctx.scale(scale, scale);
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 7;
+    ctx.fillStyle = character.color;
+    ctx.beginPath();
+    ctx.ellipse(-70, 50, 30, 52, -0.55, 0, Math.PI * 2);
+    ctx.ellipse(70, 50, 30, 52, 0.55, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#ffd84a";
+    ctx.beginPath();
+    ctx.arc(-82, 88, 22, 0, Math.PI * 2);
+    ctx.arc(82, 88, 22, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = character.accent;
+    roundRect(ctx, -46, 38, 92, 66, 14);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = character.color;
+    ctx.beginPath();
+    ctx.arc(0, -18, 56, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#fffef7";
+    ctx.beginPath();
+    ctx.arc(-32, -50, 26, 0, Math.PI * 2);
+    ctx.arc(0, -62, 30, 0, Math.PI * 2);
+    ctx.arc(32, -50, 26, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#fffef7";
+    ctx.beginPath();
+    ctx.arc(-20, -20, 15, 0, Math.PI * 2);
+    ctx.arc(20, -20, 15, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#171216";
+    ctx.beginPath();
+    ctx.arc(-16, -20, 4, 0, Math.PI * 2);
+    ctx.arc(16, -20, 4, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(-28, 16);
+    ctx.quadraticCurveTo(0, 30, 28, 16);
+    ctx.stroke();
+    ctx.fillStyle = "#ffd84a";
+    ctx.beginPath();
+    ctx.moveTo(56, 36);
+    ctx.lineTo(96, -8);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(96, -8, 12, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
   }
 
   function drawActionEffect(c, action, color) {
