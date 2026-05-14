@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
     <title>Battleship Thursday</title>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css?v=fights-2" />
   </head>
   <body>
     <main class="game-shell">
@@ -58,7 +58,8 @@
             <p class="eyebrow">Box Revealed</p>
             <h2 id="sceneTitle"></h2>
             <p id="sceneText"></p>
-            <div id="fightPanel" class="fight-panel">
+            <div id="fightPanel" class="fight-panel hidden">
+              <strong class="fight-title">Fight The Villain</strong>
               <div class="heart-row">
                 <span id="heroHearts">Hero: 5</span>
                 <span id="villainHearts">Villain: 3</span>
@@ -79,6 +80,6 @@
       </section>
     </main>
 
-    <script src="game.js"></script>
+    <script src="game.js?v=fights-2"></script>
   </body>
 </html>
