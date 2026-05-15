@@ -231,6 +231,8 @@
     heroX: 235,
     heroY: 410,
     action: "",
+    playerAction: "",
+    playerTarget: "",
     trappedUntil: 0,
     knockedDownUntil: 0,
     hiddenUntil: 0,
@@ -264,6 +266,8 @@
     state.heroX = 235;
     state.heroY = 410;
     state.action = "";
+    state.playerAction = "";
+    state.playerTarget = "";
     state.trappedUntil = 0;
     state.knockedDownUntil = 0;
     state.hiddenUntil = 0;
@@ -303,12 +307,15 @@
       return;
     }
     const target = currentTarget();
+    state.playerTarget = target;
     if ((kind === "punch" || kind === "kick") && !isCloseEnoughToAttack(kind, target)) {
       state.action = "miss";
-      els.statusText.textContent = `${kind === "punch" ? "Punch" : "Kick"} missed. Move closer to ${currentBossName(target)} first!`;
+      state.playerAction = kind;
+      els.statusText.textContent = `${attackName(kind)} missed because ${currentBossName(target)} is too far away. Move closer and try again.`;
       draw();
       return;
     }
+    state.playerAction = kind;
     const damage = kind === "power" ? usePowerDamage() : kind === "kick" ? 2 : 1;
     if (target === "math") {
       state.mathHp = Math.max(0, state.mathHp - damage);
@@ -351,10 +358,10 @@
 
     const shieldBlocked = kind === "power" && state.heroId === "fary" && state.earnedPowers.has("homeworkShield");
     const blocked = shieldBlocked;
-    applyBossPower(target, blocked);
-    const bossAction = state.action;
     const dodged = Date.now() < state.hiddenUntil || Date.now() < state.jumpingUntil;
-    const bossDamage = target === "food" || target === "pusher" || target === "bus" || bossAction === "principalWarning" ? 0.5 : target === "crazyBall" && bossAction === "ballRollMiss" ? 0 : bossAction === "principalFar" ? 1.5 : 1;
+    applyBossPower(target, blocked, dodged);
+    const bossAction = state.action;
+    const bossDamage = bossDamageForAction(bossAction);
     state.heroHp = Math.max(0, state.heroHp - (blocked || dodged ? 0 : bossDamage));
     if (state.heroHp === 0) {
       state.lost = true;
@@ -368,13 +375,14 @@
 
     state.action = blocked ? `${kind}-${target}` : bossAction;
     const bossName = currentBossName(target);
-    els.statusText.textContent = `You used ${kind}. ${bossName} got hit, then ${dodged ? "your jump or hide avoided the boss hit!" : bossPowerText(target, blocked, bossAction)}`;
+    els.statusText.textContent = `${attackName(kind)} hit ${bossName} for ${heartText(damage)}. ${bossCounterText(target, blocked, dodged, bossAction, bossDamage)}`;
     updateHud();
     draw();
   }
 
   function useDefenseMove(kind) {
     const now = Date.now();
+    state.playerAction = kind;
     if (kind === "jump") {
       state.jumpingUntil = now + 1400;
       state.heroY = clamp(state.heroY - 42, 270, 470);
@@ -389,48 +397,55 @@
     draw();
   }
 
-  function applyBossPower(target, blocked) {
+  function applyBossPower(target, blocked, avoided = false) {
     if (blocked) {
       return;
     }
     if (target === "math") {
-      state.trappedUntil = Date.now() + 5000;
+      if (!avoided) state.trappedUntil = Date.now() + 5000;
       state.action = "numberNet";
     } else if (target === "evil") {
-      state.knockedDownUntil = Date.now() + 1200;
-      state.heroY = clamp(state.heroY + 38, 270, 470);
+      if (!avoided) {
+        state.knockedDownUntil = Date.now() + 1200;
+        state.heroY = clamp(state.heroY + 38, 270, 470);
+      }
       state.action = "letterShot";
     } else if (target === "food") {
-      state.heroY = clamp(state.heroY + 28, 270, 470);
+      if (!avoided) state.heroY = clamp(state.heroY + 28, 270, 470);
       state.action = "garbageShot";
     } else if (target === "crazyBall") {
       const hit = Math.random() < 0.65;
       state.action = hit ? "ballRollHit" : "ballRollMiss";
-      if (hit) {
+      if (hit && !avoided) {
         state.heroX = clamp(state.heroX - 45, 120, 560);
       }
     } else if (target === "airplane") {
-      state.heroY = clamp(state.heroY + 24, 270, 470);
+      if (!avoided) state.heroY = clamp(state.heroY + 24, 270, 470);
       state.action = "airplaneAttack";
     } else if (target === "pusher") {
-      state.heroX = clamp(state.heroX - 62, 120, 560);
+      if (!avoided) state.heroX = clamp(state.heroX - 62, 120, 560);
       state.action = "paperPush";
     } else if (target === "whacker") {
-      state.heroX = clamp(state.heroX - 28, 120, 560);
-      state.heroY = clamp(state.heroY + 18, 270, 470);
+      if (!avoided) {
+        state.heroX = clamp(state.heroX - 28, 120, 560);
+        state.heroY = clamp(state.heroY + 18, 270, 470);
+      }
       state.action = "wingWhack";
     } else if (target === "archer") {
-      state.heroY = clamp(state.heroY + 18, 270, 470);
+      if (!avoided) state.heroY = clamp(state.heroY + 18, 270, 470);
       state.action = "paintbrushArrow";
     } else if (target === "librarian") {
-      state.heroX = clamp(state.heroX - 35, 120, 560);
+      if (!avoided) state.heroX = clamp(state.heroX - 35, 120, 560);
       state.action = "bookLaunch";
     } else if (target === "bus") {
-      state.trappedUntil = Date.now() + 1800;
+      if (!avoided) state.trappedUntil = Date.now() + 1800;
       state.action = "busStop";
     } else if (target === "principal") {
       const action = bossLevels[state.level].action;
       state.action = action;
+      if (avoided) {
+        return;
+      }
       if (action === "principalMultiply") {
         state.heroX = clamp(state.heroX - 30, 120, 560);
       } else if (action === "principalGiant") {
@@ -445,6 +460,58 @@
         state.heroY = clamp(state.heroY + 24, 270, 470);
       }
     }
+  }
+
+  function attackName(kind) {
+    if (kind === "power") return heroes[state.heroId].firstPower;
+    return kind === "kick" ? "Kick" : "Punch";
+  }
+
+  function heartText(amount) {
+    if (amount === 0.5) return "half a heart";
+    if (amount === 1.5) return "one and a half hearts";
+    return `${amount} ${amount === 1 ? "heart" : "hearts"}`;
+  }
+
+  function bossCounterText(target, blocked, dodged, bossAction, bossDamage) {
+    if (blocked) {
+      return "Homework Shield blocked the boss counterattack.";
+    }
+    if (dodged) {
+      return `${bossAttackText(target, bossAction)} Your jump or hide made it miss, so you lost no hearts.`;
+    }
+    if (bossDamage === 0) {
+      return bossPowerText(target, false, bossAction);
+    }
+    return `${bossPowerText(target, false, bossAction)} You lost ${heartText(bossDamage)}.`;
+  }
+
+  function bossDamageForAction(bossAction) {
+    if (bossAction === "ballRollMiss" || bossAction === "principalWarning") {
+      return 0;
+    }
+    return 0.5;
+  }
+
+  function bossAttackText(target, bossAction = state.action) {
+    if (target === "math") return "Math Monster threw Number Nets.";
+    if (target === "evil") return "Evil LA shot letters.";
+    if (target === "food") return "Food Monster Fiasco shot garbage.";
+    if (target === "airplane") return "Airplane Attacker dove down.";
+    if (target === "pusher") return "Paper Pusher rushed forward.";
+    if (target === "whacker") return "Wing Whacker swung a paper wing.";
+    if (target === "archer") return "Art Archer shot paintbrush arrows.";
+    if (target === "librarian") return "Librarian Launcher launched books.";
+    if (target === "bus") return "Field Trip Terror flashed its stop sign.";
+    if (target === "principal") {
+      if (bossAction === "principalWarning") return "Robot Principal stomped around the office.";
+      if (bossAction === "principalMultiply") return "Robot Principal tried to multiply.";
+      if (bossAction === "principalGiant") return "Robot Principal tried to turn giant.";
+      if (bossAction === "principalFar") return "Robot Principal fired from farther away.";
+      if (bossAction === "principalSpin") return "Robot Principal tried a spin attack.";
+      return "Robot Principal fired a principal laser.";
+    }
+    return bossAction === "ballRollHit" ? "The Crazy Ball rolled toward you." : "The Crazy Ball rolled by.";
   }
 
   function bossPowerText(target, blocked, bossAction = state.action) {
@@ -678,9 +745,32 @@
     const hero = heroes[state.heroId];
     els.levelEyebrow.textContent = `Level ${state.level}`;
     els.selectedHeroName.textContent = hero.name;
-    els.heroHearts.textContent = `${hero.name}: ${state.heroHp} hearts`;
-    els.bossHearts.textContent = `${state.level === 1 ? "Bosses" : currentBossName()}: ${currentBossHp()} hearts`;
+    renderHeartMeter(els.heroHearts, hero.name, state.heroHp, hero.hp);
+    renderHeartMeter(els.bossHearts, state.level === 1 ? "Bosses" : currentBossName(), currentBossHp(), currentBossMaxHp());
     updatePowerButton();
+  }
+
+  function renderHeartMeter(element, label, hp, maxHp) {
+    element.textContent = "";
+    const name = document.createElement("strong");
+    name.textContent = `${label}: ${heartText(hp)}`;
+    const hearts = document.createElement("span");
+    hearts.className = "heart-icons";
+    const wholeHearts = Math.ceil(maxHp);
+    for (let index = 1; index <= wholeHearts; index += 1) {
+      const heart = document.createElement("span");
+      heart.className = "heart";
+      if (hp >= index) {
+        heart.classList.add("full");
+      } else if (hp > index - 1) {
+        heart.classList.add("half");
+      } else {
+        heart.classList.add("empty");
+      }
+      heart.textContent = "♥";
+      hearts.append(heart);
+    }
+    element.append(name, hearts);
   }
 
   function updatePowerButton() {
@@ -1812,21 +1902,19 @@
     ctx.lineCap = "round";
     if (state.action === "win") {
       drawImpact("YOU WIN!", 640, 230, "#18a66a");
-      } else if (state.action === "lost") {
+    } else if (state.action === "lost") {
       drawImpact("TRY AGAIN!", 640, 230, "#d91f2e");
     } else if (state.action === "miss") {
+      drawPlayerAttack(state.playerAction, true);
       drawImpact("TOO FAR!", 650, 215, "#d91f2e");
+    } else if (state.action === "heroJump") {
+      drawDefenseMove("jump");
+      drawImpact("JUMP!", 650, 215, "#2e91de");
+    } else if (state.action === "heroHide") {
+      drawDefenseMove("hide");
+      drawImpact("HIDE!", 650, 215, "#6f737a");
     } else {
-      ctx.strokeStyle = "#ffd84a";
-      ctx.beginPath();
-      ctx.moveTo(state.heroX + 80, state.heroY - 80);
-      ctx.lineTo(805, 320);
-      ctx.stroke();
-      ctx.strokeStyle = "#d91f2e";
-      ctx.beginPath();
-      ctx.moveTo(state.level === 2 ? 880 : 900, 305);
-      ctx.quadraticCurveTo(670, 220, state.heroX + 60, state.heroY - 80);
-      ctx.stroke();
+      drawPlayerAttack(state.playerAction, false);
       if (state.action === "numberNet") {
         drawNumberNet(state.heroX, state.heroY);
         drawImpact("NUMBER NET!", 650, 215, "#7146d9");
@@ -1863,14 +1951,86 @@
       } else if (state.action.startsWith("principal")) {
         drawPrincipalAttack(state.heroX, state.heroY, state.action);
         drawImpact("PRINCIPAL!", 650, 215, "#6f737a");
-      } else if (state.action === "heroJump") {
-        drawImpact("JUMP!", 650, 215, "#2e91de");
-      } else if (state.action === "heroHide") {
-        drawImpact("HIDE!", 650, 215, "#6f737a");
       } else {
-        drawImpact("BOSS HIT!", 650, 215, "#d91f2e");
+        drawImpact("BLOCKED!", 650, 215, "#18a66a");
       }
     }
+    ctx.restore();
+  }
+
+  function drawPlayerAttack(kind, missed) {
+    if (!kind) return;
+    const boss = currentBossPosition(state.playerTarget || currentTarget());
+    const startX = state.heroX + 58;
+    const startY = state.heroY - 76;
+    const endX = missed ? state.heroX + 190 : boss.x - 70;
+    const endY = missed ? state.heroY - 100 : boss.y - 66;
+    ctx.save();
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    if (kind === "punch") {
+      ctx.strokeStyle = missed ? "rgba(217,31,46,0.55)" : "#ffd84a";
+      ctx.lineWidth = 16;
+      ctx.beginPath();
+      ctx.moveTo(startX, startY);
+      ctx.lineTo(endX, endY);
+      ctx.stroke();
+      ctx.fillStyle = "#ffd84a";
+      ctx.strokeStyle = "#171216";
+      ctx.lineWidth = 5;
+      ctx.beginPath();
+      ctx.arc(endX, endY, 20, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    } else if (kind === "kick") {
+      ctx.strokeStyle = missed ? "rgba(217,31,46,0.55)" : "#2e91de";
+      ctx.lineWidth = 16;
+      ctx.beginPath();
+      ctx.arc(state.heroX + 95, state.heroY - 42, 74, -0.8, 0.35);
+      ctx.stroke();
+      ctx.fillStyle = "#2e91de";
+      ctx.strokeStyle = "#171216";
+      ctx.lineWidth = 5;
+      roundRect(endX - 28, endY - 12, 56, 24, 10);
+      ctx.fill();
+      ctx.stroke();
+    } else if (kind === "power") {
+      ctx.strokeStyle = "#7146d9";
+      ctx.lineWidth = 18;
+      ctx.beginPath();
+      ctx.moveTo(startX, startY);
+      ctx.quadraticCurveTo(650, 150, endX, endY);
+      ctx.stroke();
+      ctx.fillStyle = "#fffef7";
+      ctx.strokeStyle = "#7146d9";
+      ctx.lineWidth = 6;
+      ctx.beginPath();
+      ctx.arc(endX, endY, 25, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "#7146d9";
+      ctx.font = "900 18px Trebuchet MS";
+      ctx.textAlign = "center";
+      ctx.fillText("POWER", endX, endY + 6);
+    }
+    if (missed) {
+      ctx.fillStyle = "#d91f2e";
+      ctx.font = "900 28px Trebuchet MS";
+      ctx.textAlign = "center";
+      ctx.fillText("MISS", endX + 38, endY - 18);
+    }
+    ctx.restore();
+  }
+
+  function drawDefenseMove(kind) {
+    ctx.save();
+    ctx.strokeStyle = kind === "jump" ? "#2e91de" : "#6f737a";
+    ctx.fillStyle = kind === "jump" ? "rgba(46,145,222,0.18)" : "rgba(111,115,122,0.28)";
+    ctx.lineWidth = 7;
+    ctx.beginPath();
+    ctx.arc(state.heroX, state.heroY - 74, kind === "jump" ? 82 : 68, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
     ctx.restore();
   }
 
