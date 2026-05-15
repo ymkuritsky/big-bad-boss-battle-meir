@@ -31,6 +31,54 @@
       title: "Level 3 Gym",
       intro: "The Crazy Ball is rolling around the gym.",
       start: "Level 3 started in the gym. Watch out when The Crazy Ball rolls!"
+    },
+    4: {
+      title: "Level 4 Airplane Attacker",
+      intro: "The Airplane Attacker is circling the school hallway.",
+      start: "Level 4 started. The Airplane Attacker dives at you from above!"
+    },
+    5: {
+      title: "Level 5 Paper Pusher",
+      intro: "The Paper Pusher is waiting with a shove attack.",
+      start: "Level 5 started. The Paper Pusher tries to push you across the floor!"
+    },
+    6: {
+      title: "Level 6 Wing Whacker",
+      intro: "The Wing Whacker is flapping around with sharp paper wings.",
+      start: "Level 6 started. The Wing Whacker swings its paper wings!"
+    }
+  };
+
+  const paperBosses = {
+    4: {
+      target: "airplane",
+      name: "Airplane Attacker",
+      hpKey: "airplaneHp",
+      action: "airplaneAttack",
+      color: "#f15b42",
+      accent: "#ffd84a",
+      board: "LEVEL 4: HALLWAY",
+      note: "DODGE THE DIVE!"
+    },
+    5: {
+      target: "pusher",
+      name: "Paper Pusher",
+      hpKey: "pusherHp",
+      action: "paperPush",
+      color: "#7146d9",
+      accent: "#9edcff",
+      board: "LEVEL 5: PAPER ROOM",
+      note: "DON'T GET PUSHED!"
+    },
+    6: {
+      target: "whacker",
+      name: "Wing Whacker",
+      hpKey: "whackerHp",
+      action: "wingWhack",
+      color: "#18a66a",
+      accent: "#fffef7",
+      board: "LEVEL 6: WINDY HALL",
+      note: "WATCH THE WINGS!"
     }
   };
 
@@ -72,6 +120,9 @@
     evilHp: 4,
     foodHp: 5,
     crazyBallHp: 5,
+    airplaneHp: 5,
+    pusherHp: 5,
+    whackerHp: 5,
     earnedPowers: new Set(),
     mathRewarded: false,
     evilRewarded: false,
@@ -92,6 +143,9 @@
     state.evilHp = 5;
     state.foodHp = 5;
     state.crazyBallHp = 5;
+    state.airplaneHp = 5;
+    state.pusherHp = 5;
+    state.whackerHp = 5;
     state.earnedPowers = new Set();
     state.mathRewarded = false;
     state.evilRewarded = false;
@@ -132,6 +186,12 @@
       state.foodHp = Math.max(0, state.foodHp - damage);
     } else if (target === "crazyBall") {
       state.crazyBallHp = Math.max(0, state.crazyBallHp - damage);
+    } else if (target === "airplane") {
+      state.airplaneHp = Math.max(0, state.airplaneHp - damage);
+    } else if (target === "pusher") {
+      state.pusherHp = Math.max(0, state.pusherHp - damage);
+    } else if (target === "whacker") {
+      state.whackerHp = Math.max(0, state.whackerHp - damage);
     }
     checkPowerRewards();
 
@@ -148,7 +208,7 @@
     const blocked = kind === "power" && state.earnedPowers.has("homeworkShield");
     applyBossPower(target, blocked);
     const bossAction = state.action;
-    const bossDamage = target === "food" ? 0.5 : target === "crazyBall" && bossAction === "ballRollMiss" ? 0 : 1;
+    const bossDamage = target === "food" || target === "pusher" ? 0.5 : target === "crazyBall" && bossAction === "ballRollMiss" ? 0 : 1;
     state.heroHp = Math.max(0, state.heroHp - (blocked ? 0 : bossDamage));
     if (state.heroHp === 0) {
       state.lost = true;
@@ -161,7 +221,7 @@
     }
 
     state.action = blocked ? `${kind}-${target}` : bossAction;
-    const bossName = target === "math" ? "Math Monster" : target === "evil" ? "Evil LA" : target === "food" ? "Food Monster Fiasco" : "The Crazy Ball";
+    const bossName = currentBossName(target);
     els.statusText.textContent = `You used ${kind}. ${bossName} got hit, then ${bossPowerText(target, blocked, bossAction)}`;
     updateHud();
     draw();
@@ -181,12 +241,22 @@
     } else if (target === "food") {
       state.heroY = clamp(state.heroY + 28, 270, 470);
       state.action = "garbageShot";
-    } else {
+    } else if (target === "crazyBall") {
       const hit = Math.random() < 0.65;
       state.action = hit ? "ballRollHit" : "ballRollMiss";
       if (hit) {
         state.heroX = clamp(state.heroX - 45, 120, 560);
       }
+    } else if (target === "airplane") {
+      state.heroY = clamp(state.heroY + 24, 270, 470);
+      state.action = "airplaneAttack";
+    } else if (target === "pusher") {
+      state.heroX = clamp(state.heroX - 62, 120, 560);
+      state.action = "paperPush";
+    } else if (target === "whacker") {
+      state.heroX = clamp(state.heroX - 28, 120, 560);
+      state.heroY = clamp(state.heroY + 18, 270, 470);
+      state.action = "wingWhack";
     }
   }
 
@@ -203,6 +273,15 @@
     if (target === "food") {
       return "Food Monster Fiasco shot garbage and took away half a heart!";
     }
+    if (target === "airplane") {
+      return "Airplane Attacker dove down and attacked from the air!";
+    }
+    if (target === "pusher") {
+      return "Paper Pusher shoved you backward and took half a heart!";
+    }
+    if (target === "whacker") {
+      return "Wing Whacker smacked you with a paper wing!";
+    }
     return bossAction === "ballRollHit" ? "The Crazy Ball rolled on top of you and attacked!" : "The Crazy Ball rolled by and missed!";
   }
 
@@ -210,13 +289,16 @@
     if (state.level === 1) {
       return state.mathHp > 0 ? "math" : "evil";
     }
-    return state.level === 2 ? "food" : "crazyBall";
+    if (state.level === 2) return "food";
+    if (state.level === 3) return "crazyBall";
+    return paperBosses[state.level].target;
   }
 
   function currentBossHp() {
     if (state.level === 1) return state.mathHp + state.evilHp;
     if (state.level === 2) return state.foodHp;
-    return state.crazyBallHp;
+    if (state.level === 3) return state.crazyBallHp;
+    return state[paperBosses[state.level].hpKey];
   }
 
   function currentBossMaxHp() {
@@ -226,7 +308,16 @@
   function levelWinText() {
     if (state.level === 1) return "You beat the Math Monster and Evil LA!";
     if (state.level === 2) return "You beat Food Monster Fiasco!";
-    return "You beat The Crazy Ball in the gym!";
+    if (state.level === 3) return "You beat The Crazy Ball in the gym!";
+    return `You beat ${paperBosses[state.level].name}!`;
+  }
+
+  function currentBossName(target = currentTarget()) {
+    if (target === "math") return "Math Monster";
+    if (target === "evil") return "Evil LA";
+    if (target === "food") return "Food Monster Fiasco";
+    if (target === "crazyBall") return "The Crazy Ball";
+    return Object.values(paperBosses).find((boss) => boss.target === target).name;
   }
 
   function usePowerDamage() {
@@ -300,7 +391,7 @@
     els.levelEyebrow.textContent = `Level ${state.level}`;
     els.selectedHeroName.textContent = hero.name;
     els.heroHearts.textContent = `${hero.name}: ${state.heroHp} hearts`;
-    els.bossHearts.textContent = `${state.level === 1 ? "Bosses" : state.level === 2 ? "Food Monster" : "Crazy Ball"}: ${currentBossHp()} hearts`;
+    els.bossHearts.textContent = `${state.level === 1 ? "Bosses" : currentBossName()}: ${currentBossHp()} hearts`;
     updatePowerButton();
   }
 
@@ -339,6 +430,8 @@
       drawFoodMonsterFiasco(950, 390);
     } else if (state.level === 3 && state.crazyBallHp > 0) {
       drawCrazyBall(950, 390);
+    } else if (state.level >= 4 && currentBossHp() > 0) {
+      drawPaperPlaneBoss(950, 380, paperBosses[state.level]);
     }
     drawAction();
   }
@@ -377,14 +470,16 @@
     ctx.fillStyle = "#fff";
     ctx.font = "900 36px Trebuchet MS";
     ctx.textAlign = "center";
-    ctx.fillText(state.level === 1 ? "LEVEL 1: CLASSROOM" : state.level === 2 ? "LEVEL 2: CAFETERIA" : "LEVEL 3: GYM", 625, 270);
+    ctx.fillText(boardTitle(), 625, 270);
     ctx.font = "900 28px Trebuchet MS";
-    ctx.fillText(state.level === 1 ? "2 + 2 = BOSS?" : state.level === 2 ? "TODAY'S LUNCH: TROUBLE" : "DODGE THE ROLL!", 625, 318);
+    ctx.fillText(boardNote(), 625, 318);
 
     if (state.level === 2) {
       drawCafeteriaTables();
     } else if (state.level === 3) {
       drawGymLines();
+    } else if (state.level >= 4) {
+      drawPaperHallway();
     }
 
     ctx.fillStyle = "#b86a32";
@@ -412,6 +507,44 @@
     }
   }
 
+  function boardTitle() {
+    if (state.level === 1) return "LEVEL 1: CLASSROOM";
+    if (state.level === 2) return "LEVEL 2: CAFETERIA";
+    if (state.level === 3) return "LEVEL 3: GYM";
+    return paperBosses[state.level].board;
+  }
+
+  function boardNote() {
+    if (state.level === 1) return "2 + 2 = BOSS?";
+    if (state.level === 2) return "TODAY'S LUNCH: TROUBLE";
+    if (state.level === 3) return "DODGE THE ROLL!";
+    return paperBosses[state.level].note;
+  }
+
+  function drawPaperHallway() {
+    ctx.save();
+    ctx.strokeStyle = "#c8d0d8";
+    ctx.lineWidth = 4;
+    for (let x = 110; x <= 1080; x += 160) {
+      ctx.beginPath();
+      ctx.moveTo(x, 390);
+      ctx.lineTo(x + 64, 365);
+      ctx.lineTo(x + 126, 390);
+      ctx.stroke();
+    }
+    ctx.fillStyle = "#fffef7";
+    for (let x = 165; x <= 1035; x += 210) {
+      ctx.save();
+      ctx.translate(x, 475);
+      ctx.rotate(-0.12);
+      roundRect(-42, -28, 84, 56, 4);
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+    }
+    ctx.restore();
+  }
+
   function drawGymLines() {
     ctx.save();
     ctx.strokeStyle = "#f4c84a";
@@ -437,7 +570,7 @@
   function drawHealthBars() {
     const hero = heroes[state.heroId];
     drawBar(50, 44, 430, hero.name.toUpperCase(), state.heroHp, hero.hp, hero.accent);
-    drawBar(800, 44, 430, state.level === 1 ? "SCHOOL BOSSES" : state.level === 2 ? "FOOD MONSTER FIASCO" : "THE CRAZY BALL", currentBossHp(), currentBossMaxHp(), "#d91f2e");
+    drawBar(800, 44, 430, state.level === 1 ? "SCHOOL BOSSES" : currentBossName().toUpperCase(), currentBossHp(), currentBossMaxHp(), "#d91f2e");
     drawLabel(levels[state.level].title.toUpperCase(), 420, 122, "#ffd84a", 440);
   }
 
@@ -697,6 +830,58 @@
     ctx.restore();
   }
 
+  function drawPaperPlaneBoss(x, y, boss) {
+    ctx.save();
+    ctx.translate(x, y);
+    const bob = Math.sin(state.tick * 0.25) * 10;
+    ctx.translate(0, bob);
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 7;
+    ctx.fillStyle = boss.accent;
+    ctx.beginPath();
+    ctx.moveTo(-130, 24);
+    ctx.lineTo(120, -64);
+    ctx.lineTo(52, 24);
+    ctx.lineTo(8, 92);
+    ctx.lineTo(-18, 36);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = boss.color;
+    ctx.beginPath();
+    ctx.moveTo(-18, 36);
+    ctx.lineTo(120, -64);
+    ctx.lineTo(52, 24);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.moveTo(-18, 36);
+    ctx.lineTo(44, 20);
+    ctx.moveTo(8, 92);
+    ctx.lineTo(36, 28);
+    ctx.stroke();
+    ctx.fillStyle = "#fffef7";
+    ctx.beginPath();
+    ctx.arc(32, -14, 13, 0, Math.PI * 2);
+    ctx.arc(70, -26, 12, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#171216";
+    ctx.beginPath();
+    ctx.arc(36, -14, 5, 0, Math.PI * 2);
+    ctx.arc(66, -26, 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(34, 22);
+    ctx.quadraticCurveTo(62, 42, 90, 8);
+    ctx.stroke();
+    drawLabel(boss.name.toUpperCase(), -210, -112, boss.color, 390);
+    ctx.restore();
+  }
+
   function drawAction() {
     if (!state.action) return;
     ctx.save();
@@ -732,6 +917,15 @@
       } else if (state.action === "ballRollMiss") {
         drawBallRoll(state.heroX, state.heroY, false);
         drawImpact("MISSED!", 650, 215, "#18a66a");
+      } else if (state.action === "airplaneAttack") {
+        drawPaperAttack(state.heroX, state.heroY, paperBosses[4]);
+        drawImpact("AIR ATTACK!", 650, 215, "#f15b42");
+      } else if (state.action === "paperPush") {
+        drawPaperPush(state.heroX, state.heroY);
+        drawImpact("PUSHED!", 650, 215, "#7146d9");
+      } else if (state.action === "wingWhack") {
+        drawWingWhack(state.heroX, state.heroY);
+        drawImpact("WHACK!", 650, 215, "#18a66a");
       } else {
         drawImpact("BOSS HIT!", 650, 215, "#d91f2e");
       }
@@ -805,6 +999,59 @@
     ctx.moveTo(x + (hit ? 58 : 140), y + (hit ? 5 : 75));
     ctx.lineTo(x + (hit ? 118 : 200), y + (hit ? 5 : 75));
     ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawPaperAttack(x, y, boss) {
+    ctx.save();
+    ctx.strokeStyle = boss.color;
+    ctx.lineWidth = 8;
+    ctx.beginPath();
+    ctx.moveTo(910, 250);
+    ctx.lineTo(x + 76, y - 78);
+    ctx.stroke();
+    ctx.fillStyle = boss.accent;
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.moveTo(x + 100, y - 116);
+    ctx.lineTo(x + 200, y - 150);
+    ctx.lineTo(x + 170, y - 92);
+    ctx.lineTo(x + 145, y - 48);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawPaperPush(x, y) {
+    ctx.save();
+    ctx.strokeStyle = "#7146d9";
+    ctx.lineWidth = 9;
+    for (let i = 0; i < 3; i += 1) {
+      ctx.beginPath();
+      ctx.moveTo(x + 145 + i * 34, y - 82 + i * 12);
+      ctx.lineTo(x + 70 + i * 12, y - 48 + i * 12);
+      ctx.stroke();
+    }
+    ctx.fillStyle = "#fffef7";
+    ctx.font = "900 28px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText("PUSH", x + 180, y - 22);
+    ctx.restore();
+  }
+
+  function drawWingWhack(x, y) {
+    ctx.save();
+    ctx.strokeStyle = "#18a66a";
+    ctx.lineWidth = 12;
+    ctx.beginPath();
+    ctx.arc(x + 130, y - 62, 84, -1.2, 1.8);
+    ctx.stroke();
+    ctx.fillStyle = "#ffd84a";
+    ctx.font = "900 26px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText("WING", x + 172, y - 94);
     ctx.restore();
   }
 

@@ -5,10 +5,14 @@ First playable sequel level:
 - Level 1 takes place in the classroom.
 - Level 2 takes place in the cafeteria.
 - Level 3 takes place in the gym.
+- Level 4 has the Airplane Attacker.
+- Level 5 has the Paper Pusher.
+- Level 6 has the Wing Whacker.
 - The Math Monster looks like a person made from numbers and math signs.
 - Evil LA looks like a blob full of letters, poems, rhymes, and words.
 - Food Monster Fiasco is two giant legs that shoots garbage. Each garbage hit takes half a heart.
 - The Crazy Ball is a blue ball with an evil face. Its roll can run over the player, but sometimes it misses.
+- The Airplane Attacker, Paper Pusher, and Wing Whacker are paper airplanes with evil faces and powers based on their names.
 - Everybody has 5 hearts in these school levels.
 - Player can move, punch, kick, and use Super Homework.
 - Bosses fight back after attacks.
