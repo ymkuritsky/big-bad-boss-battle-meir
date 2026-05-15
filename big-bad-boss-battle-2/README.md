@@ -12,7 +12,7 @@ First playable sequel level:
 - Everybody has 5 hearts in these school levels.
 - Player can move, punch, kick, and use Super Homework.
 - Bosses fight back after attacks.
-- Character choices use the same heroes from Big Bad Boss Battle: Super Tats, Mom Fary, Super Appie Juice, Freddy, Benji, Mr. 67, Super Ness, Captain Crayonstorm, and Zap Hoodie.
+- Character choices use heroes from Big Bad Boss Battle plus new playable choices: Super Tats, Mom Fary, Super Appie Juice, Freddy, Benji, Mr. 67, Super Ness, Captain Crayonstorm, Zap Hoodie, Mischievous Mayer, and Yapping Yonatan.
 - Defeating certain villains earns power-ups: Math Monster gives Homework Shield, and Evil LA gives Poetry Blast.
 - Math Monster can use Number Nets that catch the player for 5 seconds.
 - Evil LA can shoot letters that knock the player down.
