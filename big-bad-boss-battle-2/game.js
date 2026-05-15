@@ -50,12 +50,12 @@
     7: {
       title: "Level 7 Art Archer",
       intro: "The Art Archer is waiting in the art room.",
-      start: "Level 7 started in the art room. Watch out for paintbrush arrows!"
+      start: "Level 7 started in the art room. Paintbrushes come in slowly, so move up or down to dodge before you attack!"
     },
     8: {
       title: "Level 8 Librarian Launcher",
       intro: "The Librarian Launcher is guarding the library.",
-      start: "Level 8 started in the library. Dodge the launched books!"
+      start: "Level 8 started in the library. BO-OK-S books come in slowly, so move up or down to dodge before you attack!"
     },
     9: {
       title: "Level 9 Field Trip Terror",
@@ -757,10 +757,10 @@
     state.heroY = clamp(state.heroY, 270, 470);
     state.playerAction = "";
     if (canLaneDodge(currentTarget()) && (direction === "up" || direction === "down")) {
-      state.laneDodgeUntil = Date.now() + 2600;
+      state.laneDodgeUntil = Date.now() + 4500;
       state.laneDodgeDirection = direction;
       state.action = currentTarget() === "archer" ? "paintbrushDodge" : "bookDodge";
-      els.statusText.textContent = `Hero moved ${direction} and is ready to dodge the ${currentTarget() === "archer" ? "paintbrushes" : "books"}. Get close and attack!`;
+      els.statusText.textContent = `Hero moved ${direction} and has time to dodge the slow ${currentTarget() === "archer" ? "paintbrushes" : "BO-OK-S books"}. Get close and attack!`;
     } else {
       state.action = "";
       els.statusText.textContent = `Hero moved ${direction}.`;
