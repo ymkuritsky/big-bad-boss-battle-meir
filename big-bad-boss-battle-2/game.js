@@ -339,29 +339,7 @@
     }
     state.playerAction = kind;
     const damage = kind === "power" ? usePowerDamage() : kind === "kick" ? 2 : 1;
-    if (target === "math") {
-      state.mathHp = Math.max(0, state.mathHp - damage);
-    } else if (target === "evil") {
-      state.evilHp = Math.max(0, state.evilHp - damage);
-    } else if (target === "food") {
-      state.foodHp = Math.max(0, state.foodHp - damage);
-    } else if (target === "crazyBall") {
-      state.crazyBallHp = Math.max(0, state.crazyBallHp - damage);
-    } else if (target === "airplane") {
-      state.airplaneHp = Math.max(0, state.airplaneHp - damage);
-    } else if (target === "pusher") {
-      state.pusherHp = Math.max(0, state.pusherHp - damage);
-    } else if (target === "whacker") {
-      state.whackerHp = Math.max(0, state.whackerHp - damage);
-    } else if (target === "archer") {
-      state.archerHp = Math.max(0, state.archerHp - damage);
-    } else if (target === "librarian") {
-      state.librarianHp = Math.max(0, state.librarianHp - damage);
-    } else if (target === "bus") {
-      state.busHp = Math.max(0, state.busHp - damage);
-    } else if (target === "principal") {
-      state.principalHp = Math.max(0, state.principalHp - damage);
-    }
+    damageBoss(target, damage);
     checkPowerRewards();
 
     if (currentBossHp() === 0) {
@@ -418,6 +396,32 @@
     }
     updateHud();
     draw();
+  }
+
+  function damageBoss(target, damage) {
+    if (target === "math") {
+      state.mathHp = Math.max(0, state.mathHp - damage);
+    } else if (target === "evil") {
+      state.evilHp = Math.max(0, state.evilHp - damage);
+    } else if (target === "food") {
+      state.foodHp = Math.max(0, state.foodHp - damage);
+    } else if (target === "crazyBall") {
+      state.crazyBallHp = Math.max(0, state.crazyBallHp - damage);
+    } else if (target === "airplane") {
+      state.airplaneHp = Math.max(0, state.airplaneHp - damage);
+    } else if (target === "pusher") {
+      state.pusherHp = Math.max(0, state.pusherHp - damage);
+    } else if (target === "whacker") {
+      state.whackerHp = Math.max(0, state.whackerHp - damage);
+    } else if (target === "archer") {
+      state.archerHp = Math.max(0, state.archerHp - damage);
+    } else if (target === "librarian") {
+      state.librarianHp = Math.max(0, state.librarianHp - damage);
+    } else if (target === "bus") {
+      state.busHp = Math.max(0, state.busHp - damage);
+    } else if (target === "principal") {
+      state.principalHp = Math.max(0, state.principalHp - damage);
+    }
   }
 
   function applyBossPower(target, blocked, avoided = false) {
@@ -819,7 +823,19 @@
     const bossAction = state.action;
     if (laneDodged) {
       state.action = target === "archer" ? "paintbrushDodge" : "bookDodge";
-      els.statusText.textContent = `${bossAttackText(target, bossAction)} Your up/down dodge made it miss. Keep moving closer!`;
+      damageBoss(target, 1);
+      checkPowerRewards();
+      if (currentBossHp() === 0) {
+        state.won = true;
+        state.action = "win";
+        els.statusText.textContent = `${bossAttackText(target, bossAction)} Your dodge made it explode on the wall and take away 1 boss heart. ${levelWinText()}`;
+        if (advanceAfterWin()) {
+          return true;
+        }
+        setAttacks(true);
+        return true;
+      }
+      els.statusText.textContent = `${bossAttackText(target, bossAction)} Your ${direction} dodge made it miss, explode on the wall, and take away 1 boss heart. Keep moving closer!`;
       return true;
     }
     if (jumpOrHideDodged) {
