@@ -79,7 +79,8 @@
       color: "#f15b42",
       accent: "#ffd84a",
       board: "LEVEL 4: OUTSIDE",
-      note: "DODGE THE DIVE!"
+      note: "DODGE THE DIVE!",
+      maxHp: 7
     },
     5: {
       target: "pusher",
@@ -90,7 +91,8 @@
       color: "#7146d9",
       accent: "#9edcff",
       board: "LEVEL 5: SCHOOL YARD",
-      note: "DON'T GET PUSHED!"
+      note: "DON'T GET PUSHED!",
+      maxHp: 7
     },
     6: {
       target: "whacker",
@@ -101,7 +103,8 @@
       color: "#18a66a",
       accent: "#fffef7",
       board: "LEVEL 6: WINDY OUTSIDE",
-      note: "WATCH THE WINGS!"
+      note: "WATCH THE WINGS!",
+      maxHp: 7
     },
     7: {
       target: "archer",
@@ -112,7 +115,8 @@
       color: "#ef4fa3",
       accent: "#ffd84a",
       board: "LEVEL 7: ART ROOM",
-      note: "PAINTBRUSH ARROWS!"
+      note: "PAINTBRUSH ARROWS!",
+      maxHp: 7
     },
     8: {
       target: "librarian",
@@ -123,7 +127,8 @@
       color: "#6a4b2b",
       accent: "#9edcff",
       board: "LEVEL 8: LIBRARY",
-      note: "BOOKS ARE FLYING!"
+      note: "BOOKS ARE FLYING!",
+      maxHp: 7
     },
     9: {
       target: "bus",
@@ -134,7 +139,8 @@
       color: "#ffd84a",
       accent: "#d91f2e",
       board: "LEVEL 9: PARKING LOT",
-      note: "STOP SIGN TRAP!"
+      note: "STOP SIGN TRAP!",
+      maxHp: 7
     },
     10: {
       target: "principal",
@@ -145,7 +151,8 @@
       color: "#6f737a",
       accent: "#49d9ff",
       board: "LEVEL 10: PRINCIPAL'S OFFICE",
-      note: "OFFICE BOSS!"
+      note: "OFFICE BOSS!",
+      maxHp: 8
     }
   };
 
@@ -174,7 +181,7 @@
       accent: level === 30 ? "#ffd84a" : "#49d9ff",
       board: `LEVEL ${level}: ROBOT PRINCIPAL`,
       note: trick.note,
-      maxHp: level === 30 ? 10 : 6 + Math.floor((level - 11) / 5)
+      maxHp: level === 30 ? 12 : 8 + Math.floor((level - 11) / 5)
     };
   }
 
@@ -214,17 +221,17 @@
     level: 1,
     heroId: "tats",
     heroHp: 6,
-    mathHp: 6,
-    evilHp: 4,
-    foodHp: 5,
-    crazyBallHp: 5,
-    airplaneHp: 5,
-    pusherHp: 5,
-    whackerHp: 5,
-    archerHp: 5,
-    librarianHp: 5,
-    busHp: 5,
-    principalHp: 6,
+    mathHp: 7,
+    evilHp: 6,
+    foodHp: 7,
+    crazyBallHp: 7,
+    airplaneHp: 7,
+    pusherHp: 7,
+    whackerHp: 7,
+    archerHp: 7,
+    librarianHp: 7,
+    busHp: 7,
+    principalHp: 8,
     earnedPowers: new Set(),
     mathRewarded: false,
     evilRewarded: false,
@@ -249,16 +256,16 @@
     state.won = false;
     state.lost = false;
     state.heroHp = heroes[state.heroId].hp;
-    state.mathHp = 5;
-    state.evilHp = 5;
-    state.foodHp = 5;
-    state.crazyBallHp = 5;
-    state.airplaneHp = 5;
-    state.pusherHp = 5;
-    state.whackerHp = 5;
-    state.archerHp = 5;
-    state.librarianHp = 5;
-    state.busHp = 5;
+    state.mathHp = 7;
+    state.evilHp = 6;
+    state.foodHp = 7;
+    state.crazyBallHp = 7;
+    state.airplaneHp = 7;
+    state.pusherHp = 7;
+    state.whackerHp = 7;
+    state.archerHp = 7;
+    state.librarianHp = 7;
+    state.busHp = 7;
     state.principalHp = currentBossMaxHp();
     state.earnedPowers = new Set();
     state.mathRewarded = false;
@@ -573,9 +580,9 @@
   }
 
   function currentBossMaxHp() {
-    if (state.level === 1) return 10;
+    if (state.level === 1) return 13;
     if (state.level >= 4) return bossLevels[state.level].maxHp || 5;
-    return 5;
+    return 7;
   }
 
   function levelWinText() {
