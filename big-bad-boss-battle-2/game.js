@@ -246,6 +246,7 @@
     jumpingUntil: 0,
     laneDodgeUntil: 0,
     laneDodgeDirection: "",
+    bossPressureStep: 0,
     tick: 0
   };
 
@@ -283,6 +284,7 @@
     state.jumpingUntil = 0;
     state.laneDodgeUntil = 0;
     state.laneDodgeDirection = "";
+    state.bossPressureStep = 0;
     state.tick = 0;
     els.statusText.textContent = levels[state.level].intro;
     setAttacks(true);
@@ -319,6 +321,13 @@
     }
     const target = currentTarget();
     state.playerTarget = target;
+    if (kind === "power" && mustReachBossForPower(target) && !isCloseEnoughToAttack("kick", target)) {
+      state.action = "miss";
+      state.playerAction = kind;
+      els.statusText.textContent = `${currentBossName(target)} is too far away for ${attackName(kind)}. Dodge the shots, get closer, then use it.`;
+      draw();
+      return;
+    }
     if ((kind === "punch" || kind === "kick") && !isCloseEnoughToAttack(kind, target)) {
       state.action = "miss";
       state.playerAction = kind;
@@ -521,13 +530,17 @@
     return target === "archer" || target === "librarian";
   }
 
+  function mustReachBossForPower(target) {
+    return target === "archer" || target === "librarian";
+  }
+
   function bossAttackText(target, bossAction = state.action) {
     if (target === "math") return "Math Monster threw Number Nets.";
     if (target === "evil") return "Evil LA shot letters.";
     if (target === "food") return "Food Monster Fiasco shot garbage.";
-    if (target === "airplane") return "Airplane Attacker dove down.";
+    if (target === "airplane") return "Airplane Attacker flew high, bent its wings, and dove down.";
     if (target === "pusher") return "Paper Pusher rushed forward.";
-    if (target === "whacker") return "Wing Whacker swung a paper wing.";
+    if (target === "whacker") return "Wing Whacker bent its wings and swung hard.";
     if (target === "archer") return "Art Archer shot paintbrush arrows.";
     if (target === "librarian") return "Librarian Launcher launched books.";
     if (target === "bus") return "Field Trip Terror flashed its stop sign.";
@@ -556,13 +569,13 @@
       return "Food Monster Fiasco shot garbage and took away half a heart!";
     }
     if (target === "airplane") {
-      return "Airplane Attacker dove down and attacked from the air!";
+      return "Airplane Attacker flew high, bent its wings, and attacked from the air!";
     }
     if (target === "pusher") {
       return "Paper Pusher shoved you backward and took half a heart!";
     }
     if (target === "whacker") {
-      return "Wing Whacker smacked you with a paper wing!";
+      return "Wing Whacker bent its wings and whacked you!";
     }
     if (target === "archer") {
       return "Art Archer shot paintbrush arrows at you!";
@@ -767,16 +780,66 @@
     state.heroX = clamp(state.heroX, 120, 1080);
     state.heroY = clamp(state.heroY, 270, 470);
     state.playerAction = "";
-    if (canLaneDodge(currentTarget()) && (direction === "up" || direction === "down")) {
+    const target = currentTarget();
+    if (canLaneDodge(target) && (direction === "up" || direction === "down")) {
       state.laneDodgeUntil = Date.now() + 4500;
       state.laneDodgeDirection = direction;
-      state.action = currentTarget() === "archer" ? "paintbrushDodge" : "bookDodge";
-      els.statusText.textContent = `Hero moved ${direction} and has time to dodge the slow ${currentTarget() === "archer" ? "paintbrushes" : "BO-OK-S books"}. Get close and attack!`;
+      state.action = target === "archer" ? "paintbrushDodge" : "bookDodge";
+      els.statusText.textContent = `Hero moved ${direction} and has time to dodge the slow ${target === "archer" ? "paintbrushes" : "BO-OK-S books"}. Get close and attack!`;
+    } else if (handleBossPressureWhileMoving(target, direction)) {
+      updateHud();
+      draw();
+      return;
+    } else if (bossPressuresWhileMoving(target) && isCloseEnoughToAttack("kick", target)) {
+      state.action = "";
+      els.statusText.textContent = `Hero moved ${direction}. You reached ${currentBossName(target)}, so the far-away attacks stopped. Now fight!`;
     } else {
       state.action = "";
       els.statusText.textContent = `Hero moved ${direction}.`;
     }
     draw();
+  }
+
+  function handleBossPressureWhileMoving(target, direction) {
+    if (!bossPressuresWhileMoving(target) || isCloseEnoughToAttack("kick", target)) {
+      state.bossPressureStep = 0;
+      return false;
+    }
+    state.bossPressureStep += 1;
+    const laneDodged = canLaneDodge(target) && Date.now() < state.laneDodgeUntil;
+    const jumpOrHideDodged = Date.now() < state.hiddenUntil || Date.now() < state.jumpingUntil;
+    const dodged = laneDodged || jumpOrHideDodged;
+    const canHitThisMove = canLaneDodge(target) ? state.bossPressureStep % 2 === 0 : state.bossPressureStep % 3 === 0;
+    applyBossPower(target, false, dodged || !canHitThisMove);
+    const bossAction = state.action;
+    if (laneDodged) {
+      state.action = target === "archer" ? "paintbrushDodge" : "bookDodge";
+      els.statusText.textContent = `${bossAttackText(target, bossAction)} Your up/down dodge made it miss. Keep moving closer!`;
+      return true;
+    }
+    if (jumpOrHideDodged) {
+      els.statusText.textContent = `${bossAttackText(target, bossAction)} Your jump or hide made it miss. Keep moving closer!`;
+      return true;
+    }
+    if (!canHitThisMove) {
+      els.statusText.textContent = `${bossAttackText(target, bossAction)} It is coming slowly. Move up/down, jump, or hide, then get closer!`;
+      return true;
+    }
+    const damage = bossDamageForAction(bossAction);
+    state.heroHp = Math.max(0, state.heroHp - damage);
+    if (state.heroHp === 0) {
+      state.lost = true;
+      state.action = "lost";
+      els.statusText.textContent = "The school bosses won this round. Reset for a rematch.";
+      setAttacks(true);
+      return true;
+    }
+    els.statusText.textContent = `${bossPowerText(target, false, bossAction)} You lost ${heartText(damage)}. Get closer to stop the attacks!`;
+    return true;
+  }
+
+  function bossPressuresWhileMoving(target) {
+    return target === "airplane" || target === "pusher" || target === "whacker" || target === "archer" || target === "librarian" || target === "bus";
   }
 
   function updateHud() {
