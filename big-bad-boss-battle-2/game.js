@@ -234,6 +234,10 @@
     tick: 0
   };
 
+  const progress = {
+    unlockedLevel: Number(localStorage.getItem("bbb2UnlockedLevel") || "1")
+  };
+
   function resetGame() {
     state.started = false;
     state.won = false;
@@ -262,22 +266,30 @@
     els.statusText.textContent = levels[state.level].intro;
     setAttacks(true);
     updateHud();
+    updateLevelLocks();
     renderPowers();
     draw();
   }
 
   function startLevel() {
+    if (!canPlayLevel(state.level)) {
+      els.statusText.textContent = `Beat Level ${state.level - 1} to unlock Level ${state.level}.`;
+      updateLevelLocks();
+      return;
+    }
     state.started = true;
     state.won = false;
     state.lost = false;
     els.statusText.textContent = levels[state.level].start;
     setAttacks(false);
+    updateLevelLocks();
     updateHud();
     draw();
   }
 
   function attack(kind) {
     if (!state.started || state.won || state.lost) {
+      els.statusText.textContent = "Press Start Level first, then you can punch, kick, and use powers.";
       return;
     }
     const target = currentTarget();
@@ -311,13 +323,16 @@
       state.won = true;
       state.action = "win";
       els.statusText.textContent = levelWinText();
+      unlockNextLevel();
       setAttacks(true);
+      updateLevelLocks();
       updateHud();
       draw();
       return;
     }
 
-    const blocked = kind === "power" && state.earnedPowers.has("homeworkShield");
+    const shieldBlocked = kind === "power" && state.heroId === "fary" && state.earnedPowers.has("homeworkShield");
+    const blocked = shieldBlocked;
     applyBossPower(target, blocked);
     const bossAction = state.action;
     const bossDamage = target === "food" || target === "pusher" || target === "bus" || bossAction === "principalWarning" ? 0.5 : target === "crazyBall" && bossAction === "ballRollMiss" ? 0 : bossAction === "principalFar" ? 1.5 : 1;
@@ -483,7 +498,20 @@
       renderPowers();
       return 4;
     }
-    return 3;
+    const heroPowerDamage = {
+      tats: 3,
+      fary: 2,
+      apple: 3,
+      freddy: 2,
+      benji: 2,
+      frost: 2,
+      ness: 3,
+      crayon: 3,
+      hoodie: 2,
+      mayer: 3,
+      yonatan: 2
+    };
+    return heroPowerDamage[state.heroId] || 2;
   }
 
   function checkPowerRewards() {
@@ -514,12 +542,44 @@
   }
 
   function chooseLevel(level) {
-    state.level = Number(level);
+    const requestedLevel = Number(level);
+    if (!canPlayLevel(requestedLevel)) {
+      els.statusText.textContent = `Level ${requestedLevel} is locked. Beat Level ${requestedLevel - 1} first.`;
+      updateLevelLocks();
+      return;
+    }
+    state.level = requestedLevel;
     document.querySelectorAll(".level-choice").forEach((button) => {
       button.classList.toggle("selected", Number(button.dataset.level) === state.level);
     });
     els.startButton.textContent = `Start Level ${state.level}`;
     resetGame();
+  }
+
+  function canPlayLevel(level) {
+    return level <= progress.unlockedLevel;
+  }
+
+  function unlockNextLevel() {
+    if (state.level < 30 && progress.unlockedLevel < state.level + 1) {
+      progress.unlockedLevel = state.level + 1;
+      localStorage.setItem("bbb2UnlockedLevel", String(progress.unlockedLevel));
+      els.statusText.textContent = `${levelWinText()} Level ${progress.unlockedLevel} unlocked!`;
+    }
+  }
+
+  function updateLevelLocks() {
+    document.querySelectorAll(".level-choice").forEach((button) => {
+      const level = Number(button.dataset.level);
+      const locked = !canPlayLevel(level);
+      button.disabled = locked;
+      button.classList.toggle("locked", locked);
+      button.classList.toggle("selected", level === state.level);
+      const baseLabel = button.dataset.label || button.textContent.replace(" Locked", "");
+      button.dataset.label = baseLabel;
+      button.textContent = locked ? `${baseLabel} Locked` : baseLabel;
+    });
+    els.startButton.disabled = !canPlayLevel(state.level);
   }
 
   function moveHero(direction) {
@@ -2039,6 +2099,7 @@
       button.className = "level-choice";
       button.dataset.level = String(level);
       button.textContent = level === 30 ? "Level 30 Final Robot Principal" : `Level ${level} Robot Principal`;
+      button.dataset.label = button.textContent;
       levelSelect.append(button);
     }
   }

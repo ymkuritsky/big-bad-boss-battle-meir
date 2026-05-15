@@ -21,6 +21,8 @@ First playable sequel level:
 - The Art Archer shoots paintbrushes from a bow, the Librarian Launcher launches books, the Field Trip Terror drives around and uses a stop sign, and later Robot Principal levels add bigger robot tricks.
 - Everybody has 5 hearts in these school levels.
 - Player can move, punch, kick, and use Super Homework.
+- Levels now unlock in order after the player beats the previous level.
+- Each hero's power button works as that hero's first power.
 - Bosses fight back after attacks.
 - Character choices use heroes from Big Bad Boss Battle plus new playable choices: Super Tats, Mom Fary, Super Appie Juice, Freddy, Benji, Mr. 67, Super Ness, Captain Crayonstorm, Zap Hoodie, Mischievous Mayer, and Yapping Yonatan.
 - Defeating certain villains earns power-ups: Math Monster gives Homework Shield, and Evil LA gives Poetry Blast.

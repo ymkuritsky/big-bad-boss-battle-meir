@@ -159,6 +159,12 @@ h1 {
   color: white;
 }
 
+.level-choice.locked {
+  opacity: 0.5;
+  filter: grayscale(0.6);
+  cursor: not-allowed;
+}
+
 .power-pill.locked {
   opacity: 0.62;
 }
