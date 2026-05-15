@@ -962,7 +962,7 @@
     const hero = heroes[state.heroId];
     drawBar(50, 44, 430, hero.name.toUpperCase(), state.heroHp, hero.hp, hero.accent);
     drawBar(800, 44, 430, state.level === 1 ? "SCHOOL BOSSES" : currentBossName().toUpperCase(), currentBossHp(), currentBossMaxHp(), "#d91f2e");
-    drawLabel(levels[state.level].title.toUpperCase(), 420, 122, "#ffd84a", 440);
+    drawLabel(`FIGHTING: ${currentBossName().toUpperCase()}`, 365, 122, "#ffd84a", 550);
   }
 
   function drawBar(x, y, width, label, hp, maxHp, color) {
@@ -1359,7 +1359,6 @@
     ctx.fillText("÷", -28, 48);
     ctx.fillText("3", 30, 50);
     ctx.fillText("=", 0, 82);
-    drawLabel("MATH MONSTER", -156, -124, "#7d43d6", 300);
     ctx.restore();
   }
 
@@ -1406,7 +1405,6 @@
     ctx.moveTo(-34, 70);
     ctx.quadraticCurveTo(4, 48, 44, 70);
     ctx.stroke();
-    drawLabel("EVIL LA", -96, -126, "#d91f2e", 190);
     ctx.restore();
   }
 
@@ -1440,7 +1438,6 @@
     ctx.textAlign = "center";
     ctx.fillText("TRASH", 8, -42);
     drawGarbageCan(-142, 10);
-    drawLabel("FOOD MONSTER FIASCO", -220, -130, "#d91f2e", 390);
     ctx.restore();
   }
 
@@ -1502,7 +1499,6 @@
     ctx.moveTo(-38, 34);
     ctx.quadraticCurveTo(0, 60, 40, 34);
     ctx.stroke();
-    drawLabel("THE CRAZY BALL", -170, -112, "#2e7bc7", 330);
     ctx.restore();
   }
 
@@ -1570,7 +1566,6 @@
     ctx.moveTo(34, 22);
     ctx.quadraticCurveTo(62, 42, 90, 8);
     ctx.stroke();
-    drawLabel(boss.name.toUpperCase(), -210, -112, boss.color, 390);
     ctx.restore();
   }
 
@@ -1616,7 +1611,6 @@
     roundRect(-178, -26, 70, 16, 4);
     ctx.fill();
     ctx.stroke();
-    drawLabel(boss.name.toUpperCase(), -175, -142, boss.color, 300);
     ctx.restore();
   }
 
@@ -1642,7 +1636,6 @@
     for (let i = 0; i < 4; i += 1) {
       ctx.strokeRect(-118 + i * 24, -8 + i * 8, 46, 34);
     }
-    drawLabel(boss.name.toUpperCase(), -230, -142, boss.color, 420);
     ctx.restore();
   }
 
@@ -1677,7 +1670,6 @@
     ctx.textAlign = "center";
     ctx.fillText("STOP", 156, -36);
     ctx.strokeRect(130, -62, 52, 52);
-    drawLabel(boss.name.toUpperCase(), -245, -142, "#d91f2e", 420);
     ctx.restore();
   }
 
@@ -1731,7 +1723,6 @@
       ctx.stroke();
     }
     ctx.globalAlpha = 1;
-    drawLabel(boss.name.toUpperCase(), -230 / scale, -172 / scale, boss.color, 430);
     ctx.restore();
   }
 
