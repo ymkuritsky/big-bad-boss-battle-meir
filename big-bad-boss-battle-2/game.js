@@ -2292,23 +2292,9 @@
       const targetY = dodged ? y + (state.laneDodgeDirection === "up" ? 82 : -120) : y - 72;
       const endX = dodged ? x + 155 : x + 82;
       const offset = index * 18;
-      ctx.strokeStyle = index === 1 ? "#ef4fa3" : "#ff9ad0";
-      ctx.lineWidth = index === 1 ? 9 : 6;
-      ctx.beginPath();
-      ctx.moveTo(900, laneY);
-      ctx.lineTo(endX + offset, targetY + offset * 0.35);
-      ctx.stroke();
-      ctx.fillStyle = index === 1 ? "#18a66a" : "#2e91de";
-      ctx.strokeStyle = "#171216";
-      ctx.lineWidth = 4;
-      roundRect(endX + offset - 6, targetY - 8 + offset * 0.35, 96, 16, 4);
-      ctx.fill();
-      ctx.stroke();
-      ctx.fillStyle = "#ffd84a";
-      ctx.beginPath();
-      ctx.arc(endX + offset - 9, targetY + offset * 0.35, 12, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.stroke();
+      const brushX = endX + offset;
+      const brushY = dodged ? targetY + offset * 0.35 : laneY + (targetY - laneY) * 0.72;
+      drawFlyingPaintbrush(brushX, brushY, index);
     });
     if (dodged) {
       ctx.fillStyle = "#18a66a";
@@ -2319,29 +2305,40 @@
     ctx.restore();
   }
 
+  function drawFlyingPaintbrush(x, y, index) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(-0.18 + index * 0.1);
+    ctx.strokeStyle = ["#ff9ad0", "#ef4fa3", "#ff9ad0"][index];
+    ctx.lineWidth = 5;
+    for (let streak = 0; streak < 3; streak += 1) {
+      ctx.globalAlpha = 0.45 - streak * 0.1;
+      ctx.beginPath();
+      ctx.moveTo(22 + streak * 18, -10 + streak * 8);
+      ctx.lineTo(78 + streak * 18, -18 + streak * 8);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 4;
+    ctx.fillStyle = index === 1 ? "#18a66a" : "#2e91de";
+    roundRect(-42, -8, 92, 16, 4);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#ffd84a";
+    ctx.beginPath();
+    ctx.arc(-50, 0, 12, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+  }
+
   function drawBookLaunch(x, y, dodged = false) {
     ctx.save();
-    ctx.strokeStyle = "#171216";
-    ctx.lineWidth = 5;
     ["BO", "OK", "S"].forEach((book, index) => {
       const bx = dodged ? x + 145 + index * 36 : 780 - index * 86;
       const by = dodged ? y - 132 + index * 56 : 286 + index * 42;
-      ctx.strokeStyle = ["#d91f2e", "#2e91de", "#7146d9"][index];
-      ctx.lineWidth = 7;
-      ctx.beginPath();
-      ctx.moveTo(900 - index * 18, 300 + index * 42);
-      ctx.lineTo(bx + 35, by + 22);
-      ctx.stroke();
-      ctx.strokeStyle = "#171216";
-      ctx.lineWidth = 5;
-      ctx.fillStyle = ["#d91f2e", "#2e91de", "#ffd84a"][index];
-      roundRect(bx, by, 70, 44, 6);
-      ctx.fill();
-      ctx.stroke();
-      ctx.fillStyle = "#171216";
-      ctx.font = "900 14px Trebuchet MS";
-      ctx.textAlign = "center";
-      ctx.fillText(book, bx + 35, by + 28);
+      drawFlyingBook(bx, by, book, index);
     });
     if (dodged) {
       ctx.fillStyle = "#18a66a";
@@ -2349,6 +2346,39 @@
       ctx.textAlign = "center";
       ctx.fillText(`${state.laneDodgeDirection.toUpperCase()} DODGE`, x + 165, y - 130);
     }
+    ctx.restore();
+  }
+
+  function drawFlyingBook(x, y, text, index) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(-0.25 + index * 0.22);
+    ctx.strokeStyle = ["#d91f2e", "#2e91de", "#7146d9"][index];
+    ctx.lineWidth = 5;
+    for (let streak = 0; streak < 3; streak += 1) {
+      ctx.globalAlpha = 0.42 - streak * 0.1;
+      ctx.beginPath();
+      ctx.moveTo(76 + streak * 15, 12 + streak * 8);
+      ctx.lineTo(124 + streak * 15, 4 + streak * 8);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    ctx.fillStyle = ["#d91f2e", "#2e91de", "#ffd84a"][index];
+    roundRect(0, 0, 70, 44, 6);
+    ctx.fill();
+    ctx.stroke();
+    ctx.strokeStyle = "rgba(23,18,22,0.45)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(35, 4);
+    ctx.lineTo(35, 40);
+    ctx.stroke();
+    ctx.fillStyle = "#171216";
+    ctx.font = "900 14px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText(text, 35, 28);
     ctx.restore();
   }
 
