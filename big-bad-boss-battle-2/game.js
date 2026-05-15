@@ -278,14 +278,6 @@
   }
 
   function startLevel() {
-    if (state.won && state.level < progress.unlockedLevel) {
-      state.level += 1;
-      document.querySelectorAll(".level-choice").forEach((button) => {
-        button.classList.toggle("selected", Number(button.dataset.level) === state.level);
-      });
-      els.startButton.textContent = `Start Level ${state.level}`;
-      resetGame();
-    }
     if (!canPlayLevel(state.level)) {
       els.statusText.textContent = `Beat Level ${state.level - 1} to unlock Level ${state.level}.`;
       updateLevelLocks();
@@ -347,7 +339,9 @@
       state.won = true;
       state.action = "win";
       els.statusText.textContent = levelWinText();
-      unlockNextLevel();
+      if (advanceAfterWin()) {
+        return;
+      }
       setAttacks(true);
       updateLevelLocks();
       updateHud();
@@ -625,6 +619,26 @@
     }
   }
 
+  function advanceAfterWin() {
+    if (state.level >= 30) {
+      return false;
+    }
+    const completedText = levelWinText();
+    const nextLevel = state.level + 1;
+    unlockNextLevel();
+    state.level = nextLevel;
+    document.querySelectorAll(".level-choice").forEach((button) => {
+      button.classList.toggle("selected", Number(button.dataset.level) === state.level);
+    });
+    els.startButton.textContent = `Start Level ${state.level}`;
+    resetGame();
+    els.statusText.textContent = `${completedText} Level ${state.level} unlocked! Press Start Level ${state.level}.`;
+    updateHud();
+    updateLevelLocks();
+    draw();
+    return true;
+  }
+
   function updateLevelLocks() {
     document.querySelectorAll(".level-choice").forEach((button) => {
       const level = Number(button.dataset.level);
@@ -637,9 +651,6 @@
       button.textContent = locked ? `${baseLabel} Locked` : baseLabel;
     });
     els.startButton.disabled = !canPlayLevel(state.level);
-    if (state.won && state.level < progress.unlockedLevel) {
-      els.startButton.textContent = `Start Level ${state.level + 1}`;
-    }
   }
 
   function moveHero(direction) {
