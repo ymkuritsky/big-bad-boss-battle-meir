@@ -76,7 +76,7 @@ h1 {
   grid-template-columns: minmax(0, 1fr) 360px;
   align-items: stretch;
   gap: 10px;
-  padding: 10px;
+  padding: 10px 10px 106px;
   min-height: 0;
   background: #130f1f;
 }
@@ -180,14 +180,31 @@ h1 {
 }
 
 .controls-grid {
-  width: 170px;
+  width: 168px;
   display: grid;
-  grid-template-columns: repeat(3, 52px);
-  grid-template-rows: repeat(3, 38px);
+  grid-template-columns: repeat(3, 50px);
+  grid-template-rows: repeat(3, 32px);
   gap: 5px;
   grid-column: auto;
   grid-row: auto;
   justify-self: center;
+}
+
+.player-controls {
+  position: fixed;
+  left: 8px;
+  right: 8px;
+  bottom: max(8px, env(safe-area-inset-bottom));
+  z-index: 20;
+  display: grid;
+  grid-template-columns: 176px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  padding: 7px 9px;
+  border: 4px solid var(--ink);
+  border-radius: 8px;
+  background: rgba(255,254,247,0.96);
+  box-shadow: 5px 5px 0 rgba(0,0,0,0.18);
 }
 
 .move-button {
@@ -245,8 +262,9 @@ h1 {
 }
 
 .comic-button.attack {
-  flex: 1 1 115px;
-  min-height: 48px;
+  flex: 1 1 86px;
+  min-height: 46px;
+  padding: 7px 8px;
 }
 
 .comic-button:disabled {
@@ -268,7 +286,7 @@ h1 {
   .stage-wrap {
     grid-template-columns: 1fr;
     align-items: start;
-    padding: 6px;
+    padding: 6px 6px 126px;
   }
 
   #gameCanvas {
@@ -298,5 +316,39 @@ h1 {
   .controls-grid {
     grid-column: auto;
     grid-row: auto;
+  }
+
+  .player-controls {
+    left: 4px;
+    right: 4px;
+    grid-template-columns: 88px minmax(0, 1fr);
+    gap: 5px;
+    padding: 5px;
+    border-width: 3px;
+  }
+
+  .controls-grid {
+    width: 84px;
+    grid-template-columns: repeat(3, 25px);
+    grid-template-rows: repeat(3, 24px);
+    gap: 3px;
+  }
+
+  .move-button {
+    padding: 1px;
+    font-size: 8px;
+    border-width: 2px;
+  }
+
+  .attack-row {
+    gap: 4px;
+  }
+
+  .comic-button.attack {
+    flex: 1 1 52px;
+    min-height: 34px;
+    padding: 4px 3px;
+    border-width: 2px;
+    font-size: 9px;
   }
 }

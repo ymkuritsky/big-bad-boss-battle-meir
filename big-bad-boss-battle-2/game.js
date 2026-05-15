@@ -202,6 +202,8 @@
     resetButton: document.getElementById("resetButton"),
     punchButton: document.getElementById("punchButton"),
     kickButton: document.getElementById("kickButton"),
+    jumpButton: document.getElementById("jumpButton"),
+    hideButton: document.getElementById("hideButton"),
     powerButton: document.getElementById("powerButton")
   };
 
@@ -231,6 +233,8 @@
     action: "",
     trappedUntil: 0,
     knockedDownUntil: 0,
+    hiddenUntil: 0,
+    jumpingUntil: 0,
     tick: 0
   };
 
@@ -262,6 +266,8 @@
     state.action = "";
     state.trappedUntil = 0;
     state.knockedDownUntil = 0;
+    state.hiddenUntil = 0;
+    state.jumpingUntil = 0;
     state.tick = 0;
     els.statusText.textContent = levels[state.level].intro;
     setAttacks(true);
@@ -290,6 +296,10 @@
   function attack(kind) {
     if (!state.started || state.won || state.lost) {
       els.statusText.textContent = "Press Start Level first, then you can punch, kick, and use powers.";
+      return;
+    }
+    if (kind === "jump" || kind === "hide") {
+      useDefenseMove(kind);
       return;
     }
     const target = currentTarget();
@@ -335,8 +345,9 @@
     const blocked = shieldBlocked;
     applyBossPower(target, blocked);
     const bossAction = state.action;
+    const dodged = Date.now() < state.hiddenUntil || Date.now() < state.jumpingUntil;
     const bossDamage = target === "food" || target === "pusher" || target === "bus" || bossAction === "principalWarning" ? 0.5 : target === "crazyBall" && bossAction === "ballRollMiss" ? 0 : bossAction === "principalFar" ? 1.5 : 1;
-    state.heroHp = Math.max(0, state.heroHp - (blocked ? 0 : bossDamage));
+    state.heroHp = Math.max(0, state.heroHp - (blocked || dodged ? 0 : bossDamage));
     if (state.heroHp === 0) {
       state.lost = true;
       state.action = "lost";
@@ -349,7 +360,23 @@
 
     state.action = blocked ? `${kind}-${target}` : bossAction;
     const bossName = currentBossName(target);
-    els.statusText.textContent = `You used ${kind}. ${bossName} got hit, then ${bossPowerText(target, blocked, bossAction)}`;
+    els.statusText.textContent = `You used ${kind}. ${bossName} got hit, then ${dodged ? "your jump or hide avoided the boss hit!" : bossPowerText(target, blocked, bossAction)}`;
+    updateHud();
+    draw();
+  }
+
+  function useDefenseMove(kind) {
+    const now = Date.now();
+    if (kind === "jump") {
+      state.jumpingUntil = now + 1400;
+      state.heroY = clamp(state.heroY - 42, 270, 470);
+      state.action = "heroJump";
+      els.statusText.textContent = "Jump! The next boss hit can miss while you are in the air.";
+    } else {
+      state.hiddenUntil = now + 1800;
+      state.action = "heroHide";
+      els.statusText.textContent = "Hide! The next boss hit can miss while you are hidden.";
+    }
     updateHud();
     draw();
   }
@@ -632,6 +659,8 @@
   function setAttacks(disabled) {
     els.punchButton.disabled = disabled;
     els.kickButton.disabled = disabled;
+    els.jumpButton.disabled = disabled;
+    els.hideButton.disabled = disabled;
     els.powerButton.disabled = disabled;
   }
 
@@ -990,6 +1019,12 @@
   function drawHero(x, y) {
     ctx.save();
     ctx.translate(x, y);
+    if (Date.now() < state.jumpingUntil) {
+      ctx.translate(0, -42);
+    }
+    if (Date.now() < state.hiddenUntil) {
+      ctx.globalAlpha = 0.38;
+    }
     ctx.scale(0.9, 0.9);
     if (state.heroId === "tats") drawTatsHero();
     else if (state.heroId === "fary") drawFaryHero();
@@ -1782,6 +1817,10 @@
       } else if (state.action.startsWith("principal")) {
         drawPrincipalAttack(state.heroX, state.heroY, state.action);
         drawImpact("PRINCIPAL!", 650, 215, "#6f737a");
+      } else if (state.action === "heroJump") {
+        drawImpact("JUMP!", 650, 215, "#2e91de");
+      } else if (state.action === "heroHide") {
+        drawImpact("HIDE!", 650, 215, "#6f737a");
       } else {
         drawImpact("BOSS HIT!", 650, 215, "#d91f2e");
       }

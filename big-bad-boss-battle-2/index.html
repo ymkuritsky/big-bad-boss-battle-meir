@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
     <title>Big Bad Boss Battle 2</title>
-    <link rel="stylesheet" href="styles.css?v=matching-character-colors" />
+    <link rel="stylesheet" href="styles.css?v=bottom-player-controls" />
   </head>
   <body>
     <main class="game-shell">
@@ -52,6 +52,8 @@
             <span id="bossHearts">Bosses: 10</span>
           </div>
           <div id="powerInventory" class="power-inventory" aria-label="Earned power ups"></div>
+        </aside>
+        <div class="player-controls" aria-label="Player controls">
           <div class="controls-grid" aria-label="Move">
             <button class="move-button up" data-move="up" aria-label="Move up">UP</button>
             <button class="move-button left" data-move="left" aria-label="Move left">LEFT</button>
@@ -61,11 +63,13 @@
           <div class="attack-row">
             <button id="punchButton" class="comic-button attack">Punch</button>
             <button id="kickButton" class="comic-button attack">Kick</button>
+            <button id="jumpButton" class="comic-button attack">Jump</button>
+            <button id="hideButton" class="comic-button attack">Hide</button>
             <button id="powerButton" class="comic-button attack violet">Use Power-Up</button>
           </div>
-        </aside>
+        </div>
       </section>
     </main>
-    <script src="game.js?v=matching-character-colors"></script>
+    <script src="game.js?v=bottom-player-controls"></script>
   </body>
 </html>
