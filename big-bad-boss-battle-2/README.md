@@ -8,11 +8,17 @@ First playable sequel level:
 - Level 4 has the Airplane Attacker.
 - Level 5 has the Paper Pusher.
 - Level 6 has the Wing Whacker.
+- Level 7 takes place in the art room with the Art Archer.
+- Level 8 takes place in the library with the Librarian Launcher.
+- Level 9 takes place in the parking lot with the Field Trip Terror school bus.
+- Level 10 takes place in the principal's office with the Robot Principal.
+- Levels 11 through 30 are Robot Principal rematches with multiplying, giant, far-away, laser, and spinning tricks.
 - The Math Monster looks like a person made from numbers and math signs.
 - Evil LA looks like a blob full of letters, poems, rhymes, and words.
 - Food Monster Fiasco is two giant legs that shoots garbage. Each garbage hit takes half a heart.
 - The Crazy Ball is a blue ball with an evil face. Its roll can run over the player, but sometimes it misses.
 - The Airplane Attacker, Paper Pusher, and Wing Whacker are paper airplanes with evil faces and powers based on their names. Their levels take place outside.
+- The Art Archer shoots paintbrushes from a bow, the Librarian Launcher launches books, the Field Trip Terror drives around and uses a stop sign, and later Robot Principal levels add bigger robot tricks.
 - Everybody has 5 hearts in these school levels.
 - Player can move, punch, kick, and use Super Homework.
 - Bosses fight back after attacks.

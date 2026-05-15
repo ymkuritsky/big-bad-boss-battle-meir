@@ -46,13 +46,34 @@
       title: "Level 6 Wing Whacker",
       intro: "The Wing Whacker is flapping around outside in the wind.",
       start: "Level 6 started. The Wing Whacker swings its paper wings!"
+    },
+    7: {
+      title: "Level 7 Art Archer",
+      intro: "The Art Archer is waiting in the art room.",
+      start: "Level 7 started in the art room. Watch out for paintbrush arrows!"
+    },
+    8: {
+      title: "Level 8 Librarian Launcher",
+      intro: "The Librarian Launcher is guarding the library.",
+      start: "Level 8 started in the library. Dodge the launched books!"
+    },
+    9: {
+      title: "Level 9 Field Trip Terror",
+      intro: "The Field Trip Terror is roaring in the parking lot.",
+      start: "Level 9 started in the parking lot. Do not get trapped by the stop sign!"
+    },
+    10: {
+      title: "Level 10 Robot Principal's Office",
+      intro: "The Robot Principal is waiting inside the principal's office.",
+      start: "Level 10 started in the principal's office. Fight the Robot Principal!"
     }
   };
 
-  const paperBosses = {
+  const bossLevels = {
     4: {
       target: "airplane",
       name: "Airplane Attacker",
+      type: "paper",
       hpKey: "airplaneHp",
       action: "airplaneAttack",
       color: "#f15b42",
@@ -63,6 +84,7 @@
     5: {
       target: "pusher",
       name: "Paper Pusher",
+      type: "paper",
       hpKey: "pusherHp",
       action: "paperPush",
       color: "#7146d9",
@@ -73,14 +95,88 @@
     6: {
       target: "whacker",
       name: "Wing Whacker",
+      type: "paper",
       hpKey: "whackerHp",
       action: "wingWhack",
       color: "#18a66a",
       accent: "#fffef7",
       board: "LEVEL 6: WINDY OUTSIDE",
       note: "WATCH THE WINGS!"
+    },
+    7: {
+      target: "archer",
+      name: "Art Archer",
+      type: "archer",
+      hpKey: "archerHp",
+      action: "paintbrushArrow",
+      color: "#ef4fa3",
+      accent: "#ffd84a",
+      board: "LEVEL 7: ART ROOM",
+      note: "PAINTBRUSH ARROWS!"
+    },
+    8: {
+      target: "librarian",
+      name: "Librarian Launcher",
+      type: "librarian",
+      hpKey: "librarianHp",
+      action: "bookLaunch",
+      color: "#6a4b2b",
+      accent: "#9edcff",
+      board: "LEVEL 8: LIBRARY",
+      note: "BOOKS ARE FLYING!"
+    },
+    9: {
+      target: "bus",
+      name: "Field Trip Terror",
+      type: "bus",
+      hpKey: "busHp",
+      action: "busStop",
+      color: "#ffd84a",
+      accent: "#d91f2e",
+      board: "LEVEL 9: PARKING LOT",
+      note: "STOP SIGN TRAP!"
+    },
+    10: {
+      target: "principal",
+      name: "Robot Principal",
+      type: "principal",
+      hpKey: "principalHp",
+      action: "principalWarning",
+      color: "#6f737a",
+      accent: "#49d9ff",
+      board: "LEVEL 10: PRINCIPAL'S OFFICE",
+      note: "OFFICE BOSS!"
     }
   };
+
+  const robotTricks = [
+    { action: "principalMultiply", note: "MULTIPLY MODE!", label: "MULTIPLY" },
+    { action: "principalGiant", note: "GIANT MODE!", label: "GIANT" },
+    { action: "principalFar", note: "FAR ATTACK!", label: "FAR" },
+    { action: "principalLaser", note: "LASER OFFICE!", label: "LASER" },
+    { action: "principalSpin", note: "SPIN ATTACK!", label: "SPIN" }
+  ];
+
+  for (let level = 11; level <= 30; level += 1) {
+    const trick = robotTricks[(level - 11) % robotTricks.length];
+    levels[level] = {
+      title: `Level ${level} Robot Principal Rematch`,
+      intro: `More Robot Principals are waiting in level ${level}.`,
+      start: `Level ${level} started. Robot Principal uses ${trick.label.toLowerCase()} tricks!`
+    };
+    bossLevels[level] = {
+      target: "principal",
+      name: level === 30 ? "Final Robot Principal" : `Robot Principal ${level}`,
+      type: "principal",
+      hpKey: "principalHp",
+      action: trick.action,
+      color: level === 30 ? "#d91f2e" : "#6f737a",
+      accent: level === 30 ? "#ffd84a" : "#49d9ff",
+      board: `LEVEL ${level}: ROBOT PRINCIPAL`,
+      note: trick.note,
+      maxHp: level === 30 ? 10 : 6 + Math.floor((level - 11) / 5)
+    };
+  }
 
   const powerUps = {
     homeworkShield: {
@@ -123,6 +219,10 @@
     airplaneHp: 5,
     pusherHp: 5,
     whackerHp: 5,
+    archerHp: 5,
+    librarianHp: 5,
+    busHp: 5,
+    principalHp: 6,
     earnedPowers: new Set(),
     mathRewarded: false,
     evilRewarded: false,
@@ -146,6 +246,10 @@
     state.airplaneHp = 5;
     state.pusherHp = 5;
     state.whackerHp = 5;
+    state.archerHp = 5;
+    state.librarianHp = 5;
+    state.busHp = 5;
+    state.principalHp = currentBossMaxHp();
     state.earnedPowers = new Set();
     state.mathRewarded = false;
     state.evilRewarded = false;
@@ -192,6 +296,14 @@
       state.pusherHp = Math.max(0, state.pusherHp - damage);
     } else if (target === "whacker") {
       state.whackerHp = Math.max(0, state.whackerHp - damage);
+    } else if (target === "archer") {
+      state.archerHp = Math.max(0, state.archerHp - damage);
+    } else if (target === "librarian") {
+      state.librarianHp = Math.max(0, state.librarianHp - damage);
+    } else if (target === "bus") {
+      state.busHp = Math.max(0, state.busHp - damage);
+    } else if (target === "principal") {
+      state.principalHp = Math.max(0, state.principalHp - damage);
     }
     checkPowerRewards();
 
@@ -208,7 +320,7 @@
     const blocked = kind === "power" && state.earnedPowers.has("homeworkShield");
     applyBossPower(target, blocked);
     const bossAction = state.action;
-    const bossDamage = target === "food" || target === "pusher" ? 0.5 : target === "crazyBall" && bossAction === "ballRollMiss" ? 0 : 1;
+    const bossDamage = target === "food" || target === "pusher" || target === "bus" || bossAction === "principalWarning" ? 0.5 : target === "crazyBall" && bossAction === "ballRollMiss" ? 0 : bossAction === "principalFar" ? 1.5 : 1;
     state.heroHp = Math.max(0, state.heroHp - (blocked ? 0 : bossDamage));
     if (state.heroHp === 0) {
       state.lost = true;
@@ -257,6 +369,31 @@
       state.heroX = clamp(state.heroX - 28, 120, 560);
       state.heroY = clamp(state.heroY + 18, 270, 470);
       state.action = "wingWhack";
+    } else if (target === "archer") {
+      state.heroY = clamp(state.heroY + 18, 270, 470);
+      state.action = "paintbrushArrow";
+    } else if (target === "librarian") {
+      state.heroX = clamp(state.heroX - 35, 120, 560);
+      state.action = "bookLaunch";
+    } else if (target === "bus") {
+      state.trappedUntil = Date.now() + 1800;
+      state.action = "busStop";
+    } else if (target === "principal") {
+      const action = bossLevels[state.level].action;
+      state.action = action;
+      if (action === "principalMultiply") {
+        state.heroX = clamp(state.heroX - 30, 120, 560);
+      } else if (action === "principalGiant") {
+        state.heroY = clamp(state.heroY + 34, 270, 470);
+      } else if (action === "principalFar") {
+        state.heroX = clamp(state.heroX - 50, 120, 560);
+      } else if (action === "principalLaser") {
+        state.knockedDownUntil = Date.now() + 1400;
+        state.heroY = clamp(state.heroY + 30, 270, 470);
+      } else if (action === "principalSpin") {
+        state.heroX = clamp(state.heroX - 24, 120, 560);
+        state.heroY = clamp(state.heroY + 24, 270, 470);
+      }
     }
   }
 
@@ -282,6 +419,23 @@
     if (target === "whacker") {
       return "Wing Whacker smacked you with a paper wing!";
     }
+    if (target === "archer") {
+      return "Art Archer shot paintbrush arrows at you!";
+    }
+    if (target === "librarian") {
+      return "Librarian Launcher launched books at you!";
+    }
+    if (target === "bus") {
+      return "Field Trip Terror drove around you and stopped you with its stop sign!";
+    }
+    if (target === "principal") {
+      if (bossAction === "principalWarning") return "Robot Principal stomped around the office. No big power yet!";
+      if (bossAction === "principalMultiply") return "Robot Principal multiplied into extra copies!";
+      if (bossAction === "principalGiant") return "Robot Principal turned giant!";
+      if (bossAction === "principalFar") return "Robot Principal attacked from farther away!";
+      if (bossAction === "principalSpin") return "Robot Principal spun around the office!";
+      return "Robot Principal fired a principal laser from the office!";
+    }
     return bossAction === "ballRollHit" ? "The Crazy Ball rolled on top of you and attacked!" : "The Crazy Ball rolled by and missed!";
   }
 
@@ -291,25 +445,27 @@
     }
     if (state.level === 2) return "food";
     if (state.level === 3) return "crazyBall";
-    return paperBosses[state.level].target;
+    return bossLevels[state.level].target;
   }
 
   function currentBossHp() {
     if (state.level === 1) return state.mathHp + state.evilHp;
     if (state.level === 2) return state.foodHp;
     if (state.level === 3) return state.crazyBallHp;
-    return state[paperBosses[state.level].hpKey];
+    return state[bossLevels[state.level].hpKey];
   }
 
   function currentBossMaxHp() {
-    return state.level === 1 ? 10 : 5;
+    if (state.level === 1) return 10;
+    if (state.level >= 4) return bossLevels[state.level].maxHp || 5;
+    return 5;
   }
 
   function levelWinText() {
     if (state.level === 1) return "You beat the Math Monster and Evil LA!";
     if (state.level === 2) return "You beat Food Monster Fiasco!";
     if (state.level === 3) return "You beat The Crazy Ball in the gym!";
-    return `You beat ${paperBosses[state.level].name}!`;
+    return `You beat ${bossLevels[state.level].name}!`;
   }
 
   function currentBossName(target = currentTarget()) {
@@ -317,7 +473,8 @@
     if (target === "evil") return "Evil LA";
     if (target === "food") return "Food Monster Fiasco";
     if (target === "crazyBall") return "The Crazy Ball";
-    return Object.values(paperBosses).find((boss) => boss.target === target).name;
+    if (target === "principal") return bossLevels[state.level].name;
+    return Object.values(bossLevels).find((boss) => boss.target === target).name;
   }
 
   function usePowerDamage() {
@@ -431,7 +588,7 @@
     } else if (state.level === 3 && state.crazyBallHp > 0) {
       drawCrazyBall(950, 390);
     } else if (state.level >= 4 && currentBossHp() > 0) {
-      drawPaperPlaneBoss(950, 380, paperBosses[state.level]);
+      drawBossCharacter(950, 380, bossLevels[state.level]);
     }
     drawAction();
   }
@@ -441,7 +598,7 @@
     const h = canvas.height;
     ctx.clearRect(0, 0, w, h);
     if (state.level >= 4) {
-      drawOutsideSchool(w, h);
+      drawBossLevelRoom(w, h);
       return;
     }
     ctx.fillStyle = "#9edcff";
@@ -483,7 +640,7 @@
     } else if (state.level === 3) {
       drawGymLines();
     } else if (state.level >= 4) {
-      drawPaperHallway();
+      drawPaperOutsideDetails();
     }
 
     ctx.fillStyle = "#b86a32";
@@ -496,7 +653,23 @@
     ctx.stroke();
   }
 
-  function drawOutsideSchool(w, h) {
+  function drawBossLevelRoom(w, h) {
+    if (state.level === 7) {
+      drawArtRoom(w, h);
+      return;
+    }
+    if (state.level === 8) {
+      drawLibraryRoom(w, h);
+      return;
+    }
+    if (state.level === 9) {
+      drawParkingLot(w, h);
+      return;
+    }
+    if (state.level >= 10) {
+      drawPrincipalOffice(w, h);
+      return;
+    }
     ctx.fillStyle = "#8ed8ff";
     ctx.fillRect(0, 0, w, h);
     ctx.fillStyle = "#fffef7";
@@ -550,7 +723,104 @@
     ctx.fillText(boardTitle(), 630, 276);
     ctx.font = "900 28px Trebuchet MS";
     ctx.fillText(boardNote(), 630, 322);
-    drawPaperHallway();
+    drawPaperOutsideDetails();
+  }
+
+  function drawRoomBoard() {
+    ctx.fillStyle = "#2f6f52";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 7;
+    roundRect(420, 215, 420, 150, 8);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#fff";
+    ctx.font = "900 34px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText(boardTitle(), 630, 276);
+    ctx.font = "900 27px Trebuchet MS";
+    ctx.fillText(boardNote(), 630, 322);
+  }
+
+  function drawArtRoom(w, h) {
+    ctx.fillStyle = "#fff4d6";
+    ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = "#e3c38a";
+    ctx.fillRect(0, 500, w, 220);
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 7;
+    for (let x = 90; x <= 1040; x += 210) {
+      ctx.fillStyle = ["#ef4fa3", "#2e91de", "#18a66a", "#ffd84a"][Math.floor(x / 210) % 4];
+      roundRect(x, 250, 96, 130, 8);
+      ctx.fill();
+      ctx.stroke();
+    }
+    ctx.fillStyle = "#b86a32";
+    roundRect(120, 430, 220, 54, 8);
+    ctx.fill();
+    ctx.stroke();
+    drawRoomBoard();
+  }
+
+  function drawLibraryRoom(w, h) {
+    ctx.fillStyle = "#f1e0c3";
+    ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = "#8a4c2c";
+    ctx.fillRect(0, 500, w, 220);
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 7;
+    for (let x = 70; x <= 1080; x += 220) {
+      ctx.fillStyle = "#6a4b2b";
+      roundRect(x, 195, 140, 290, 8);
+      ctx.fill();
+      ctx.stroke();
+      for (let y = 235; y <= 420; y += 58) {
+        ctx.fillStyle = "#ffd84a";
+        ctx.fillRect(x + 18, y, 24, 42);
+        ctx.fillStyle = "#2e91de";
+        ctx.fillRect(x + 52, y, 24, 42);
+        ctx.fillStyle = "#d91f2e";
+        ctx.fillRect(x + 86, y, 24, 42);
+      }
+    }
+    drawRoomBoard();
+  }
+
+  function drawParkingLot(w, h) {
+    ctx.fillStyle = "#8ed8ff";
+    ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = "#525b63";
+    ctx.fillRect(0, 300, w, 420);
+    ctx.strokeStyle = "#ffd84a";
+    ctx.lineWidth = 8;
+    for (let x = 70; x <= 1130; x += 180) {
+      ctx.beginPath();
+      ctx.moveTo(x, 520);
+      ctx.lineTo(x + 92, 520);
+      ctx.stroke();
+    }
+    drawRoomBoard();
+  }
+
+  function drawPrincipalOffice(w, h) {
+    ctx.fillStyle = "#c9d7e8";
+    ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = "#8b5a3a";
+    ctx.fillRect(0, 510, w, 210);
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 7;
+    ctx.fillStyle = "#fffef7";
+    roundRect(90, 230, 180, 120, 8);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#d91f2e";
+    ctx.font = "900 24px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText("RULES", 180, 300);
+    ctx.fillStyle = "#7c3f18";
+    roundRect(450, 438, 360, 74, 8);
+    ctx.fill();
+    ctx.stroke();
+    drawRoomBoard();
   }
 
   function drawCafeteriaTables() {
@@ -572,17 +842,17 @@
     if (state.level === 1) return "LEVEL 1: CLASSROOM";
     if (state.level === 2) return "LEVEL 2: CAFETERIA";
     if (state.level === 3) return "LEVEL 3: GYM";
-    return paperBosses[state.level].board;
+    return bossLevels[state.level].board;
   }
 
   function boardNote() {
     if (state.level === 1) return "2 + 2 = BOSS?";
     if (state.level === 2) return "TODAY'S LUNCH: TROUBLE";
     if (state.level === 3) return "DODGE THE ROLL!";
-    return paperBosses[state.level].note;
+    return bossLevels[state.level].note;
   }
 
-  function drawPaperHallway() {
+  function drawPaperOutsideDetails() {
     ctx.save();
     ctx.strokeStyle = "#c8d0d8";
     ctx.lineWidth = 4;
@@ -660,41 +930,326 @@
   function drawHero(x, y) {
     ctx.save();
     ctx.translate(x, y);
-    ctx.strokeStyle = "#171216";
-    ctx.lineWidth = 7;
-    ctx.fillStyle = "#fffef7";
-    ctx.beginPath();
-    ctx.arc(0, -58, 42, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.stroke();
-    const hero = heroes[state.heroId];
-    ctx.fillStyle = hero.color;
-    roundRect(-38, -18, 76, 88, 12);
-    ctx.fill();
-    ctx.stroke();
-    ctx.fillStyle = "#171216";
-    ctx.beginPath();
-    ctx.arc(-14, -62, 5, 0, Math.PI * 2);
-    ctx.arc(14, -62, 5, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(0, -50, 18, 0, Math.PI);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(-38, 6);
-    ctx.lineTo(-82, 32);
-    ctx.moveTo(38, 6);
-    ctx.lineTo(82, -18);
-    ctx.moveTo(-24, 70);
-    ctx.lineTo(-44, 112);
-    ctx.moveTo(24, 70);
-    ctx.lineTo(44, 112);
-    ctx.stroke();
-    ctx.fillStyle = hero.accent;
-    ctx.font = "900 20px Trebuchet MS";
-    ctx.textAlign = "center";
-    ctx.fillText(hero.name.toUpperCase().slice(0, 12), 0, 26);
+    ctx.scale(0.9, 0.9);
+    if (state.heroId === "tats") drawTatsHero();
+    else if (state.heroId === "fary") drawFaryHero();
+    else if (state.heroId === "apple") drawAppleHero();
+    else if (state.heroId === "freddy") drawFreddyHero();
+    else if (state.heroId === "benji") drawBenjiHero();
+    else if (state.heroId === "frost") drawFrostHero();
+    else if (state.heroId === "ness") drawNessHero();
+    else if (state.heroId === "crayon") drawCrayonHero();
+    else if (state.heroId === "hoodie") drawHoodieHero();
+    else if (state.heroId === "mayer") drawMayorHero();
+    else if (state.heroId === "yonatan") drawYappingHero();
     ctx.restore();
+  }
+
+  function setupHeroLine(color, width = 9) {
+    ctx.strokeStyle = color;
+    ctx.fillStyle = color;
+    ctx.lineWidth = width;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+  }
+
+  function drawHeroHead(x, y, r, color) {
+    ctx.save();
+    setupHeroLine(color, 7);
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(x - 8, y - 3, 2.8, 0, Math.PI * 2);
+    ctx.arc(x + 8, y - 3, 2.8, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(x, y + 6, 9, 0.1, Math.PI - 0.1);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawEvilHeroHead(x, y, r, color, mustache = false) {
+    ctx.save();
+    setupHeroLine(color, 7);
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.strokeStyle = "#171216";
+    ctx.fillStyle = "#171216";
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.moveTo(x - 17, y - 13);
+    ctx.lineTo(x - 5, y - 7);
+    ctx.moveTo(x + 17, y - 13);
+    ctx.lineTo(x + 5, y - 7);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.ellipse(x - 9, y - 1, 4.4, 2.5, -0.28, 0, Math.PI * 2);
+    ctx.ellipse(x + 9, y - 1, 4.4, 2.5, 0.28, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.moveTo(x - 9, y + 12);
+    ctx.quadraticCurveTo(x + 2, y + 5, x + 14, y + 13);
+    ctx.stroke();
+    if (mustache) {
+      ctx.strokeStyle = "#5b3018";
+      ctx.lineWidth = 5;
+      ctx.beginPath();
+      ctx.moveTo(x - 3, y + 8);
+      ctx.bezierCurveTo(x - 14, y, x - 27, y + 6, x - 32, y + 13);
+      ctx.moveTo(x + 3, y + 8);
+      ctx.bezierCurveTo(x + 14, y + 6, x + 25, y + 14, x + 31, y + 6);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function drawHeroArms(color, bulky = false) {
+    setupHeroLine(color, bulky ? 14 : 9);
+    ctx.beginPath();
+    ctx.moveTo(0, -70);
+    ctx.lineTo(-38, -42);
+    ctx.moveTo(0, -70);
+    ctx.lineTo(40, -42);
+    ctx.stroke();
+    if (bulky) {
+      ctx.fillStyle = "rgba(120,201,255,0.2)";
+      ctx.beginPath();
+      ctx.ellipse(-52, -45, 24, 19, 0.2, 0, Math.PI * 2);
+      ctx.ellipse(52, -45, 24, 19, -0.2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    }
+  }
+
+  function drawStickBody(color) {
+    setupHeroLine(color, 9);
+    ctx.beginPath();
+    ctx.moveTo(0, -88);
+    ctx.lineTo(0, -22);
+    ctx.moveTo(0, -22);
+    ctx.lineTo(-24, 44);
+    ctx.moveTo(0, -22);
+    ctx.lineTo(28, 44);
+    ctx.stroke();
+  }
+
+  function drawCloudMuscleShape(x, y, color, fill) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.strokeStyle = color;
+    ctx.fillStyle = fill;
+    ctx.lineWidth = 8;
+    ctx.beginPath();
+    ctx.arc(-22, 0, 22, 0, Math.PI * 2);
+    ctx.arc(2, -16, 24, 0, Math.PI * 2);
+    ctx.arc(30, 2, 22, 0, Math.PI * 2);
+    ctx.arc(5, 14, 20, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawTatsHero() {
+    const color = heroes.tats.color;
+    drawHeroHead(0, -112, 24, color);
+    drawCloudMuscleShape(-58, -58, color, "rgba(120,201,255,0.2)");
+    drawCloudMuscleShape(58, -58, color, "rgba(120,201,255,0.2)");
+    drawStickBody(color);
+    drawHeroArms(color, true);
+  }
+
+  function drawFaryHero() {
+    const color = heroes.fary.color;
+    ctx.fillStyle = "rgba(255,137,198,0.42)";
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.ellipse(-32, -62, 28, 48, -0.25, 0, Math.PI * 2);
+    ctx.ellipse(32, -62, 28, 48, 0.25, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    drawHeroHead(0, -112, 22, color);
+    drawStickBody(color);
+    drawHeroArms(color);
+  }
+
+  function drawAppleHero() {
+    const color = heroes.apple.color;
+    drawHeroHead(0, -112, 23, color);
+    setupHeroLine(color, 8);
+    ctx.beginPath();
+    ctx.arc(-2, -142, 11, 0.1, Math.PI * 1.4);
+    ctx.stroke();
+    drawStickBody(color);
+    drawHeroArms(color);
+  }
+
+  function drawFreddyHero() {
+    setupHeroLine("#17633c", 8);
+    ctx.fillStyle = "#17633c";
+    roundRect(-20, -84, 40, 66, 9);
+    ctx.fill();
+    ctx.stroke();
+    drawPersonHead("#17633c", "#f0cf62", "#7b5b35");
+    drawHeroArms("#17633c");
+    drawLegsAndShoes("#17633c");
+    ctx.fillStyle = "#0f4a2b";
+    ctx.font = "900 21px Trebuchet MS";
+    ctx.fillText("F", -7, -45);
+  }
+
+  function drawBenjiHero() {
+    setupHeroLine("#6f737a", 8);
+    ctx.fillStyle = "#9b9ea5";
+    roundRect(-20, -84, 40, 66, 8);
+    ctx.fill();
+    ctx.stroke();
+    drawHeroArms("#171216");
+    drawLegsAndShoes("#171216");
+    drawPersonHead("#171216", "#b68a45", "#2f74d0");
+  }
+
+  function drawPersonHead(outline, hair, eye) {
+    ctx.save();
+    ctx.strokeStyle = outline;
+    ctx.lineWidth = 6;
+    ctx.fillStyle = "#f2c99d";
+    ctx.beginPath();
+    ctx.arc(0, -112, 23, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = hair;
+    ctx.beginPath();
+    ctx.moveTo(-23, -126);
+    ctx.quadraticCurveTo(-12, -150, 6, -134);
+    ctx.quadraticCurveTo(18, -146, 24, -122);
+    ctx.lineTo(18, -117);
+    ctx.quadraticCurveTo(0, -128, -20, -116);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = eye;
+    ctx.beginPath();
+    ctx.arc(-8, -113, 3.4, 0, Math.PI * 2);
+    ctx.arc(8, -113, 3.4, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = outline;
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.arc(0, -104, 7, 0.12, Math.PI - 0.12);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawLegsAndShoes(color) {
+    setupHeroLine(color, 8);
+    ctx.beginPath();
+    ctx.moveTo(-10, -20);
+    ctx.lineTo(-24, 42);
+    ctx.moveTo(10, -20);
+    ctx.lineTo(26, 42);
+    ctx.stroke();
+    ctx.fillStyle = "#111";
+    roundRect(-44, 42, 30, 13, 5);
+    ctx.fill();
+    ctx.stroke();
+    roundRect(16, 42, 30, 13, 5);
+    ctx.fill();
+    ctx.stroke();
+  }
+
+  function drawFrostHero() {
+    const color = heroes.frost.color;
+    const accent = heroes.frost.accent;
+    drawHeroHead(0, -112, 23, color);
+    ctx.fillStyle = "rgba(108,240,194,0.22)";
+    ctx.strokeStyle = accent;
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(-28, -88);
+    ctx.lineTo(0, -105);
+    ctx.lineTo(28, -88);
+    ctx.lineTo(12, -96);
+    ctx.lineTo(0, -82);
+    ctx.lineTo(-12, -96);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    drawStickBody(color);
+    drawHeroArms(color);
+  }
+
+  function drawNessHero() {
+    const color = heroes.ness.color;
+    const accent = heroes.ness.accent;
+    ctx.fillStyle = "rgba(107,216,255,0.28)";
+    ctx.strokeStyle = accent;
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.moveTo(-28, -82);
+    ctx.lineTo(-56, -24);
+    ctx.lineTo(-18, -42);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    drawHeroHead(0, -112, 23, color);
+    drawStickBody(color);
+    drawHeroArms(color);
+    ctx.fillStyle = accent;
+    ctx.font = "900 24px Trebuchet MS";
+    ctx.fillText("N", -9, -42);
+  }
+
+  function drawCrayonHero() {
+    const color = heroes.crayon.color;
+    drawHeroHead(0, -112, 23, color);
+    ctx.fillStyle = heroes.crayon.accent;
+    ctx.beginPath();
+    ctx.moveTo(-20, -144);
+    ctx.lineTo(20, -144);
+    ctx.lineTo(0, -174);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    drawStickBody(color);
+    drawHeroArms(color);
+  }
+
+  function drawHoodieHero() {
+    const color = heroes.hoodie.color;
+    ctx.fillStyle = color;
+    ctx.strokeStyle = heroes.hoodie.accent;
+    ctx.lineWidth = 6;
+    ctx.beginPath();
+    ctx.arc(0, -112, 31, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    drawHeroHead(0, -112, 19, heroes.hoodie.accent);
+    drawStickBody(color);
+    drawHeroArms(heroes.hoodie.accent);
+  }
+
+  function drawMayorHero() {
+    const color = heroes.mayer.color;
+    drawEvilHeroHead(0, -112, 24, color, true);
+    drawStickBody(color);
+    drawHeroArms(color);
+    ctx.fillStyle = heroes.mayer.accent;
+    ctx.font = "900 32px Trebuchet MS";
+    ctx.fillText("M", -15, -42);
+  }
+
+  function drawYappingHero() {
+    const color = heroes.yonatan.color;
+    drawEvilHeroHead(0, -112, 23, color);
+    drawStickBody(color);
+    drawHeroArms(color);
+    ctx.fillStyle = heroes.yonatan.accent;
+    ctx.fillRect(16, -115, 18, 9);
   }
 
   function drawMathMonster(x, y) {
@@ -891,7 +1446,23 @@
     ctx.restore();
   }
 
-  function drawPaperPlaneBoss(x, y, boss) {
+  function drawBossCharacter(x, y, boss) {
+    if (boss.type === "archer") {
+      drawArtArcher(x, y, boss);
+      return;
+    }
+    if (boss.type === "librarian") {
+      drawLibrarianLauncher(x, y, boss);
+      return;
+    }
+    if (boss.type === "bus") {
+      drawFieldTripTerror(x, y, boss);
+      return;
+    }
+    if (boss.type === "principal") {
+      drawRobotPrincipal(x, y, boss);
+      return;
+    }
     ctx.save();
     ctx.translate(x, y);
     const bob = Math.sin(state.tick * 0.25) * 10;
@@ -943,6 +1514,167 @@
     ctx.restore();
   }
 
+  function drawArtArcher(x, y, boss) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 7;
+    ctx.fillStyle = "#f7c18b";
+    ctx.beginPath();
+    ctx.arc(0, -90, 44, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = boss.color;
+    roundRect(-50, -48, 100, 132, 14);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#fffef7";
+    ctx.beginPath();
+    ctx.arc(-15, -97, 10, 0, Math.PI * 2);
+    ctx.arc(18, -97, 10, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#171216";
+    ctx.beginPath();
+    ctx.arc(-12, -97, 4, 0, Math.PI * 2);
+    ctx.arc(15, -97, 4, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = "#7c3f18";
+    ctx.lineWidth = 8;
+    ctx.beginPath();
+    ctx.arc(-90, -18, 55, -1.2, 1.2);
+    ctx.stroke();
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.moveTo(-90, -72);
+    ctx.lineTo(-90, 36);
+    ctx.moveTo(-88, -18);
+    ctx.lineTo(-170, -18);
+    ctx.stroke();
+    ctx.fillStyle = "#18a66a";
+    roundRect(-178, -26, 70, 16, 4);
+    ctx.fill();
+    ctx.stroke();
+    drawLabel(boss.name.toUpperCase(), -175, -142, boss.color, 300);
+    ctx.restore();
+  }
+
+  function drawLibrarianLauncher(x, y, boss) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 7;
+    ctx.fillStyle = "#fffef7";
+    ctx.beginPath();
+    ctx.arc(0, -90, 44, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = boss.color;
+    roundRect(-54, -48, 108, 140, 14);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#171216";
+    ctx.fillRect(-28, -106, 18, 7);
+    ctx.fillRect(12, -106, 18, 7);
+    ctx.strokeStyle = "#ffd84a";
+    ctx.lineWidth = 6;
+    for (let i = 0; i < 4; i += 1) {
+      ctx.strokeRect(-118 + i * 24, -8 + i * 8, 46, 34);
+    }
+    drawLabel(boss.name.toUpperCase(), -230, -142, boss.color, 420);
+    ctx.restore();
+  }
+
+  function drawFieldTripTerror(x, y, boss) {
+    ctx.save();
+    ctx.translate(x - 50, y + 20);
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 7;
+    ctx.fillStyle = boss.color;
+    roundRect(-145, -90, 270, 130, 16);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#fffef7";
+    for (let i = 0; i < 4; i += 1) {
+      roundRect(-112 + i * 52, -62, 36, 34, 4);
+      ctx.fill();
+      ctx.stroke();
+    }
+    ctx.fillStyle = "#171216";
+    ctx.beginPath();
+    ctx.arc(-82, 44, 26, 0, Math.PI * 2);
+    ctx.arc(74, 44, 26, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "#fffef7";
+    ctx.beginPath();
+    ctx.arc(18, -4, 13, 0, Math.PI * 2);
+    ctx.arc(62, -4, 13, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#d91f2e";
+    ctx.font = "900 22px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText("STOP", 156, -36);
+    ctx.strokeRect(130, -62, 52, 52);
+    drawLabel(boss.name.toUpperCase(), -245, -142, "#d91f2e", 420);
+    ctx.restore();
+  }
+
+  function drawRobotPrincipal(x, y, boss) {
+    ctx.save();
+    ctx.translate(x, y);
+    const scale = state.level >= 11 && boss.action === "principalGiant" ? 1.25 : state.level === 30 ? 1.35 : 1;
+    ctx.scale(scale, scale);
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 7;
+    ctx.fillStyle = boss.color;
+    roundRect(-58, -122, 116, 90, 12);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = boss.accent;
+    roundRect(-70, -34, 140, 132, 14);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#fffef7";
+    ctx.beginPath();
+    ctx.arc(-24, -82, 13, 0, Math.PI * 2);
+    ctx.arc(24, -82, 13, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#d91f2e";
+    ctx.beginPath();
+    ctx.arc(-24, -82, 5, 0, Math.PI * 2);
+    ctx.arc(24, -82, 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 9;
+    ctx.beginPath();
+    ctx.moveTo(-70, 10);
+    ctx.lineTo(-126, -18);
+    ctx.moveTo(70, 10);
+    ctx.lineTo(126, -18);
+    ctx.moveTo(-38, 98);
+    ctx.lineTo(-58, 154);
+    ctx.moveTo(38, 98);
+    ctx.lineTo(58, 154);
+    ctx.stroke();
+    if (state.level >= 11 && boss.action === "principalMultiply") {
+      ctx.globalAlpha = 0.5;
+      ctx.translate(-150, 20);
+      roundRect(-42, -72, 84, 84, 12);
+      ctx.fill();
+      ctx.stroke();
+      ctx.translate(300, 0);
+      roundRect(-42, -72, 84, 84, 12);
+      ctx.fill();
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+    drawLabel(boss.name.toUpperCase(), -230 / scale, -172 / scale, boss.color, 430);
+    ctx.restore();
+  }
+
   function drawAction() {
     if (!state.action) return;
     ctx.save();
@@ -979,7 +1711,7 @@
         drawBallRoll(state.heroX, state.heroY, false);
         drawImpact("MISSED!", 650, 215, "#18a66a");
       } else if (state.action === "airplaneAttack") {
-        drawPaperAttack(state.heroX, state.heroY, paperBosses[4]);
+        drawPaperAttack(state.heroX, state.heroY, bossLevels[4]);
         drawImpact("AIR ATTACK!", 650, 215, "#f15b42");
       } else if (state.action === "paperPush") {
         drawPaperPush(state.heroX, state.heroY);
@@ -987,6 +1719,18 @@
       } else if (state.action === "wingWhack") {
         drawWingWhack(state.heroX, state.heroY);
         drawImpact("WHACK!", 650, 215, "#18a66a");
+      } else if (state.action === "paintbrushArrow") {
+        drawPaintbrushArrow(state.heroX, state.heroY);
+        drawImpact("PAINT ARROW!", 650, 215, "#ef4fa3");
+      } else if (state.action === "bookLaunch") {
+        drawBookLaunch(state.heroX, state.heroY);
+        drawImpact("BOOKS!", 650, 215, "#6a4b2b");
+      } else if (state.action === "busStop") {
+        drawBusStopAttack(state.heroX, state.heroY);
+        drawImpact("STOPPED!", 650, 215, "#d91f2e");
+      } else if (state.action.startsWith("principal")) {
+        drawPrincipalAttack(state.heroX, state.heroY, state.action);
+        drawImpact("PRINCIPAL!", 650, 215, "#6f737a");
       } else {
         drawImpact("BOSS HIT!", 650, 215, "#d91f2e");
       }
@@ -1116,6 +1860,102 @@
     ctx.restore();
   }
 
+  function drawPaintbrushArrow(x, y) {
+    ctx.save();
+    ctx.strokeStyle = "#ef4fa3";
+    ctx.lineWidth = 8;
+    ctx.beginPath();
+    ctx.moveTo(840, 300);
+    ctx.lineTo(x + 80, y - 72);
+    ctx.stroke();
+    ctx.fillStyle = "#18a66a";
+    roundRect(x + 95, y - 95, 92, 16, 4);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#ffd84a";
+    ctx.beginPath();
+    ctx.arc(x + 92, y - 87, 12, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawBookLaunch(x, y) {
+    ctx.save();
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    ["MATH", "LA", "RULES"].forEach((book, index) => {
+      const bx = 780 - index * 80;
+      const by = 280 + index * 36;
+      ctx.fillStyle = ["#d91f2e", "#2e91de", "#ffd84a"][index];
+      roundRect(bx, by, 70, 44, 6);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "#171216";
+      ctx.font = "900 14px Trebuchet MS";
+      ctx.textAlign = "center";
+      ctx.fillText(book, bx + 35, by + 28);
+    });
+    ctx.restore();
+  }
+
+  function drawBusStopAttack(x, y) {
+    ctx.save();
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 6;
+    ctx.fillStyle = "#d91f2e";
+    ctx.beginPath();
+    for (let i = 0; i < 8; i += 1) {
+      const angle = Math.PI / 8 + i * Math.PI / 4;
+      const radius = 44;
+      const px = x + 130 + Math.cos(angle) * radius;
+      const py = y - 86 + Math.sin(angle) * radius;
+      if (i === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
+    }
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#fffef7";
+    ctx.font = "900 22px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText("STOP", x + 130, y - 78);
+    ctx.restore();
+  }
+
+  function drawPrincipalAttack(x, y, action) {
+    ctx.save();
+    ctx.strokeStyle = "#49d9ff";
+    ctx.lineWidth = 9;
+    if (action === "principalWarning") {
+      ctx.fillStyle = "#ffd84a";
+      ctx.font = "900 28px Trebuchet MS";
+      ctx.textAlign = "center";
+      ctx.fillText("DETENTION?", x + 190, y - 90);
+    } else if (action === "principalMultiply") {
+      drawImpact("x3", x + 190, y - 80, "#49d9ff");
+    } else if (action === "principalGiant") {
+      ctx.fillStyle = "#d91f2e";
+      ctx.font = "900 34px Trebuchet MS";
+      ctx.textAlign = "center";
+      ctx.fillText("BIG ROBOT!", x + 190, y - 90);
+    } else if (action === "principalFar") {
+      ctx.beginPath();
+      ctx.moveTo(1040, 205);
+      ctx.lineTo(x + 60, y - 90);
+      ctx.stroke();
+    } else if (action === "principalSpin") {
+      ctx.beginPath();
+      ctx.arc(x + 138, y - 64, 72, 0, Math.PI * 1.7);
+      ctx.stroke();
+    } else {
+      ctx.beginPath();
+      ctx.moveTo(890, 280);
+      ctx.lineTo(x + 70, y - 78);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
   function drawGarbageShot(x, y) {
     ctx.save();
     ctx.fillStyle = "#6f737a";
@@ -1192,6 +2032,18 @@
     return Math.min(max, Math.max(min, value));
   }
 
+  function addRobotPrincipalLevelButtons() {
+    const levelSelect = document.querySelector(".level-select");
+    for (let level = 11; level <= 30; level += 1) {
+      const button = document.createElement("button");
+      button.className = "level-choice";
+      button.dataset.level = String(level);
+      button.textContent = level === 30 ? "Level 30 Final Robot Principal" : `Level ${level} Robot Principal`;
+      levelSelect.append(button);
+    }
+  }
+
+  addRobotPrincipalLevelButtons();
   els.startButton.addEventListener("click", startLevel);
   els.resetButton.addEventListener("click", resetGame);
   document.querySelectorAll(".level-choice").forEach((button) => {
@@ -1224,3 +2076,4 @@
 
   resetGame();
 })();
+
