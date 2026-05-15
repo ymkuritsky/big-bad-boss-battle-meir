@@ -1,0 +1,263 @@
+:root {
+  color-scheme: light;
+  --ink: #171216;
+  --paper: #fffaf0;
+  --red: #d91f2e;
+  --violet: #7146d9;
+  --gold: #ffd84a;
+  --green: #18a66a;
+  --blue: #2e91de;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  overflow: hidden;
+  color: var(--ink);
+  font-family: "Trebuchet MS", Arial, sans-serif;
+  background: #f2efe7;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+.game-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px clamp(12px, 3vw, 32px);
+  border-bottom: 5px solid var(--ink);
+  background: #fff;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(27px, 4.4vw, 58px);
+  line-height: 0.9;
+  text-transform: uppercase;
+  text-shadow: 4px 4px 0 var(--red), -3px 3px 0 var(--violet);
+}
+
+.top-actions,
+.attack-row,
+.heart-row,
+.level-select,
+.character-select,
+.power-inventory {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.stage-wrap {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 0;
+  background: #130f1f;
+}
+
+#gameCanvas {
+  width: min(100vw, calc((100vh - 82px) * 16 / 9));
+  max-height: calc(100vh - 82px);
+  border: 8px solid var(--ink);
+  background: #a9dcff;
+}
+
+.hud-panel {
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  width: min(1060px, calc(100vw - 20px));
+  transform: translateX(-50%);
+  display: grid;
+  grid-template-columns: minmax(220px, 0.8fr) minmax(420px, 1.4fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border: 5px solid var(--ink);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.9);
+  box-shadow: 7px 7px 0 rgba(0,0,0,0.2);
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--red);
+  font-size: 13px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.hud-panel h2 {
+  margin: 0;
+  font-size: 28px;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.hud-panel p {
+  margin: 0;
+  font-weight: 900;
+}
+
+.heart-row {
+  grid-column: 2;
+}
+
+.character-select,
+.level-select,
+.power-inventory {
+  grid-column: 2;
+}
+
+.hero-choice,
+.level-choice,
+.power-pill {
+  border: 3px solid var(--ink);
+  border-radius: 6px;
+  padding: 6px 8px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.16);
+}
+
+.hero-choice.selected,
+.level-choice.selected,
+.power-pill.earned {
+  background: var(--green);
+  color: white;
+}
+
+.power-pill.locked {
+  opacity: 0.62;
+}
+
+.heart-row span {
+  flex: 1 1 150px;
+  padding: 7px 9px;
+  border: 3px solid var(--ink);
+  border-radius: 6px;
+  background: #fff;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.controls-grid {
+  width: 170px;
+  display: grid;
+  grid-template-columns: repeat(3, 52px);
+  grid-template-rows: repeat(3, 38px);
+  gap: 5px;
+  grid-column: 3;
+  grid-row: 1 / span 4;
+}
+
+.move-button {
+  border: 3px solid var(--ink);
+  border-radius: 6px;
+  background: #fff;
+  font-size: 12px;
+  font-weight: 900;
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.18);
+  touch-action: manipulation;
+}
+
+.move-button.up {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.move-button.left {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.move-button.right {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+.move-button.down {
+  grid-column: 2;
+  grid-row: 3;
+}
+
+.attack-row {
+  grid-column: 2;
+}
+
+.comic-button {
+  border: 4px solid var(--ink);
+  border-radius: 7px;
+  padding: 10px 14px;
+  background: var(--gold);
+  color: var(--ink);
+  font-weight: 900;
+  text-transform: uppercase;
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.18);
+}
+
+.comic-button.violet {
+  background: var(--violet);
+  color: white;
+}
+
+.comic-button.small {
+  background: #fff;
+}
+
+.comic-button.attack {
+  flex: 1 1 115px;
+  min-height: 48px;
+}
+
+.comic-button:disabled {
+  opacity: 0.58;
+  cursor: default;
+}
+
+@media (max-width: 760px) {
+  body {
+    overflow: auto;
+  }
+
+  .top-bar,
+  .hud-panel {
+    align-items: stretch;
+    grid-template-columns: 1fr;
+  }
+
+  .hud-panel {
+    position: static;
+    width: 100%;
+    transform: none;
+    border-radius: 0;
+  }
+
+  .heart-row,
+  .attack-row,
+  .level-select,
+  .character-select,
+  .power-inventory,
+  .controls-grid {
+    grid-column: auto;
+    grid-row: auto;
+  }
+}
