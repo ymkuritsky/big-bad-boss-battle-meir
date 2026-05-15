@@ -12,7 +12,7 @@ First playable sequel level:
 - Evil LA looks like a blob full of letters, poems, rhymes, and words.
 - Food Monster Fiasco is two giant legs that shoots garbage. Each garbage hit takes half a heart.
 - The Crazy Ball is a blue ball with an evil face. Its roll can run over the player, but sometimes it misses.
-- The Airplane Attacker, Paper Pusher, and Wing Whacker are paper airplanes with evil faces and powers based on their names.
+- The Airplane Attacker, Paper Pusher, and Wing Whacker are paper airplanes with evil faces and powers based on their names. Their levels take place outside.
 - Everybody has 5 hearts in these school levels.
 - Player can move, punch, kick, and use Super Homework.
 - Bosses fight back after attacks.

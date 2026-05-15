@@ -34,17 +34,17 @@
     },
     4: {
       title: "Level 4 Airplane Attacker",
-      intro: "The Airplane Attacker is circling the school hallway.",
+      intro: "The Airplane Attacker is circling outside the school.",
       start: "Level 4 started. The Airplane Attacker dives at you from above!"
     },
     5: {
       title: "Level 5 Paper Pusher",
-      intro: "The Paper Pusher is waiting with a shove attack.",
+      intro: "The Paper Pusher is waiting outside by the school yard.",
       start: "Level 5 started. The Paper Pusher tries to push you across the floor!"
     },
     6: {
       title: "Level 6 Wing Whacker",
-      intro: "The Wing Whacker is flapping around with sharp paper wings.",
+      intro: "The Wing Whacker is flapping around outside in the wind.",
       start: "Level 6 started. The Wing Whacker swings its paper wings!"
     }
   };
@@ -57,7 +57,7 @@
       action: "airplaneAttack",
       color: "#f15b42",
       accent: "#ffd84a",
-      board: "LEVEL 4: HALLWAY",
+      board: "LEVEL 4: OUTSIDE",
       note: "DODGE THE DIVE!"
     },
     5: {
@@ -67,7 +67,7 @@
       action: "paperPush",
       color: "#7146d9",
       accent: "#9edcff",
-      board: "LEVEL 5: PAPER ROOM",
+      board: "LEVEL 5: SCHOOL YARD",
       note: "DON'T GET PUSHED!"
     },
     6: {
@@ -77,7 +77,7 @@
       action: "wingWhack",
       color: "#18a66a",
       accent: "#fffef7",
-      board: "LEVEL 6: WINDY HALL",
+      board: "LEVEL 6: WINDY OUTSIDE",
       note: "WATCH THE WINGS!"
     }
   };
@@ -440,6 +440,10 @@
     const w = canvas.width;
     const h = canvas.height;
     ctx.clearRect(0, 0, w, h);
+    if (state.level >= 4) {
+      drawOutsideSchool(w, h);
+      return;
+    }
     ctx.fillStyle = "#9edcff";
     ctx.fillRect(0, 0, w, h);
     ctx.fillStyle = "#f7edd0";
@@ -490,6 +494,63 @@
     ctx.arc(680, 505, 8, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
+  }
+
+  function drawOutsideSchool(w, h) {
+    ctx.fillStyle = "#8ed8ff";
+    ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = "#fffef7";
+    for (let x = 80; x <= 1080; x += 260) {
+      ctx.beginPath();
+      ctx.arc(x, 120, 44, 0, Math.PI * 2);
+      ctx.arc(x + 52, 108, 58, 0, Math.PI * 2);
+      ctx.arc(x + 108, 122, 42, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.fillStyle = "#8ccf8b";
+    ctx.fillRect(0, 500, w, 220);
+    ctx.fillStyle = "#d6a35a";
+    ctx.fillRect(0, 540, w, 72);
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 6;
+    ctx.beginPath();
+    ctx.moveTo(0, 540);
+    ctx.lineTo(w, 540);
+    ctx.moveTo(0, 612);
+    ctx.lineTo(w, 612);
+    ctx.stroke();
+
+    ctx.fillStyle = "#f7edd0";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 7;
+    roundRect(70, 295, 260, 205, 8);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#d91f2e";
+    ctx.beginPath();
+    ctx.moveTo(44, 302);
+    ctx.lineTo(200, 205);
+    ctx.lineTo(356, 302);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#fffef7";
+    for (let x = 115; x <= 255; x += 90) {
+      roundRect(x, 338, 54, 58, 5);
+      ctx.fill();
+      ctx.stroke();
+    }
+    ctx.fillStyle = "#2f6f52";
+    roundRect(420, 215, 420, 150, 8);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#fff";
+    ctx.font = "900 36px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText(boardTitle(), 630, 276);
+    ctx.font = "900 28px Trebuchet MS";
+    ctx.fillText(boardNote(), 630, 322);
+    drawPaperHallway();
   }
 
   function drawCafeteriaTables() {
