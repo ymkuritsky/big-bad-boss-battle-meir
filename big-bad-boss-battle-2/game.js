@@ -539,8 +539,8 @@
     const boss = currentBossPosition(target);
     const dx = Math.abs(state.heroX - boss.x);
     const dy = Math.abs(state.heroY - boss.y);
-    const range = kind === "kick" ? 190 : 160;
-    return dx <= range && dy <= 150;
+    const range = kind === "kick" ? 270 : 230;
+    return dx <= range && dy <= 180;
   }
 
   function usePowerDamage() {
