@@ -1130,13 +1130,12 @@
 
   function drawHealthBars() {
     const hero = heroes[state.heroId];
-    drawBar(50, 44, 430, hero.name.toUpperCase(), state.heroHp, hero.hp, hero.accent);
-    drawBar(800, 44, 430, state.level === 1 ? "SCHOOL BOSSES" : currentBossName().toUpperCase(), currentBossHp(), currentBossMaxHp(), "#d91f2e");
+    drawHeartBar(50, 44, 430, hero.name.toUpperCase(), state.heroHp, hero.hp, hero.accent);
+    drawHeartBar(800, 44, 430, state.level === 1 ? "SCHOOL BOSSES" : currentBossName().toUpperCase(), currentBossHp(), currentBossMaxHp(), "#d91f2e");
     drawLabel(`FIGHTING: ${currentBossName().toUpperCase()}`, 365, 122, "#ffd84a", 550);
   }
 
-  function drawBar(x, y, width, label, hp, maxHp, color) {
-    const pct = Math.max(0, hp) / Math.max(1, maxHp);
+  function drawHeartBar(x, y, width, label, hp, maxHp, color) {
     ctx.save();
     ctx.fillStyle = "#fffef7";
     ctx.strokeStyle = "#171216";
@@ -1148,13 +1147,36 @@
     ctx.font = "900 22px Trebuchet MS";
     ctx.textAlign = "left";
     ctx.fillText(label, x + 16, y + 29);
-    ctx.fillStyle = "#f1dada";
-    roundRect(x + 16, y + 42, width - 32, 18, 5);
-    ctx.fill();
-    ctx.fillStyle = color;
-    roundRect(x + 16, y + 42, (width - 32) * pct, 18, 5);
-    ctx.fill();
+    drawCanvasHearts(x + 18, y + 63, hp, maxHp, color);
     ctx.restore();
+  }
+
+  function drawCanvasHearts(x, y, hp, maxHp, color) {
+    const total = Math.ceil(maxHp);
+    const size = total > 10 ? 25 : 30;
+    const gap = total > 10 ? 5 : 8;
+    for (let index = 0; index < total; index += 1) {
+      const heartX = x + index * (size + gap);
+      const fillAmount = clamp(hp - index, 0, 1);
+      ctx.save();
+      ctx.font = `900 ${size}px Trebuchet MS`;
+      ctx.textAlign = "left";
+      ctx.textBaseline = "middle";
+      ctx.lineWidth = 4;
+      ctx.strokeStyle = "#171216";
+      ctx.fillStyle = "#f1dada";
+      ctx.strokeText("♥", heartX, y);
+      ctx.fillText("♥", heartX, y);
+      if (fillAmount > 0) {
+        ctx.beginPath();
+        ctx.rect(heartX - 2, y - size, (size + 6) * fillAmount, size * 1.45);
+        ctx.clip();
+        ctx.fillStyle = color;
+        ctx.strokeText("♥", heartX, y);
+        ctx.fillText("♥", heartX, y);
+      }
+      ctx.restore();
+    }
   }
 
   function drawHero(x, y) {
