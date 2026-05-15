@@ -63,6 +63,7 @@
     character: null,
     revealed: new Set(),
     beaten: new Set(),
+    results: {},
     currentBox: null,
     heroHp: 5,
     villainHp: 0,
@@ -117,9 +118,10 @@
     els.battleGrid.innerHTML = "";
     mysteryBoxes.forEach((box) => {
       const button = document.createElement("button");
-      button.className = `cell-button${state.revealed.has(box.id) ? " revealed" : ""}`;
+      const result = state.results[box.id];
+      button.className = `cell-button${state.revealed.has(box.id) ? " revealed" : ""}${result ? ` ${result}` : ""}`;
       button.type = "button";
-      button.textContent = state.revealed.has(box.id) ? "!" : box.label;
+      button.innerHTML = result ? `<span>${box.label}</span><strong>${result === "won" ? "WON" : "LOST"}</strong>` : box.label;
       button.addEventListener("click", () => revealBox(box));
       els.battleGrid.append(button);
     });
@@ -140,6 +142,7 @@
     state.character = null;
     state.revealed.clear();
     state.beaten.clear();
+    state.results = {};
     state.currentBox = null;
     state.fighting = false;
     els.sceneStage.classList.remove("battle-mode");
@@ -180,6 +183,7 @@
     if (state.villainHp === 0) {
       state.fighting = false;
       state.beaten.add(state.currentBox.id);
+      state.results[state.currentBox.id] = "won";
       els.fightMessage.textContent = `${state.character.name} beat ${villain.name}!`;
       els.sceneTitle.textContent = "Villain Defeated";
       els.backToBoardButton.disabled = false;
@@ -191,6 +195,7 @@
     state.heroHp = Math.max(0, state.heroHp - 1);
     if (state.heroHp === 0) {
       state.fighting = false;
+      state.results[state.currentBox.id] = "lost";
       els.fightMessage.textContent = `${villain.name} wins this round. Pick the box again for a rematch.`;
       els.sceneTitle.textContent = "Try Again";
       els.backToBoardButton.disabled = false;

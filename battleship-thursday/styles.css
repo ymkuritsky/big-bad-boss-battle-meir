@@ -193,6 +193,26 @@ h1 {
   background: #ffd84a;
 }
 
+.cell-button.won {
+  background: #18a66a;
+  color: white;
+}
+
+.cell-button.lost {
+  background: #d91f2e;
+  color: white;
+}
+
+.cell-button span,
+.cell-button strong {
+  display: block;
+  line-height: 1;
+}
+
+.cell-button strong {
+  font-size: clamp(15px, 2vw, 28px);
+}
+
 .scene-stage {
   position: relative;
   display: grid;
