@@ -244,6 +244,8 @@
     knockedDownUntil: 0,
     hiddenUntil: 0,
     jumpingUntil: 0,
+    laneDodgeUntil: 0,
+    laneDodgeDirection: "",
     tick: 0
   };
 
@@ -279,6 +281,8 @@
     state.knockedDownUntil = 0;
     state.hiddenUntil = 0;
     state.jumpingUntil = 0;
+    state.laneDodgeUntil = 0;
+    state.laneDodgeDirection = "";
     state.tick = 0;
     els.statusText.textContent = levels[state.level].intro;
     setAttacks(true);
@@ -365,7 +369,8 @@
 
     const shieldBlocked = kind === "power" && state.heroId === "fary" && state.earnedPowers.has("homeworkShield");
     const blocked = shieldBlocked;
-    const dodged = Date.now() < state.hiddenUntil || Date.now() < state.jumpingUntil;
+    const laneDodged = canLaneDodge(target) && Date.now() < state.laneDodgeUntil;
+    const dodged = Date.now() < state.hiddenUntil || Date.now() < state.jumpingUntil || laneDodged;
     applyBossPower(target, blocked, dodged);
     const bossAction = state.action;
     const bossDamage = bossDamageForAction(bossAction);
@@ -382,7 +387,7 @@
 
     state.action = blocked ? `${kind}-${target}` : bossAction;
     const bossName = currentBossName(target);
-    els.statusText.textContent = `${attackName(kind)} hit ${bossName} for ${heartText(damage)}. ${bossCounterText(target, blocked, dodged, bossAction, bossDamage)}`;
+    els.statusText.textContent = `${attackName(kind)} hit ${bossName} for ${heartText(damage)}. ${bossCounterText(target, blocked, dodged, laneDodged, bossAction, bossDamage)}`;
     updateHud();
     draw();
   }
@@ -480,11 +485,14 @@
     return `${amount} ${amount === 1 ? "heart" : "hearts"}`;
   }
 
-  function bossCounterText(target, blocked, dodged, bossAction, bossDamage) {
+  function bossCounterText(target, blocked, dodged, laneDodged, bossAction, bossDamage) {
     if (blocked) {
       return "Homework Shield blocked the boss counterattack.";
     }
     if (dodged) {
+      if (laneDodged) {
+        return `${bossAttackText(target, bossAction)} Your up/down dodge made it miss, so you lost no hearts.`;
+      }
       return `${bossAttackText(target, bossAction)} Your jump or hide made it miss, so you lost no hearts.`;
     }
     if (bossDamage === 0) {
@@ -498,6 +506,10 @@
       return 0;
     }
     return 0.5;
+  }
+
+  function canLaneDodge(target) {
+    return target === "archer" || target === "librarian";
   }
 
   function bossAttackText(target, bossAction = state.action) {
@@ -743,8 +755,16 @@
     if (direction === "down") state.heroY += step;
     state.heroX = clamp(state.heroX, 120, 1080);
     state.heroY = clamp(state.heroY, 270, 470);
-    state.action = "";
-    els.statusText.textContent = `Hero moved ${direction}.`;
+    state.playerAction = "";
+    if (canLaneDodge(currentTarget()) && (direction === "up" || direction === "down")) {
+      state.laneDodgeUntil = Date.now() + 2600;
+      state.laneDodgeDirection = direction;
+      state.action = currentTarget() === "archer" ? "paintbrushDodge" : "bookDodge";
+      els.statusText.textContent = `Hero moved ${direction} and is ready to dodge the ${currentTarget() === "archer" ? "paintbrushes" : "books"}. Get close and attack!`;
+    } else {
+      state.action = "";
+      els.statusText.textContent = `Hero moved ${direction}.`;
+    }
     draw();
   }
 
@@ -1969,11 +1989,17 @@
         drawWingWhack(state.heroX, state.heroY);
         drawImpact("WHACK!", 650, 215, "#18a66a");
       } else if (state.action === "paintbrushArrow") {
-        drawPaintbrushArrow(state.heroX, state.heroY);
+        drawPaintbrushArrow(state.heroX, state.heroY, false);
         drawImpact("PAINT ARROW!", 650, 215, "#ef4fa3");
+      } else if (state.action === "paintbrushDodge") {
+        drawPaintbrushArrow(state.heroX, state.heroY, true);
+        drawImpact("DODGE!", 650, 215, "#18a66a");
       } else if (state.action === "bookLaunch") {
-        drawBookLaunch(state.heroX, state.heroY);
+        drawBookLaunch(state.heroX, state.heroY, false);
         drawImpact("BOOKS!", 650, 215, "#6a4b2b");
+      } else if (state.action === "bookDodge") {
+        drawBookLaunch(state.heroX, state.heroY, true);
+        drawImpact("DODGE!", 650, 215, "#18a66a");
       } else if (state.action === "busStop") {
         drawBusStopAttack(state.heroX, state.heroY);
         drawImpact("STOPPED!", 650, 215, "#d91f2e");
@@ -2185,32 +2211,55 @@
     ctx.restore();
   }
 
-  function drawPaintbrushArrow(x, y) {
+  function drawPaintbrushArrow(x, y, dodged = false) {
     ctx.save();
-    ctx.strokeStyle = "#ef4fa3";
-    ctx.lineWidth = 8;
-    ctx.beginPath();
-    ctx.moveTo(840, 300);
-    ctx.lineTo(x + 80, y - 72);
-    ctx.stroke();
-    ctx.fillStyle = "#18a66a";
-    roundRect(x + 95, y - 95, 92, 16, 4);
-    ctx.fill();
-    ctx.stroke();
-    ctx.fillStyle = "#ffd84a";
-    ctx.beginPath();
-    ctx.arc(x + 92, y - 87, 12, 0, Math.PI * 2);
-    ctx.fill();
+    const lanes = [315, 375, 435];
+    lanes.forEach((laneY, index) => {
+      const targetY = dodged ? y + (state.laneDodgeDirection === "up" ? 82 : -120) : y - 72;
+      const endX = dodged ? x + 155 : x + 82;
+      const offset = index * 18;
+      ctx.strokeStyle = index === 1 ? "#ef4fa3" : "#ff9ad0";
+      ctx.lineWidth = index === 1 ? 9 : 6;
+      ctx.beginPath();
+      ctx.moveTo(900, laneY);
+      ctx.lineTo(endX + offset, targetY + offset * 0.35);
+      ctx.stroke();
+      ctx.fillStyle = index === 1 ? "#18a66a" : "#2e91de";
+      ctx.strokeStyle = "#171216";
+      ctx.lineWidth = 4;
+      roundRect(endX + offset - 6, targetY - 8 + offset * 0.35, 96, 16, 4);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "#ffd84a";
+      ctx.beginPath();
+      ctx.arc(endX + offset - 9, targetY + offset * 0.35, 12, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    });
+    if (dodged) {
+      ctx.fillStyle = "#18a66a";
+      ctx.font = "900 24px Trebuchet MS";
+      ctx.textAlign = "center";
+      ctx.fillText(`${state.laneDodgeDirection.toUpperCase()} DODGE`, x + 165, y - 130);
+    }
     ctx.restore();
   }
 
-  function drawBookLaunch(x, y) {
+  function drawBookLaunch(x, y, dodged = false) {
     ctx.save();
     ctx.strokeStyle = "#171216";
     ctx.lineWidth = 5;
-    ["MATH", "LA", "RULES"].forEach((book, index) => {
-      const bx = 780 - index * 80;
-      const by = 280 + index * 36;
+    ["BO", "OK", "S"].forEach((book, index) => {
+      const bx = dodged ? x + 145 + index * 36 : 780 - index * 86;
+      const by = dodged ? y - 132 + index * 56 : 286 + index * 42;
+      ctx.strokeStyle = ["#d91f2e", "#2e91de", "#7146d9"][index];
+      ctx.lineWidth = 7;
+      ctx.beginPath();
+      ctx.moveTo(900 - index * 18, 300 + index * 42);
+      ctx.lineTo(bx + 35, by + 22);
+      ctx.stroke();
+      ctx.strokeStyle = "#171216";
+      ctx.lineWidth = 5;
       ctx.fillStyle = ["#d91f2e", "#2e91de", "#ffd84a"][index];
       roundRect(bx, by, 70, 44, 6);
       ctx.fill();
@@ -2220,6 +2269,12 @@
       ctx.textAlign = "center";
       ctx.fillText(book, bx + 35, by + 28);
     });
+    if (dodged) {
+      ctx.fillStyle = "#18a66a";
+      ctx.font = "900 24px Trebuchet MS";
+      ctx.textAlign = "center";
+      ctx.fillText(`${state.laneDodgeDirection.toUpperCase()} DODGE`, x + 165, y - 130);
+    }
     ctx.restore();
   }
 
