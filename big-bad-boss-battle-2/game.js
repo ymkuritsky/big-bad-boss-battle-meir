@@ -278,6 +278,14 @@
   }
 
   function startLevel() {
+    if (state.won && state.level < progress.unlockedLevel) {
+      state.level += 1;
+      document.querySelectorAll(".level-choice").forEach((button) => {
+        button.classList.toggle("selected", Number(button.dataset.level) === state.level);
+      });
+      els.startButton.textContent = `Start Level ${state.level}`;
+      resetGame();
+    }
     if (!canPlayLevel(state.level)) {
       els.statusText.textContent = `Beat Level ${state.level - 1} to unlock Level ${state.level}.`;
       updateLevelLocks();
@@ -303,6 +311,12 @@
       return;
     }
     const target = currentTarget();
+    if ((kind === "punch" || kind === "kick") && !isCloseEnoughToAttack(kind, target)) {
+      state.action = "miss";
+      els.statusText.textContent = `${kind === "punch" ? "Punch" : "Kick"} missed. Move closer to ${currentBossName(target)} first!`;
+      draw();
+      return;
+    }
     const damage = kind === "power" ? usePowerDamage() : kind === "kick" ? 2 : 1;
     if (target === "math") {
       state.mathHp = Math.max(0, state.mathHp - damage);
@@ -519,6 +533,22 @@
     return Object.values(bossLevels).find((boss) => boss.target === target).name;
   }
 
+  function currentBossPosition(target = currentTarget()) {
+    if (target === "math") return { x: 900, y: 355 };
+    if (target === "evil") return { x: 1045, y: 410 };
+    if (target === "food") return { x: 950, y: 390 };
+    if (target === "crazyBall") return { x: 950, y: 390 };
+    return { x: 950, y: 380 };
+  }
+
+  function isCloseEnoughToAttack(kind, target) {
+    const boss = currentBossPosition(target);
+    const dx = Math.abs(state.heroX - boss.x);
+    const dy = Math.abs(state.heroY - boss.y);
+    const range = kind === "kick" ? 190 : 160;
+    return dx <= range && dy <= 150;
+  }
+
   function usePowerDamage() {
     if (state.earnedPowers.has("poetryBlast")) {
       state.earnedPowers.delete("poetryBlast");
@@ -607,6 +637,9 @@
       button.textContent = locked ? `${baseLabel} Locked` : baseLabel;
     });
     els.startButton.disabled = !canPlayLevel(state.level);
+    if (state.won && state.level < progress.unlockedLevel) {
+      els.startButton.textContent = `Start Level ${state.level + 1}`;
+    }
   }
 
   function moveHero(direction) {
@@ -623,7 +656,7 @@
     if (direction === "right") state.heroX += step;
     if (direction === "up") state.heroY -= step;
     if (direction === "down") state.heroY += step;
-    state.heroX = clamp(state.heroX, 120, 560);
+    state.heroX = clamp(state.heroX, 120, 1080);
     state.heroY = clamp(state.heroY, 270, 470);
     state.action = "";
     els.statusText.textContent = `Hero moved ${direction}.`;
@@ -1768,8 +1801,10 @@
     ctx.lineCap = "round";
     if (state.action === "win") {
       drawImpact("YOU WIN!", 640, 230, "#18a66a");
-    } else if (state.action === "lost") {
+      } else if (state.action === "lost") {
       drawImpact("TRY AGAIN!", 640, 230, "#d91f2e");
+    } else if (state.action === "miss") {
+      drawImpact("TOO FAR!", 650, 215, "#d91f2e");
     } else {
       ctx.strokeStyle = "#ffd84a";
       ctx.beginPath();
@@ -2145,6 +2180,8 @@
   });
   els.punchButton.addEventListener("click", () => attack("punch"));
   els.kickButton.addEventListener("click", () => attack("kick"));
+  els.jumpButton.addEventListener("click", () => attack("jump"));
+  els.hideButton.addEventListener("click", () => attack("hide"));
   els.powerButton.addEventListener("click", () => attack("power"));
   document.querySelectorAll(".move-button").forEach((button) => {
     button.addEventListener("click", () => moveHero(button.dataset.move));
