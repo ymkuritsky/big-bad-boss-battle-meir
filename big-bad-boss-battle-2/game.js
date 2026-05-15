@@ -246,6 +246,7 @@
     jumpingUntil: 0,
     laneDodgeUntil: 0,
     laneDodgeDirection: "",
+    projectileLane: "middle",
     bossPressureStep: 0,
     tick: 0
   };
@@ -284,6 +285,7 @@
     state.jumpingUntil = 0;
     state.laneDodgeUntil = 0;
     state.laneDodgeDirection = "";
+    state.projectileLane = "middle";
     state.bossPressureStep = 0;
     state.tick = 0;
     els.statusText.textContent = levels[state.level].intro;
@@ -378,7 +380,7 @@
 
     const shieldBlocked = kind === "power" && state.heroId === "fary" && state.earnedPowers.has("homeworkShield");
     const blocked = shieldBlocked;
-    const laneDodged = canLaneDodge(target) && Date.now() < state.laneDodgeUntil;
+    const laneDodged = canLaneDodge(target) && Date.now() < state.laneDodgeUntil && dodgeBeatsLane(state.laneDodgeDirection, state.projectileLane);
     const dodged = Date.now() < state.hiddenUntil || Date.now() < state.jumpingUntil || laneDodged;
     applyBossPower(target, blocked, dodged);
     const bossAction = state.action;
@@ -500,7 +502,7 @@
     }
     if (dodged) {
       if (laneDodged) {
-        return `${bossAttackText(target, bossAction)} Your up/down dodge made it miss, so you lost no hearts.`;
+        return `${bossAttackText(target, bossAction)} It aimed ${laneName(state.projectileLane)}. Your ${state.laneDodgeDirection} dodge made it miss and explode on the wall.`;
       }
       return `${bossAttackText(target, bossAction)} Your jump or hide made it miss, so you lost no hearts.`;
     }
@@ -781,15 +783,15 @@
     state.heroY = clamp(state.heroY, 270, 470);
     state.playerAction = "";
     const target = currentTarget();
-    if (canLaneDodge(target) && (direction === "up" || direction === "down")) {
+    if (handleBossPressureWhileMoving(target, direction)) {
+      updateHud();
+      draw();
+      return;
+    } else if (canLaneDodge(target) && (direction === "up" || direction === "down")) {
       state.laneDodgeUntil = Date.now() + 4500;
       state.laneDodgeDirection = direction;
       state.action = target === "archer" ? "paintbrushDodge" : "bookDodge";
       els.statusText.textContent = `Hero moved ${direction} and has time to dodge the slow ${target === "archer" ? "paintbrushes" : "BO-OK-S books"}. Get close and attack!`;
-    } else if (handleBossPressureWhileMoving(target, direction)) {
-      updateHud();
-      draw();
-      return;
     } else if (bossPressuresWhileMoving(target) && isCloseEnoughToAttack("kick", target)) {
       state.action = "";
       els.statusText.textContent = `Hero moved ${direction}. You reached ${currentBossName(target)}, so the far-away attacks stopped. Now fight!`;
@@ -806,10 +808,13 @@
       return false;
     }
     state.bossPressureStep += 1;
-    const laneDodged = canLaneDodge(target) && Date.now() < state.laneDodgeUntil;
+    if (canLaneDodge(target)) {
+      state.projectileLane = nextProjectileLane();
+    }
+    const laneDodged = canLaneDodge(target) && direction && dodgeBeatsLane(direction, state.projectileLane);
     const jumpOrHideDodged = Date.now() < state.hiddenUntil || Date.now() < state.jumpingUntil;
     const dodged = laneDodged || jumpOrHideDodged;
-    const canHitThisMove = canLaneDodge(target) ? state.bossPressureStep % 2 === 0 : state.bossPressureStep % 3 === 0;
+    const canHitThisMove = canLaneDodge(target) ? !laneDodged : state.bossPressureStep % 3 === 0;
     applyBossPower(target, false, dodged || !canHitThisMove);
     const bossAction = state.action;
     if (laneDodged) {
@@ -822,7 +827,7 @@
       return true;
     }
     if (!canHitThisMove) {
-      els.statusText.textContent = `${bossAttackText(target, bossAction)} It is coming slowly. Move up/down, jump, or hide, then get closer!`;
+      els.statusText.textContent = `${bossAttackText(target, bossAction)} It is aiming ${laneName(state.projectileLane)} and coming slowly. ${dodgeHint(state.projectileLane)}`;
       return true;
     }
     const damage = bossDamageForAction(bossAction);
@@ -840,6 +845,28 @@
 
   function bossPressuresWhileMoving(target) {
     return target === "airplane" || target === "pusher" || target === "whacker" || target === "archer" || target === "librarian" || target === "bus";
+  }
+
+  function nextProjectileLane() {
+    return ["up", "middle", "down"][state.bossPressureStep % 3];
+  }
+
+  function dodgeBeatsLane(direction, lane) {
+    if (lane === "up") return direction === "down";
+    if (lane === "down") return direction === "up";
+    return direction === "up" || direction === "down";
+  }
+
+  function laneName(lane) {
+    if (lane === "up") return "high";
+    if (lane === "down") return "low";
+    return "middle";
+  }
+
+  function dodgeHint(lane) {
+    if (lane === "up") return "Go down to dodge it!";
+    if (lane === "down") return "Go up to dodge it!";
+    return "Go up or down to dodge it!";
   }
 
   function updateHud() {
@@ -2287,20 +2314,26 @@
 
   function drawPaintbrushArrow(x, y, dodged = false) {
     ctx.save();
-    const lanes = [315, 375, 435];
-    lanes.forEach((laneY, index) => {
-      const targetY = dodged ? y + (state.laneDodgeDirection === "up" ? 82 : -120) : y - 72;
-      const endX = dodged ? x + 155 : x + 82;
+    const shotY = projectileY();
+    const wallX = 138;
+    const hitX = x + 78;
+    [0, 1, 2].forEach((index) => {
       const offset = index * 18;
-      const brushX = endX + offset;
-      const brushY = dodged ? targetY + offset * 0.35 : laneY + (targetY - laneY) * 0.72;
+      const brushX = dodged ? wallX + offset * 0.2 : hitX + offset;
+      const brushY = shotY + (index - 1) * 18;
       drawFlyingPaintbrush(brushX, brushY, index);
     });
     if (dodged) {
+      drawWallBurst(wallX - 18, shotY, "#ef4fa3");
       ctx.fillStyle = "#18a66a";
       ctx.font = "900 24px Trebuchet MS";
       ctx.textAlign = "center";
       ctx.fillText(`${state.laneDodgeDirection.toUpperCase()} DODGE`, x + 165, y - 130);
+    } else {
+      ctx.fillStyle = "#d91f2e";
+      ctx.font = "900 22px Trebuchet MS";
+      ctx.textAlign = "center";
+      ctx.fillText(`${laneName(state.projectileLane).toUpperCase()} SHOT`, hitX + 30, shotY - 42);
     }
     ctx.restore();
   }
@@ -2335,17 +2368,56 @@
 
   function drawBookLaunch(x, y, dodged = false) {
     ctx.save();
+    const shotY = projectileY();
+    const wallX = 130;
+    const hitX = x + 72;
     ["BO", "OK", "S"].forEach((book, index) => {
-      const bx = dodged ? x + 145 + index * 36 : 780 - index * 86;
-      const by = dodged ? y - 132 + index * 56 : 286 + index * 42;
+      const bx = dodged ? wallX + index * 32 : hitX + index * 32;
+      const by = shotY - 24 + (index - 1) * 18;
       drawFlyingBook(bx, by, book, index);
     });
     if (dodged) {
+      drawWallBurst(wallX - 18, shotY, "#6a4b2b");
       ctx.fillStyle = "#18a66a";
       ctx.font = "900 24px Trebuchet MS";
       ctx.textAlign = "center";
       ctx.fillText(`${state.laneDodgeDirection.toUpperCase()} DODGE`, x + 165, y - 130);
+    } else {
+      ctx.fillStyle = "#d91f2e";
+      ctx.font = "900 22px Trebuchet MS";
+      ctx.textAlign = "center";
+      ctx.fillText(`${laneName(state.projectileLane).toUpperCase()} SHOT`, hitX + 45, shotY - 52);
     }
+    ctx.restore();
+  }
+
+  function projectileY() {
+    if (state.projectileLane === "up") return 315;
+    if (state.projectileLane === "down") return 445;
+    return 380;
+  }
+
+  function drawWallBurst(x, y, color) {
+    ctx.save();
+    ctx.strokeStyle = "#171216";
+    ctx.fillStyle = color;
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    for (let i = 0; i < 12; i += 1) {
+      const angle = (Math.PI * 2 * i) / 12;
+      const radius = i % 2 === 0 ? 38 : 15;
+      const px = x + Math.cos(angle) * radius;
+      const py = y + Math.sin(angle) * radius;
+      if (i === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
+    }
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#fffef7";
+    ctx.font = "900 18px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText("BOOM", x, y + 6);
     ctx.restore();
   }
 
