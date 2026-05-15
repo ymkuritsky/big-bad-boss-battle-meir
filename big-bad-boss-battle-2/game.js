@@ -12,8 +12,8 @@
     ness: { name: "Super Ness", color: "#c73583", accent: "#6bd8ff", hp: 5, firstPower: "Super Kick" },
     crayon: { name: "Captain Crayonstorm", color: "#21a36c", accent: "#f5d129", hp: 5, firstPower: "Crayon Barrage" },
     hoodie: { name: "Zap Hoodie", color: "#1f1f29", accent: "#49d9ff", hp: 5, firstPower: "Zip Zap" },
-    mayer: { name: "Mischievous Mayer", color: "#7c3f18", accent: "#f1b335", hp: 5, firstPower: "Mischief Zap" },
-    yonatan: { name: "Yapping Yonatan", color: "#2360bd", accent: "#ff6f61", hp: 5, firstPower: "Yap Blast" }
+    mayer: { name: "Mischievous Mayer", color: "#6b28c7", accent: "#f08318", hp: 5, firstPower: "Mischief Zap" },
+    yonatan: { name: "Yapping Yonatan", color: "#f07918", accent: "#d61f2f", hp: 5, firstPower: "Yap Blast" }
   };
 
   const levels = {
