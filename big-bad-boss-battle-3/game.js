@@ -964,60 +964,76 @@
     const w = canvas.width;
     const h = canvas.height;
     ctx.clearRect(0, 0, w, h);
-    if (state.level >= 4) {
-      drawBossLevelRoom(w, h);
-      return;
-    }
-    ctx.fillStyle = "#9edcff";
-    ctx.fillRect(0, 0, w, h);
-    ctx.fillStyle = "#f7edd0";
-    ctx.fillRect(0, 155, w, 400);
-    ctx.fillStyle = "#8ccf8b";
-    ctx.fillRect(0, 555, w, 165);
-    ctx.strokeStyle = "#171216";
-    ctx.lineWidth = 8;
-    ctx.strokeRect(0, 155, w, 400);
+    drawForestScene(w, h);
+  }
 
-    ctx.fillStyle = "#fffef7";
-    for (let x = 70; x < w; x += 210) {
-      roundRect(x, 195, 120, 92, 8);
-      ctx.fill();
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(x + 60, 195);
-      ctx.lineTo(x + 60, 287);
-      ctx.moveTo(x, 241);
-      ctx.lineTo(x + 120, 241);
-      ctx.stroke();
+  function drawForestScene(w, h) {
+    ctx.fillStyle = "#86d6ff";
+    ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = "#3fa65c";
+    ctx.fillRect(0, 455, w, 265);
+    ctx.fillStyle = "#7a4a24";
+    ctx.fillRect(0, 548, w, 82);
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 6;
+    ctx.beginPath();
+    ctx.moveTo(0, 548);
+    ctx.lineTo(w, 548);
+    ctx.moveTo(0, 630);
+    ctx.lineTo(w, 630);
+    ctx.stroke();
+
+    for (let x = 35; x < w; x += 150) {
+      drawForestTree(x, 455, 0.9 + (x % 3) * 0.12);
+    }
+    for (let x = 100; x < w; x += 230) {
+      drawForestTree(x, 505, 0.65);
     }
 
     ctx.fillStyle = "#2f6f52";
-    roundRect(410, 205, 430, 160, 8);
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 7;
+    roundRect(390, 205, 480, 160, 8);
     ctx.fill();
     ctx.stroke();
     ctx.fillStyle = "#fff";
-    ctx.font = "900 36px Trebuchet MS";
+    ctx.font = "900 34px Trebuchet MS";
     ctx.textAlign = "center";
-    ctx.fillText(boardTitle(), 625, 270);
-    ctx.font = "900 28px Trebuchet MS";
-    ctx.fillText(boardNote(), 625, 318);
+    ctx.fillText(`FOREST ${state.level}`, 630, 270);
+    ctx.font = "900 25px Trebuchet MS";
+    ctx.fillText(boardNote(), 630, 318);
 
-    if (state.level === 2) {
-      drawCafeteriaTables();
-    } else if (state.level === 3) {
-      drawGymLines();
-    } else if (state.level >= 4) {
-      drawPaperOutsideDetails();
-    }
-
-    ctx.fillStyle = "#b86a32";
-    ctx.fillRect(545, 455, 160, 100);
-    ctx.strokeRect(545, 455, 160, 100);
-    ctx.fillStyle = "#ffd84a";
-    ctx.beginPath();
-    ctx.arc(680, 505, 8, 0, Math.PI * 2);
+    ctx.fillStyle = "#5f3a1b";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    roundRect(545, 460, 170, 80, 18);
     ctx.fill();
     ctx.stroke();
+    ctx.fillStyle = "#ffd84a";
+    ctx.beginPath();
+    ctx.arc(680, 500, 8, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+  }
+
+  function drawForestTree(x, groundY, scale) {
+    ctx.save();
+    ctx.translate(x, groundY);
+    ctx.scale(scale, scale);
+    ctx.fillStyle = "#6b3f1f";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    roundRect(-16, -120, 32, 120, 8);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#1f7f45";
+    ctx.beginPath();
+    ctx.arc(-34, -132, 44, 0, Math.PI * 2);
+    ctx.arc(14, -158, 54, 0, Math.PI * 2);
+    ctx.arc(58, -126, 42, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
   }
 
   function drawBossLevelRoom(w, h) {
@@ -1326,17 +1342,17 @@
       ctx.globalAlpha = 0.38;
     }
     ctx.scale(0.9, 0.9);
-    if (state.heroId === "tats") drawTatsHero();
-    else if (state.heroId === "fary") drawFaryHero();
-    else if (state.heroId === "apple") drawAppleHero();
-    else if (state.heroId === "freddy") drawFreddyHero();
-    else if (state.heroId === "benji") drawBenjiHero();
-    else if (state.heroId === "frost") drawFrostHero();
+    if (state.heroId === "tats") drawElephantHero();
+    else if (state.heroId === "fary") drawPurpleParrotHero();
+    else if (state.heroId === "apple") drawCheetahHero();
+    else if (state.heroId === "freddy") drawFoxHero();
+    else if (state.heroId === "benji") drawPolarBearHero();
+    else if (state.heroId === "frost") drawMonkeyHero();
     else if (state.heroId === "ness") drawNessHero();
     else if (state.heroId === "crayon") drawCrayonHero();
     else if (state.heroId === "hoodie") drawHoodieHero();
-    else if (state.heroId === "mayer") drawMayorHero();
-    else if (state.heroId === "yonatan") drawYappingHero();
+    else if (state.heroId === "mayer") drawEvilChickenHero();
+    else if (state.heroId === "yonatan") drawAlligatorHero();
     ctx.restore();
   }
 
@@ -1445,6 +1461,297 @@
     ctx.arc(5, 14, 20, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawAnimalLegs(color) {
+    setupHeroLine(color, 10);
+    ctx.beginPath();
+    ctx.moveTo(-22, -18);
+    ctx.lineTo(-38, 44);
+    ctx.moveTo(22, -18);
+    ctx.lineTo(38, 44);
+    ctx.stroke();
+  }
+
+  function drawAnimalEyes() {
+    ctx.fillStyle = "#171216";
+    ctx.beginPath();
+    ctx.arc(-11, -113, 4, 0, Math.PI * 2);
+    ctx.arc(11, -113, 4, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  function drawElephantHero() {
+    const color = "#8c98a4";
+    setupHeroLine(color, 8);
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.ellipse(0, -55, 44, 54, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(0, -116, 36, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.ellipse(-38, -114, 24, 32, -0.25, 0, Math.PI * 2);
+    ctx.ellipse(38, -114, 24, 32, 0.25, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    drawAnimalEyes();
+    ctx.lineWidth = 9;
+    ctx.beginPath();
+    ctx.moveTo(0, -94);
+    ctx.quadraticCurveTo(6, -54, -18, -36);
+    ctx.stroke();
+    drawHeroArms(color, true);
+    drawAnimalLegs(color);
+  }
+
+  function drawPurpleParrotHero() {
+    const color = "#8542d8";
+    setupHeroLine(color, 7);
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.ellipse(0, -58, 34, 56, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#b26dff";
+    ctx.beginPath();
+    ctx.ellipse(-42, -62, 26, 58, -0.55, 0, Math.PI * 2);
+    ctx.ellipse(42, -62, 26, 58, 0.55, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(0, -116, 26, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    drawAnimalEyes();
+    ctx.fillStyle = "#ffd84a";
+    ctx.beginPath();
+    ctx.moveTo(0, -106);
+    ctx.lineTo(30, -99);
+    ctx.lineTo(0, -88);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    drawAnimalLegs(color);
+  }
+
+  function drawCheetahHero() {
+    const color = "#f2a51f";
+    setupHeroLine(color, 8);
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.ellipse(0, -56, 38, 50, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(0, -116, 27, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(-18, -140, 10, 0, Math.PI * 2);
+    ctx.arc(18, -140, 10, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    drawAnimalEyes();
+    ctx.fillStyle = "#171216";
+    [-18, 0, 20, -8, 14].forEach((spot, index) => {
+      ctx.beginPath();
+      ctx.arc(spot, -70 + index * 14, 4, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    setupHeroLine(color, 8);
+    ctx.beginPath();
+    ctx.moveTo(34, -44);
+    ctx.quadraticCurveTo(75, -58, 58, -18);
+    ctx.stroke();
+    drawHeroArms(color);
+    drawAnimalLegs(color);
+  }
+
+  function drawFoxHero() {
+    const color = "#d96d1f";
+    setupHeroLine(color, 8);
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.ellipse(0, -58, 34, 48, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(-28, -126);
+    ctx.lineTo(-12, -158);
+    ctx.lineTo(0, -128);
+    ctx.lineTo(14, -158);
+    ctx.lineTo(30, -126);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(0, -116, 25, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    drawAnimalEyes();
+    ctx.fillStyle = "#fffef7";
+    ctx.beginPath();
+    ctx.moveTo(-16, -100);
+    ctx.lineTo(0, -82);
+    ctx.lineTo(16, -100);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    setupHeroLine(color, 9);
+    ctx.beginPath();
+    ctx.moveTo(28, -38);
+    ctx.quadraticCurveTo(74, -8, 50, 32);
+    ctx.stroke();
+    drawHeroArms(color);
+    drawAnimalLegs(color);
+  }
+
+  function drawPolarBearHero() {
+    const color = "#fffef7";
+    setupHeroLine("#171216", 7);
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.ellipse(0, -56, 42, 54, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(0, -116, 30, 0, Math.PI * 2);
+    ctx.arc(-22, -140, 11, 0, Math.PI * 2);
+    ctx.arc(22, -140, 11, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    drawAnimalEyes();
+    ctx.fillStyle = "#171216";
+    ctx.beginPath();
+    ctx.arc(0, -104, 5, 0, Math.PI * 2);
+    ctx.fill();
+    drawHeroArms("#fffef7", true);
+    drawAnimalLegs("#fffef7");
+  }
+
+  function drawMonkeyHero() {
+    const color = "#8b5a2b";
+    setupHeroLine(color, 8);
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.ellipse(0, -58, 32, 48, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(0, -116, 27, 0, Math.PI * 2);
+    ctx.arc(-28, -116, 12, 0, Math.PI * 2);
+    ctx.arc(28, -116, 12, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    drawAnimalEyes();
+    ctx.fillStyle = "#d5a56c";
+    ctx.beginPath();
+    ctx.ellipse(0, -104, 16, 10, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    setupHeroLine(color, 8);
+    ctx.beginPath();
+    ctx.moveTo(28, -38);
+    ctx.quadraticCurveTo(74, -52, 58, -8);
+    ctx.stroke();
+    drawHeroArms(color);
+    drawAnimalLegs(color);
+  }
+
+  function drawEvilChickenHero() {
+    const color = "#6b28c7";
+    setupHeroLine(color, 8);
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.ellipse(0, -58, 36, 52, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(0, -116, 26, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#d91f2e";
+    ctx.beginPath();
+    ctx.arc(-8, -145, 8, 0, Math.PI * 2);
+    ctx.arc(4, -150, 9, 0, Math.PI * 2);
+    ctx.arc(15, -144, 8, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.moveTo(-17, -124);
+    ctx.lineTo(-4, -116);
+    ctx.moveTo(17, -124);
+    ctx.lineTo(4, -116);
+    ctx.stroke();
+    ctx.fillStyle = "#ffd84a";
+    ctx.beginPath();
+    ctx.moveTo(0, -108);
+    ctx.lineTo(28, -101);
+    ctx.lineTo(0, -92);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    drawHeroArms(color);
+    drawAnimalLegs(color);
+  }
+
+  function drawAlligatorHero() {
+    const color = "#1f8f4d";
+    setupHeroLine(color, 8);
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.ellipse(0, -58, 42, 42, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.ellipse(0, -116, 48, 22, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#fffef7";
+    for (let tooth = -24; tooth <= 24; tooth += 12) {
+      ctx.beginPath();
+      ctx.moveTo(tooth, -102);
+      ctx.lineTo(tooth + 6, -90);
+      ctx.lineTo(tooth + 12, -102);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+    }
+    drawAnimalEyes();
+    setupHeroLine(color, 8);
+    ctx.beginPath();
+    ctx.moveTo(38, -46);
+    ctx.quadraticCurveTo(86, -32, 70, 22);
+    ctx.stroke();
+    drawHeroArms(color);
+    drawAnimalLegs(color);
+    drawTinyAlligator(-68, 35);
+    drawTinyAlligator(78, 38);
+  }
+
+  function drawTinyAlligator(x, y) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.strokeStyle = "#171216";
+    ctx.fillStyle = "#2aa85d";
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 28, 11, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#fffef7";
+    ctx.beginPath();
+    ctx.arc(-8, -4, 3, 0, Math.PI * 2);
+    ctx.arc(8, -4, 3, 0, Math.PI * 2);
+    ctx.fill();
     ctx.restore();
   }
 

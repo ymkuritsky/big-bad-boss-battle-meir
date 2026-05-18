@@ -3,6 +3,15 @@
 Starter version:
 - Big Bad Boss Battle 3 starts from the same engine and controls as Big Bad Boss Battle 2.
 - This is the playable base we can now redesign with new worlds, bosses, and level ideas.
+- The game takes place in a forest.
+- Super Tats is an elephant.
+- Mom Fary is a purple parrot.
+- Super Appie Juice is a cheetah.
+- Freddy is a fox.
+- Benji is a polar bear.
+- Mr. 67 is a monkey.
+- Mischievous Mayer is a purple evil chicken.
+- Yapping Yonatan is an alligator with little alligator monsters.
 - The whole game takes place inside the school, with each level in a different school area.
 - Level 1 takes place in the classroom.
 - Level 2 takes place in the cafeteria.
