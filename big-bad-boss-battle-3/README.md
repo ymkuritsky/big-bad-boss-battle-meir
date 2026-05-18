@@ -5,6 +5,7 @@ Starter version:
 - This is the playable base we can now redesign with new worlds, bosses, and level ideas.
 - The game takes place in a forest.
 - Super Tats is a blue elephant.
+- Super Tats's Gorilla Jump is replaced by Elephant Trunk Grab: close-range grab, hold/stun for up to 30 seconds, then throw.
 - Mom Fary is a purple parrot.
 - Super Appie Juice is a yellow-orange cheetah with black spots.
 - Freddy is a yellow fox.

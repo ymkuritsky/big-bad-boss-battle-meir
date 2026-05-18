@@ -3,7 +3,7 @@
   const ctx = canvas.getContext("2d");
 
   const heroes = {
-    tats: { name: "Super Tats", color: "#1478cf", accent: "#78c9ff", hp: 5, firstPower: "Giant Punch" },
+    tats: { name: "Super Tats", color: "#1478cf", accent: "#78c9ff", hp: 5, firstPower: "Elephant Trunk Grab" },
     fary: { name: "Mom Fary", color: "#8542d8", accent: "#ff89c6", hp: 5, firstPower: "Wing Gust" },
     apple: { name: "Super Appie Juice", color: "#f18319", accent: "#ffcf54", hp: 5, firstPower: "Apple Juice Shot" },
     freddy: { name: "Freddy", color: "#17633c", accent: "#f0cf62", hp: 5, firstPower: "Mammal" },
@@ -248,6 +248,8 @@
     laneDodgeDirection: "",
     projectileLane: "middle",
     bossPressureStep: 0,
+    trunkGrabUntil: 0,
+    trunkGrabTarget: "",
     tick: 0
   };
 
@@ -287,6 +289,8 @@
     state.laneDodgeDirection = "";
     state.projectileLane = "middle";
     state.bossPressureStep = 0;
+    state.trunkGrabUntil = 0;
+    state.trunkGrabTarget = "";
     state.tick = 0;
     els.statusText.textContent = levels[state.level].intro;
     setAttacks(true);
@@ -323,6 +327,10 @@
     }
     const target = currentTarget();
     state.playerTarget = target;
+    if (kind === "power" && state.heroId === "tats") {
+      elephantTrunkGrab(target);
+      return;
+    }
     if (kind === "power" && mustReachBossForPower(target) && !isCloseEnoughToAttack("kick", target)) {
       state.action = "miss";
       state.playerAction = kind;
@@ -356,6 +364,14 @@
       return;
     }
 
+    if (isBossInTrunk(target)) {
+      state.action = "trunkGrab";
+      els.statusText.textContent = `${attackName(kind)} hit ${currentBossName(target)} while Elephant Trunk Grab is holding them. They cannot hit back yet!`;
+      updateHud();
+      draw();
+      return;
+    }
+
     const shieldBlocked = kind === "power" && state.heroId === "fary" && state.earnedPowers.has("homeworkShield");
     const blocked = shieldBlocked;
     const laneDodged = canLaneDodge(target) && Date.now() < state.laneDodgeUntil && dodgeBeatsLane(state.laneDodgeDirection, state.projectileLane);
@@ -379,6 +395,42 @@
     els.statusText.textContent = `${attackName(kind)} hit ${bossName} for ${heartText(damage)}. ${bossCounterText(target, blocked, dodged, laneDodged, bossAction, bossDamage)}`;
     updateHud();
     draw();
+  }
+
+  function elephantTrunkGrab(target) {
+    state.playerAction = "power";
+    if (!isCloseEnoughToAttack("kick", target)) {
+      state.action = "miss";
+      els.statusText.textContent = `${currentBossName(target)} is too far away for Elephant Trunk Grab. Move close, then grab with the trunk!`;
+      draw();
+      return;
+    }
+    state.trunkGrabUntil = Date.now() + 30000;
+    state.trunkGrabTarget = target;
+    state.action = "trunkGrab";
+    const damage = 3;
+    damageBoss(target, damage);
+    checkPowerRewards();
+    if (currentBossHp() === 0) {
+      state.won = true;
+      state.action = "win";
+      els.statusText.textContent = `Super Tats grabbed ${currentBossName(target)} in his elephant trunk and threw them. ${levelWinText()}`;
+      if (advanceAfterWin()) {
+        return;
+      }
+      setAttacks(true);
+      updateLevelLocks();
+      updateHud();
+      draw();
+      return;
+    }
+    els.statusText.textContent = `Elephant Trunk Grab! Super Tats grabbed ${currentBossName(target)}, held them in his trunk, and threw them for ${heartText(damage)}. They cannot hit back for 30 seconds.`;
+    updateHud();
+    draw();
+  }
+
+  function isBossInTrunk(target) {
+    return state.trunkGrabTarget === target && Date.now() < state.trunkGrabUntil;
   }
 
   function useDefenseMove(kind) {
@@ -2427,6 +2479,9 @@
       } else if (state.action === "busStop") {
         drawBusStopAttack(state.heroX, state.heroY);
         drawImpact("STOPPED!", 650, 215, "#d91f2e");
+      } else if (state.action === "trunkGrab") {
+        drawTrunkGrabEffect();
+        drawImpact("TRUNK GRAB!", 650, 215, "#3f8fd2");
       } else if (state.action.startsWith("principal")) {
         drawPrincipalAttack(state.heroX, state.heroY, state.action);
         drawImpact("PRINCIPAL!", 650, 215, "#6f737a");
@@ -2434,6 +2489,30 @@
         drawImpact("BLOCKED!", 650, 215, "#18a66a");
       }
     }
+    ctx.restore();
+  }
+
+  function drawTrunkGrabEffect() {
+    const boss = currentBossPosition(state.trunkGrabTarget || state.playerTarget || currentTarget());
+    ctx.save();
+    ctx.strokeStyle = "#3f8fd2";
+    ctx.lineWidth = 18;
+    ctx.lineCap = "round";
+    ctx.beginPath();
+    ctx.moveTo(state.heroX + 12, state.heroY - 92);
+    ctx.quadraticCurveTo(620, 210, boss.x - 72, boss.y - 82);
+    ctx.stroke();
+    ctx.fillStyle = "#78c9ff";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.arc(boss.x - 72, boss.y - 82, 24, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#fffef7";
+    ctx.font = "900 24px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText("HELD", boss.x - 72, boss.y - 122);
     ctx.restore();
   }
 
