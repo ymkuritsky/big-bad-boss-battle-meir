@@ -7,7 +7,7 @@ Starter version:
 - Super Tats is a blue elephant.
 - Mom Fary is a purple parrot.
 - Super Appie Juice is a yellow-orange cheetah with black spots.
-- Freddy is a fox.
+- Freddy is a yellow fox.
 - Benji is a whitish-gray polar bear.
 - Mr. 67 is a bluish-brown monkey.
 - Mischievous Mayer is a purple evil chicken.

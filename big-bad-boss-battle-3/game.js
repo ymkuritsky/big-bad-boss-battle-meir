@@ -1574,7 +1574,7 @@
   }
 
   function drawFoxHero() {
-    const color = "#d96d1f";
+    const color = "#f4c338";
     setupHeroLine(color, 8);
     ctx.fillStyle = color;
     ctx.beginPath();
