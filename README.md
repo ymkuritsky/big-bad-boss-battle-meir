@@ -137,6 +137,9 @@ https://big-bad-boss-battle-meir.vercel.app
 GitHub Pages backup link:
 https://ymkuritsky.github.io/big-bad-boss-battle-meir/
 
+Big Bad Boss Battle 3 link:
+https://ymkuritsky.github.io/big-bad-boss-battle-meir/big-bad-boss-battle-3/
+
 GitHub repo:
 https://github.com/ymkuritsky/big-bad-boss-battle-meir
 

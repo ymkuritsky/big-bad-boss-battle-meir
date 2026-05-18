@@ -4,7 +4,7 @@
 
   const heroes = {
     tats: { name: "Super Tats", color: "#1478cf", accent: "#78c9ff", hp: 5, firstPower: "Elephant Trunk Grab" },
-    fary: { name: "Mom Fary", color: "#8542d8", accent: "#ff89c6", hp: 5, firstPower: "Wing Gust" },
+    fary: { name: "Mom Fary", color: "#8542d8", accent: "#ff89c6", hp: 5, firstPower: "Parrot Power Scream" },
     apple: { name: "Super Appie Juice", color: "#f18319", accent: "#ffcf54", hp: 5, firstPower: "Apple Juice Shot" },
     freddy: { name: "Freddy", color: "#17633c", accent: "#f0cf62", hp: 5, firstPower: "Mammal" },
     benji: { name: "Benji", color: "#6f737a", accent: "#45a6db", hp: 5, firstPower: "Tornado" },
@@ -250,6 +250,8 @@
     bossPressureStep: 0,
     trunkGrabUntil: 0,
     trunkGrabTarget: "",
+    powerSilenceUntil: 0,
+    powerSilenceTarget: "",
     tick: 0
   };
 
@@ -291,6 +293,8 @@
     state.bossPressureStep = 0;
     state.trunkGrabUntil = 0;
     state.trunkGrabTarget = "";
+    state.powerSilenceUntil = 0;
+    state.powerSilenceTarget = "";
     state.tick = 0;
     els.statusText.textContent = levels[state.level].intro;
     setAttacks(true);
@@ -331,6 +335,10 @@
       elephantTrunkGrab(target);
       return;
     }
+    if (kind === "power" && state.heroId === "fary") {
+      parrotPowerScream(target);
+      return;
+    }
     if (kind === "power" && mustReachBossForPower(target) && !isCloseEnoughToAttack("kick", target)) {
       state.action = "miss";
       state.playerAction = kind;
@@ -367,6 +375,14 @@
     if (isBossInTrunk(target)) {
       state.action = "trunkGrab";
       els.statusText.textContent = `${attackName(kind)} hit ${currentBossName(target)} while Elephant Trunk Grab is holding them. They cannot hit back yet!`;
+      updateHud();
+      draw();
+      return;
+    }
+
+    if (isBossPowerSilenced(target)) {
+      state.action = "parrotScream";
+      els.statusText.textContent = `${attackName(kind)} hit ${currentBossName(target)} while Parrot Power Scream is blocking their powers. They cannot use a special attack yet!`;
       updateHud();
       draw();
       return;
@@ -433,6 +449,26 @@
     return state.trunkGrabTarget === target && Date.now() < state.trunkGrabUntil;
   }
 
+  function parrotPowerScream(target) {
+    state.playerAction = "power";
+    if (!isCloseEnoughToAttack("kick", target)) {
+      state.action = "miss";
+      els.statusText.textContent = `${currentBossName(target)} is too far away for Parrot Power Scream. Move close, then scream!`;
+      draw();
+      return;
+    }
+    state.powerSilenceUntil = Date.now() + 30000;
+    state.powerSilenceTarget = target;
+    state.action = "parrotScream";
+    els.statusText.textContent = `Parrot Power Scream! Mom Fary screamed so loud that ${currentBossName(target)} lost their powers for 30 seconds. They can still move, but no special powers!`;
+    updateHud();
+    draw();
+  }
+
+  function isBossPowerSilenced(target) {
+    return state.powerSilenceTarget === target && Date.now() < state.powerSilenceUntil;
+  }
+
   function useDefenseMove(kind) {
     const now = Date.now();
     state.playerAction = kind;
@@ -477,6 +513,10 @@
   }
 
   function applyBossPower(target, blocked, avoided = false) {
+    if (isBossPowerSilenced(target)) {
+      state.action = "parrotScream";
+      return;
+    }
     if (blocked) {
       return;
     }
@@ -862,6 +902,11 @@
     if (!bossPressuresWhileMoving(target) || isCloseEnoughToAttack("kick", target)) {
       state.bossPressureStep = 0;
       return false;
+    }
+    if (isBossPowerSilenced(target)) {
+      state.action = "parrotScream";
+      els.statusText.textContent = `${currentBossName(target)} tried to use a power, but Parrot Power Scream is still blocking it. Keep moving closer!`;
+      return true;
     }
     state.bossPressureStep += 1;
     if (canLaneDodge(target)) {
@@ -2482,6 +2527,9 @@
       } else if (state.action === "trunkGrab") {
         drawTrunkGrabEffect();
         drawImpact("TRUNK GRAB!", 650, 215, "#3f8fd2");
+      } else if (state.action === "parrotScream") {
+        drawParrotScreamEffect();
+        drawImpact("POWER OFF!", 650, 215, "#8542d8");
       } else if (state.action.startsWith("principal")) {
         drawPrincipalAttack(state.heroX, state.heroY, state.action);
         drawImpact("PRINCIPAL!", 650, 215, "#6f737a");
@@ -2489,6 +2537,38 @@
         drawImpact("BLOCKED!", 650, 215, "#18a66a");
       }
     }
+    ctx.restore();
+  }
+
+  function drawParrotScreamEffect() {
+    const boss = currentBossPosition(state.powerSilenceTarget || state.playerTarget || currentTarget());
+    ctx.save();
+    ctx.strokeStyle = "#8542d8";
+    ctx.fillStyle = "rgba(255, 137, 198, 0.22)";
+    ctx.lineWidth = 8;
+    for (let index = 0; index < 4; index += 1) {
+      ctx.beginPath();
+      ctx.arc(state.heroX + 54, state.heroY - 96, 56 + index * 48, -0.45, 0.45);
+      ctx.stroke();
+    }
+    ctx.beginPath();
+    ctx.moveTo(state.heroX + 64, state.heroY - 108);
+    ctx.quadraticCurveTo(620, 150, boss.x - 60, boss.y - 96);
+    ctx.quadraticCurveTo(650, 245, state.heroX + 64, state.heroY - 54);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.strokeStyle = "#171216";
+    ctx.fillStyle = "#fffef7";
+    ctx.lineWidth = 5;
+    roundRect(boss.x - 118, boss.y - 166, 150, 44, 10);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#8542d8";
+    ctx.font = "900 20px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText("NO POWERS", boss.x - 43, boss.y - 138);
     ctx.restore();
   }
 
