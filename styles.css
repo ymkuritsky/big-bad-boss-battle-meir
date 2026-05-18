@@ -274,6 +274,10 @@ button {
   background: #18a66a;
 }
 
+.comic-button.sequel.three {
+  background: #2e91de;
+}
+
 .comic-button.ink {
   background: var(--ink);
 }

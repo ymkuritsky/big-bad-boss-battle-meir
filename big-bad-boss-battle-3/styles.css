@@ -1,0 +1,386 @@
+:root {
+  color-scheme: light;
+  --ink: #171216;
+  --paper: #fffaf0;
+  --red: #d91f2e;
+  --violet: #7146d9;
+  --gold: #ffd84a;
+  --green: #18a66a;
+  --blue: #2e91de;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  overflow: hidden;
+  color: var(--ink);
+  overscroll-behavior: none;
+  touch-action: manipulation;
+  font-family: "Trebuchet MS", "Comic Sans MS", Arial, sans-serif;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.82), rgba(255,255,255,0.5)),
+    radial-gradient(circle at 12% 20%, #ffd84a 0 10%, transparent 11%),
+    radial-gradient(circle at 85% 12%, #5ad7ff 0 9%, transparent 10%),
+    radial-gradient(circle at 78% 88%, #7ee08b 0 12%, transparent 13%),
+    #f7efe1;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+.game-shell {
+  height: 100vh;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  overflow: hidden;
+}
+
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px clamp(12px, 3vw, 32px);
+  border-bottom: 5px solid var(--ink);
+  background: #fff;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(27px, 4.4vw, 58px);
+  line-height: 0.9;
+  text-transform: uppercase;
+  text-shadow: 4px 4px 0 var(--red), -3px 3px 0 var(--violet);
+}
+
+.top-actions,
+.attack-row,
+.heart-row,
+.level-select,
+.character-select,
+.power-inventory {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.stage-wrap {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  align-items: stretch;
+  gap: 10px;
+  padding: 10px 10px 106px;
+  min-height: 0;
+  background: #130f1f;
+}
+
+#gameCanvas {
+  justify-self: center;
+  align-self: center;
+  width: min(100%, calc((100vh - 92px) * 16 / 9));
+  max-height: calc(100vh - 92px);
+  border: 8px solid var(--ink);
+  background: #a9dcff;
+  box-shadow: 0 0 0 8px #fff, 0 18px 34px rgba(0,0,0,0.2);
+  touch-action: none;
+}
+
+.hud-panel {
+  position: relative;
+  width: 100%;
+  max-height: calc(100vh - 102px);
+  overflow: auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  align-content: start;
+  gap: 10px;
+  padding: 10px;
+  border: 5px solid var(--ink);
+  border-radius: 8px;
+  background: rgba(255,254,247,0.96);
+  box-shadow: 7px 7px 0 rgba(0,0,0,0.2);
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--red);
+  font-size: 13px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.hud-panel h2 {
+  margin: 0;
+  font-size: 28px;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.hud-panel p {
+  margin: 0;
+  font-weight: 900;
+}
+
+.heart-row {
+  grid-column: auto;
+}
+
+.character-select,
+.level-select,
+.power-inventory {
+  grid-column: auto;
+}
+
+.hero-choice,
+.level-choice,
+.power-pill {
+  border: 3px solid var(--ink);
+  border-radius: 6px;
+  padding: 6px 8px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.16);
+}
+
+.hero-choice.selected,
+.level-choice.selected,
+.power-pill.earned {
+  background: var(--green);
+  color: white;
+}
+
+.level-choice.locked {
+  opacity: 0.5;
+  filter: grayscale(0.6);
+  cursor: not-allowed;
+}
+
+.power-pill.locked {
+  opacity: 0.62;
+}
+
+.heart-row > span {
+  flex: 1 1 150px;
+  display: grid;
+  gap: 5px;
+  padding: 7px 9px;
+  border: 3px solid var(--ink);
+  border-radius: 6px;
+  background: #fff;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.heart-row strong {
+  font-size: 13px;
+}
+
+.heart-icons {
+  display: flex;
+  gap: 2px;
+  line-height: 1;
+}
+
+.heart {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: #d91f2e;
+  font-size: 24px;
+  text-shadow: 2px 2px 0 var(--ink);
+}
+
+.heart.half {
+  background: linear-gradient(90deg, #d91f2e 0 52%, #f1dada 52% 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.heart.empty {
+  color: #f1dada;
+}
+
+.controls-grid {
+  width: 168px;
+  display: grid;
+  grid-template-columns: repeat(3, 50px);
+  grid-template-rows: repeat(3, 32px);
+  gap: 5px;
+  grid-column: auto;
+  grid-row: auto;
+  justify-self: center;
+}
+
+.player-controls {
+  position: fixed;
+  left: 8px;
+  right: 8px;
+  bottom: max(8px, env(safe-area-inset-bottom));
+  z-index: 20;
+  display: grid;
+  grid-template-columns: 176px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  padding: 7px 9px;
+  border: 4px solid var(--ink);
+  border-radius: 8px;
+  background: rgba(255,254,247,0.96);
+  box-shadow: 5px 5px 0 rgba(0,0,0,0.18);
+}
+
+.move-button {
+  border: 3px solid var(--ink);
+  border-radius: 6px;
+  background: #fff;
+  font-size: 12px;
+  font-weight: 900;
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.18);
+  touch-action: manipulation;
+}
+
+.move-button.up {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.move-button.left {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.move-button.right {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+.move-button.down {
+  grid-column: 2;
+  grid-row: 3;
+}
+
+.attack-row {
+  grid-column: auto;
+}
+
+.comic-button {
+  border: 4px solid var(--ink);
+  border-radius: 7px;
+  padding: 10px 14px;
+  background: var(--gold);
+  color: var(--ink);
+  font-weight: 900;
+  text-transform: uppercase;
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.18);
+}
+
+.comic-button.violet {
+  background: var(--violet);
+  color: white;
+}
+
+.comic-button.small {
+  background: #fff;
+}
+
+.comic-button.attack {
+  flex: 1 1 86px;
+  min-height: 46px;
+  padding: 7px 8px;
+}
+
+.comic-button:disabled {
+  opacity: 0.58;
+  cursor: default;
+}
+
+@media (max-width: 760px) {
+  body {
+    overflow: auto;
+  }
+
+  .game-shell {
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+  }
+
+  .stage-wrap {
+    grid-template-columns: 1fr;
+    align-items: start;
+    padding: 6px 6px 126px;
+  }
+
+  #gameCanvas {
+    width: 100%;
+    max-height: none;
+    border-width: 4px;
+    box-shadow: none;
+  }
+
+  .top-bar,
+  .hud-panel {
+    align-items: stretch;
+    grid-template-columns: 1fr;
+  }
+
+  .hud-panel {
+    width: 100%;
+    max-height: none;
+    border-radius: 0;
+  }
+
+  .heart-row,
+  .attack-row,
+  .level-select,
+  .character-select,
+  .power-inventory,
+  .controls-grid {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .player-controls {
+    left: 4px;
+    right: 4px;
+    grid-template-columns: 88px minmax(0, 1fr);
+    gap: 5px;
+    padding: 5px;
+    border-width: 3px;
+  }
+
+  .controls-grid {
+    width: 84px;
+    grid-template-columns: repeat(3, 25px);
+    grid-template-rows: repeat(3, 24px);
+    gap: 3px;
+  }
+
+  .move-button {
+    padding: 1px;
+    font-size: 8px;
+    border-width: 2px;
+  }
+
+  .attack-row {
+    gap: 4px;
+  }
+
+  .comic-button.attack {
+    flex: 1 1 52px;
+    min-height: 34px;
+    padding: 4px 3px;
+    border-width: 2px;
+    font-size: 9px;
+  }
+}

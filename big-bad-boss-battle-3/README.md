@@ -1,0 +1,33 @@
+# Big Bad Boss Battle 3
+
+Starter version:
+- Big Bad Boss Battle 3 starts from the same engine and controls as Big Bad Boss Battle 2.
+- This is the playable base we can now redesign with new worlds, bosses, and level ideas.
+- The whole game takes place inside the school, with each level in a different school area.
+- Level 1 takes place in the classroom.
+- Level 2 takes place in the cafeteria.
+- Level 3 takes place in the gym.
+- Level 4 has the Airplane Attacker.
+- Level 5 has the Paper Pusher.
+- Level 6 has the Wing Whacker.
+- Level 7 takes place in the art room with the Art Archer.
+- Level 8 takes place in the library with the Librarian Launcher.
+- Level 9 takes place in the parking lot with the Field Trip Terror school bus.
+- Level 10 takes place in the principal's office with the Robot Principal.
+- Levels 11 through 30 are Robot Principal rematches with multiplying, giant, far-away, laser, and spinning tricks.
+- The Math Monster looks like a person made from numbers and math signs.
+- Evil LA looks like a blob full of letters, poems, rhymes, and words.
+- Food Monster Fiasco is two giant legs that shoots garbage. Each garbage hit takes half a heart.
+- The Crazy Ball is a blue ball with an evil face. Its roll can run over the player, but sometimes it misses.
+- The Airplane Attacker, Paper Pusher, and Wing Whacker are paper airplanes with evil faces and powers based on their names. Their levels take place outside.
+- The Art Archer shoots paintbrushes from a bow, the Librarian Launcher launches books, the Field Trip Terror drives around and uses a stop sign, and later Robot Principal levels add bigger robot tricks.
+- Everybody has 5 hearts in these school levels.
+- Player can move, punch, kick, and use Super Homework.
+- Levels now unlock in order after the player beats the previous level.
+- Each hero's power button works as that hero's first power.
+- Bosses fight back after attacks.
+- Character choices use heroes from Big Bad Boss Battle plus new playable choices: Super Tats, Mom Fary, Super Appie Juice, Freddy, Benji, Mr. 67, Super Ness, Captain Crayonstorm, Zap Hoodie, Mischievous Mayer, and Yapping Yonatan.
+- Defeating certain villains earns power-ups: Math Monster gives Homework Shield, and Evil LA gives Poetry Blast.
+- Math Monster can use Number Nets that catch the player for 5 seconds.
+- Evil LA can shoot letters that knock the player down.
+- When heroes are not supercharged, they only have their first original power.
