@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
     <title>Big Bad Boss Battle 3</title>
-    <link rel="stylesheet" href="styles.css?v=mayer-yonatan-powers" />
+    <link rel="stylesheet" href="styles.css?v=animal-original-controls" />
   </head>
   <body>
     <main class="game-shell">
@@ -52,8 +52,8 @@
             <button class="hero-choice" data-hero="yonatan">Yapping Yonatan</button>
           </div>
           <div class="heart-row">
-            <span id="heroHearts">Hero: 6</span>
-            <span id="bossHearts">Bosses: 10</span>
+            <span id="heroHearts">Hero: 8</span>
+            <span id="bossHearts">Bosses: 16</span>
           </div>
           <div id="powerInventory" class="power-inventory" aria-label="Earned power ups"></div>
         </aside>
@@ -64,16 +64,23 @@
             <button class="move-button right" data-move="right" aria-label="Move right">RIGHT</button>
             <button class="move-button down" data-move="down" aria-label="Move down">DOWN</button>
           </div>
-          <div class="attack-row">
-            <button id="punchButton" class="comic-button attack">Punch</button>
-            <button id="kickButton" class="comic-button attack">Kick</button>
-            <button id="jumpButton" class="comic-button attack">Jump</button>
-            <button id="hideButton" class="comic-button attack">Hide</button>
-            <button id="powerButton" class="comic-button attack violet">Use Power-Up</button>
+          <div class="combat-controls">
+            <div class="attack-row">
+              <button id="punchButton" class="comic-button attack">Punch</button>
+              <button id="kickButton" class="comic-button attack">Kick</button>
+              <button id="jumpButton" class="comic-button attack">Jump</button>
+              <button id="hideButton" class="comic-button attack">Hide</button>
+            </div>
+            <div id="powerRow" class="power-row" aria-label="Animal powers">
+              <button class="comic-button attack violet power-slot" data-power-slot="0">1. Power</button>
+              <button class="comic-button attack violet power-slot" data-power-slot="1">2. Power</button>
+              <button class="comic-button attack violet power-slot" data-power-slot="2">3. Power</button>
+              <button class="comic-button attack violet power-slot" data-power-slot="3">4. Power</button>
+            </div>
           </div>
         </div>
       </section>
     </main>
-    <script src="game.js?v=mayer-yonatan-powers"></script>
+    <script src="game.js?v=animal-original-controls"></script>
   </body>
 </html>

@@ -249,7 +249,7 @@
     kickButton: document.getElementById("kickButton"),
     jumpButton: document.getElementById("jumpButton"),
     hideButton: document.getElementById("hideButton"),
-    powerButton: document.getElementById("powerButton")
+    powerButtons: Array.from(document.querySelectorAll(".power-slot"))
   };
 
   const state = {
@@ -396,7 +396,7 @@
     draw();
   }
 
-  function attack(kind) {
+  function attack(kind, powerSlot = 0) {
     if (!state.started || state.won || state.lost) {
       els.statusText.textContent = "Press Start Level first, then you can punch, kick, and use powers.";
       return;
@@ -417,27 +417,27 @@
       return;
     }
     if (kind === "power" && state.heroId === "apple") {
-      cheetahPowerAttack(target);
+      cheetahPowerAttack(target, powerSlot);
       return;
     }
     if (kind === "power" && state.heroId === "freddy") {
-      fennecPowerAttack(target);
+      fennecPowerAttack(target, powerSlot);
       return;
     }
     if (kind === "power" && state.heroId === "benji") {
-      polarPowerAttack(target);
+      polarPowerAttack(target, powerSlot);
       return;
     }
     if (kind === "power" && state.heroId === "frost") {
-      monkeyPowerAttack(target);
+      monkeyPowerAttack(target, powerSlot);
       return;
     }
     if (kind === "power" && state.heroId === "mayer") {
-      mayerPowerAttack(target);
+      mayerPowerAttack(target, powerSlot);
       return;
     }
     if (kind === "power" && state.heroId === "yonatan") {
-      yonatanPowerAttack(target);
+      yonatanPowerAttack(target, powerSlot);
       return;
     }
     if (kind === "power" && mustReachBossForPower(target) && !isCloseEnoughToAttack("kick", target)) {
@@ -612,9 +612,17 @@
     return state.powerSilenceTarget === target && Date.now() < state.powerSilenceUntil;
   }
 
-  function cheetahPowerAttack(target) {
-    const power = cheetahPowers[state.cheetahPowerStep % cheetahPowers.length];
-    state.cheetahPowerStep += 1;
+  function pickPower(powers, stepKey, slot) {
+    if (Number.isInteger(slot) && slot >= 0 && slot < powers.length) {
+      return powers[slot];
+    }
+    const power = powers[state[stepKey] % powers.length];
+    state[stepKey] += 1;
+    return power;
+  }
+
+  function cheetahPowerAttack(target, powerSlot = 0) {
+    const power = pickPower(cheetahPowers, "cheetahPowerStep", powerSlot);
     state.playerAction = "power";
     state.playerTarget = target;
     state.action = power.id;
@@ -692,9 +700,8 @@
     return dx <= 430 && dy <= 190;
   }
 
-  function fennecPowerAttack(target) {
-    const power = fennecPowers[state.fennecPowerStep % fennecPowers.length];
-    state.fennecPowerStep += 1;
+  function fennecPowerAttack(target, powerSlot = 0) {
+    const power = pickPower(fennecPowers, "fennecPowerStep", powerSlot);
     state.playerAction = "power";
     state.playerTarget = target;
     state.action = power.id;
@@ -759,9 +766,8 @@
     return state.fennecLoveTarget === target && Date.now() < state.fennecLoveUntil;
   }
 
-  function polarPowerAttack(target) {
-    const power = polarPowers[state.polarPowerStep % polarPowers.length];
-    state.polarPowerStep += 1;
+  function polarPowerAttack(target, powerSlot = 0) {
+    const power = pickPower(polarPowers, "polarPowerStep", powerSlot);
     state.playerAction = "power";
     state.playerTarget = target;
     state.action = power.id;
@@ -841,9 +847,8 @@
     return state.iceTornadoTarget === target && Date.now() < state.iceTornadoUntil;
   }
 
-  function monkeyPowerAttack(target) {
-    const power = monkeyPowers[state.monkeyPowerStep % monkeyPowers.length];
-    state.monkeyPowerStep += 1;
+  function monkeyPowerAttack(target, powerSlot = 0) {
+    const power = pickPower(monkeyPowers, "monkeyPowerStep", powerSlot);
     state.playerAction = "power";
     state.playerTarget = target;
     state.action = power.id;
@@ -930,9 +935,8 @@
     return state.bananaSlipTarget === target && Date.now() < state.bananaSlipUntil;
   }
 
-  function mayerPowerAttack(target) {
-    const power = mayerPowers[state.mayerPowerStep % mayerPowers.length];
-    state.mayerPowerStep += 1;
+  function mayerPowerAttack(target, powerSlot = 0) {
+    const power = pickPower(mayerPowers, "mayerPowerStep", powerSlot);
     state.playerAction = "power";
     state.playerTarget = target;
     state.action = power.id;
@@ -980,9 +984,8 @@
     finishAnimalPowerCounter(target, power);
   }
 
-  function yonatanPowerAttack(target) {
-    const power = yonatanPowers[state.yonatanPowerStep % yonatanPowers.length];
-    state.yonatanPowerStep += 1;
+  function yonatanPowerAttack(target, powerSlot = 0) {
+    const power = pickPower(yonatanPowers, "yonatanPowerStep", powerSlot);
     state.playerAction = "power";
     state.playerTarget = target;
     state.action = power.id;
@@ -1686,31 +1689,32 @@
   }
 
   function updatePowerButton() {
-    els.powerButton.textContent = currentPowerName();
+    const powers = powerNamesForHero();
+    const disabled = !state.started || state.won || state.lost;
+    els.powerButtons.forEach((button, index) => {
+      const name = powers[index];
+      button.classList.toggle("hidden", !name);
+      button.disabled = disabled || !name;
+      if (name) {
+        button.textContent = `${index + 1}. ${name}`;
+      }
+    });
   }
 
   function currentPowerName() {
+    return powerNamesForHero()[0] || "Use Power-Up";
+  }
+
+  function powerNamesForHero() {
     const hero = heroes[state.heroId];
-    if (!hero) return "Use Power-Up";
-    if (state.heroId === "apple") {
-      return cheetahPowers[state.cheetahPowerStep % cheetahPowers.length].name;
-    }
-    if (state.heroId === "benji") {
-      return polarPowers[state.polarPowerStep % polarPowers.length].name;
-    }
-    if (state.heroId === "frost") {
-      return monkeyPowers[state.monkeyPowerStep % monkeyPowers.length].name;
-    }
-    if (state.heroId === "freddy") {
-      return fennecPowers[state.fennecPowerStep % fennecPowers.length].name;
-    }
-    if (state.heroId === "mayer") {
-      return mayerPowers[state.mayerPowerStep % mayerPowers.length].name;
-    }
-    if (state.heroId === "yonatan") {
-      return yonatanPowers[state.yonatanPowerStep % yonatanPowers.length].name;
-    }
-    return hero.firstPower;
+    if (!hero) return ["Use Power-Up"];
+    if (state.heroId === "apple") return cheetahPowers.map((power) => power.name);
+    if (state.heroId === "benji") return polarPowers.map((power) => power.name);
+    if (state.heroId === "frost") return monkeyPowers.map((power) => power.name);
+    if (state.heroId === "freddy") return fennecPowers.map((power) => power.name);
+    if (state.heroId === "mayer") return mayerPowers.map((power) => power.name);
+    if (state.heroId === "yonatan") return yonatanPowers.map((power) => power.name);
+    return [hero.firstPower];
   }
 
   function chooseAliveLevelOneTarget(target) {
@@ -1738,7 +1742,11 @@
     els.kickButton.disabled = disabled;
     els.jumpButton.disabled = disabled;
     els.hideButton.disabled = disabled;
-    els.powerButton.disabled = disabled;
+    const powers = powerNamesForHero();
+    els.powerButtons.forEach((button, index) => {
+      button.disabled = disabled || !powers[index];
+    });
+    updatePowerButton();
   }
 
   function draw() {
@@ -2298,11 +2306,29 @@
     ctx.ellipse(38, -114, 24, 32, 0.25, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
+    ctx.fillStyle = "#78c9ff";
+    ctx.beginPath();
+    ctx.ellipse(-39, -114, 13, 20, -0.25, 0, Math.PI * 2);
+    ctx.ellipse(39, -114, 13, 20, 0.25, 0, Math.PI * 2);
+    ctx.fill();
     drawAnimalEyes();
     ctx.lineWidth = 9;
     ctx.beginPath();
     ctx.moveTo(0, -94);
-    ctx.quadraticCurveTo(6, -54, -18, -36);
+    ctx.quadraticCurveTo(8, -55, -16, -34);
+    ctx.quadraticCurveTo(-27, -24, -12, -17);
+    ctx.stroke();
+    ctx.fillStyle = "#fffef7";
+    ctx.beginPath();
+    ctx.moveTo(-9, -96);
+    ctx.lineTo(-22, -78);
+    ctx.lineTo(-11, -82);
+    ctx.closePath();
+    ctx.moveTo(9, -96);
+    ctx.lineTo(22, -78);
+    ctx.lineTo(11, -82);
+    ctx.closePath();
+    ctx.fill();
     ctx.stroke();
     drawHeroArms(color, true);
     drawAnimalLegs(color);
@@ -2322,6 +2348,14 @@
     ctx.ellipse(42, -62, 26, 58, 0.55, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
+    ctx.strokeStyle = "#ff89c6";
+    ctx.lineWidth = 4;
+    [-48, -38, 38, 48].forEach((x) => {
+      ctx.beginPath();
+      ctx.moveTo(x, -95);
+      ctx.quadraticCurveTo(x * 0.9, -55, x * 0.72, -16);
+      ctx.stroke();
+    });
     ctx.fillStyle = color;
     ctx.beginPath();
     ctx.arc(0, -116, 26, 0, Math.PI * 2);
@@ -2333,6 +2367,14 @@
     ctx.moveTo(0, -106);
     ctx.lineTo(30, -99);
     ctx.lineTo(0, -88);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#ff89c6";
+    ctx.beginPath();
+    ctx.moveTo(-13, -18);
+    ctx.lineTo(0, 24);
+    ctx.lineTo(13, -18);
     ctx.closePath();
     ctx.fill();
     ctx.stroke();
@@ -2358,11 +2400,19 @@
     ctx.stroke();
     drawAnimalEyes();
     ctx.fillStyle = "#171216";
-    [-22, -4, 18, -15, 8, 25].forEach((spot, index) => {
+    [
+      [-22, -84], [-4, -72], [18, -88], [-16, -52], [8, -40], [25, -62],
+      [-13, -126], [13, -126], [-30, -32], [31, -24]
+    ].forEach(([x, y]) => {
       ctx.beginPath();
-      ctx.arc(spot, -76 + index * 11, 4.5, 0, Math.PI * 2);
+      ctx.arc(x, y, 4.5, 0, Math.PI * 2);
       ctx.fill();
     });
+    ctx.fillStyle = "#fffef7";
+    ctx.beginPath();
+    ctx.ellipse(0, -100, 13, 8, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
     setupHeroLine(color, 8);
     ctx.beginPath();
     ctx.moveTo(34, -44);
@@ -2382,10 +2432,22 @@
     ctx.stroke();
     ctx.beginPath();
     ctx.moveTo(-28, -126);
-    ctx.lineTo(-12, -158);
+    ctx.lineTo(-18, -164);
     ctx.lineTo(0, -128);
-    ctx.lineTo(14, -158);
+    ctx.lineTo(18, -164);
     ctx.lineTo(30, -126);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#fff4c8";
+    ctx.beginPath();
+    ctx.moveTo(-22, -127);
+    ctx.lineTo(-17, -151);
+    ctx.lineTo(-7, -127);
+    ctx.closePath();
+    ctx.moveTo(8, -127);
+    ctx.lineTo(17, -151);
+    ctx.lineTo(24, -127);
     ctx.closePath();
     ctx.fill();
     ctx.stroke();
@@ -2405,7 +2467,13 @@
     setupHeroLine(color, 9);
     ctx.beginPath();
     ctx.moveTo(28, -38);
-    ctx.quadraticCurveTo(74, -8, 50, 32);
+    ctx.quadraticCurveTo(88, -4, 50, 34);
+    ctx.stroke();
+    ctx.strokeStyle = "#fffef7";
+    ctx.lineWidth = 6;
+    ctx.beginPath();
+    ctx.moveTo(61, 18);
+    ctx.quadraticCurveTo(69, 27, 50, 34);
     ctx.stroke();
     drawHeroArms(color);
     drawAnimalLegs(color);
@@ -2430,6 +2498,21 @@
     ctx.beginPath();
     ctx.arc(0, -104, 5, 0, Math.PI * 2);
     ctx.fill();
+    ctx.fillStyle = "#fffef7";
+    ctx.beginPath();
+    ctx.ellipse(0, -101, 16, 10, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#171216";
+    ctx.beginPath();
+    ctx.arc(0, -104, 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = "#45a6db";
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(-14, -80);
+    ctx.lineTo(14, -80);
+    ctx.stroke();
     drawHeroArms(color, true);
     drawAnimalLegs(color);
   }
@@ -2454,10 +2537,16 @@
     ctx.ellipse(0, -104, 16, 10, 0, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
+    ctx.fillStyle = "#ffd84a";
+    ctx.beginPath();
+    ctx.ellipse(16, -72, 14, 5, 0.45, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
     setupHeroLine(color, 8);
     ctx.beginPath();
     ctx.moveTo(28, -38);
-    ctx.quadraticCurveTo(74, -52, 58, -8);
+    ctx.quadraticCurveTo(86, -65, 60, -16);
+    ctx.quadraticCurveTo(45, 10, 76, 8);
     ctx.stroke();
     drawHeroArms(color);
     drawAnimalLegs(color);
@@ -2498,6 +2587,20 @@
     ctx.closePath();
     ctx.fill();
     ctx.stroke();
+    ctx.fillStyle = "#8e55e8";
+    ctx.beginPath();
+    ctx.ellipse(-30, -60, 17, 34, -0.55, 0, Math.PI * 2);
+    ctx.ellipse(30, -60, 17, 34, 0.55, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.strokeStyle = "#f08318";
+    ctx.lineWidth = 4;
+    for (let feather = -18; feather <= 18; feather += 12) {
+      ctx.beginPath();
+      ctx.moveTo(feather, -11);
+      ctx.lineTo(feather * 1.35, 20);
+      ctx.stroke();
+    }
     drawHeroArms(color);
     drawAnimalLegs(color);
   }
@@ -2514,6 +2617,11 @@
     ctx.ellipse(0, -116, 48, 22, 0, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
+    ctx.fillStyle = "#32b863";
+    ctx.beginPath();
+    ctx.ellipse(12, -120, 55, 15, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
     ctx.fillStyle = "#fffef7";
     for (let tooth = -24; tooth <= 24; tooth += 12) {
       ctx.beginPath();
@@ -2525,6 +2633,12 @@
       ctx.stroke();
     }
     drawAnimalEyes();
+    ctx.fillStyle = "#145e35";
+    [-24, -6, 12, 30].forEach((x) => {
+      ctx.beginPath();
+      ctx.arc(x, -136, 3, 0, Math.PI * 2);
+      ctx.fill();
+    });
     setupHeroLine(color, 8);
     ctx.beginPath();
     ctx.moveTo(38, -46);
@@ -4269,7 +4383,9 @@
   els.kickButton.addEventListener("click", () => attack("kick"));
   els.jumpButton.addEventListener("click", () => attack("jump"));
   els.hideButton.addEventListener("click", () => attack("hide"));
-  els.powerButton.addEventListener("click", () => attack("power"));
+  els.powerButtons.forEach((button) => {
+    button.addEventListener("click", () => attack("power", Number(button.dataset.powerSlot)));
+  });
   document.querySelectorAll(".move-button").forEach((button) => {
     button.addEventListener("click", () => moveHero(button.dataset.move));
   });
@@ -4284,9 +4400,17 @@
       event.preventDefault();
       moveHero(moves[event.key]);
     }
-    if (event.key === "1") attack("punch");
-    if (event.key === "2") attack("kick");
-    if (event.key === "3") attack("power");
+    if (event.key === "1") attack("power", 0);
+    if (event.key === "2") attack("power", 1);
+    if (event.key === "3") attack("power", 2);
+    if (event.key === "4") attack("power", 3);
+    if (event.key.toLowerCase() === "j") attack("punch");
+    if (event.key.toLowerCase() === "k") attack("kick");
+    if (event.key.toLowerCase() === "h") attack("hide");
+    if (event.key === " " || event.key.toLowerCase() === "w") {
+      event.preventDefault();
+      attack("jump");
+    }
   });
 
   resetGame();
