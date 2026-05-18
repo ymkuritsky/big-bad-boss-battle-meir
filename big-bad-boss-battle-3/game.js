@@ -217,6 +217,12 @@
     { id: "bananaSlip", name: "Banana Peel Slip", damage: 0.5 }
   ];
 
+  const fennecPowers = [
+    { id: "fennecLove", name: "Fennec Love", damage: 1 },
+    { id: "fennecSneakBite", name: "Sneak Bite", damage: 1 },
+    { id: "fennecPounce", name: "Pounce", damage: 0 }
+  ];
+
   const els = {
     statusText: document.getElementById("statusText"),
     selectedHeroName: document.getElementById("selectedHeroName"),
@@ -281,6 +287,8 @@
     bananaSlipTarget: "",
     fennecLoveUntil: 0,
     fennecLoveTarget: "",
+    fennecPowerStep: 0,
+    fennecPounceTarget: "",
     tick: 0
   };
 
@@ -334,6 +342,8 @@
     state.bananaSlipTarget = "";
     state.fennecLoveUntil = 0;
     state.fennecLoveTarget = "";
+    state.fennecPowerStep = 0;
+    state.fennecPounceTarget = "";
     state.tick = 0;
     els.statusText.textContent = levels[state.level].intro;
     setAttacks(true);
@@ -386,7 +396,7 @@
       return;
     }
     if (kind === "power" && state.heroId === "freddy") {
-      fennecLoveAttack(target);
+      fennecPowerAttack(target);
       return;
     }
     if (kind === "power" && state.heroId === "benji") {
@@ -633,20 +643,34 @@
     return dx <= 430 && dy <= 190;
   }
 
-  function fennecLoveAttack(target) {
+  function fennecPowerAttack(target) {
+    const power = fennecPowers[state.fennecPowerStep % fennecPowers.length];
+    state.fennecPowerStep += 1;
     state.playerAction = "power";
     state.playerTarget = target;
-    if (!isCloseEnoughToAttack("kick", target)) {
+    state.action = power.id;
+    updatePowerButton();
+
+    const closeEnough = state.fennecPounceTarget === target || isCloseEnoughToAttack("kick", target);
+    if (!closeEnough) {
       state.action = "miss";
-      els.statusText.textContent = `${currentBossName(target)} is too far away for Fennec Love. Move close with Freddy, then use it!`;
+      els.statusText.textContent = `${currentBossName(target)} is too far away for ${power.name}. Move close with Freddy, then use it!`;
       draw();
       return;
     }
 
-    state.fennecLoveUntil = Date.now() + 10000;
-    state.fennecLoveTarget = target;
-    state.action = "fennecLove";
-    const damage = 1;
+    if (power.id === "fennecLove") {
+      state.fennecLoveUntil = Date.now() + 10000;
+      state.fennecLoveTarget = target;
+    }
+    if (power.id === "fennecPounce") {
+      state.fennecPounceTarget = target;
+      const boss = currentBossPosition(target);
+      state.heroX = clamp(boss.x - 18, 120, 1080);
+      state.heroY = clamp(boss.y - 128, 270, 470);
+    }
+
+    const damage = power.damage;
     damageBoss(target, damage);
     checkPowerRewards();
     state.chosenBossTarget = chooseAliveLevelOneTarget(state.chosenBossTarget);
@@ -654,7 +678,7 @@
     if (currentBossHp() === 0) {
       state.won = true;
       state.action = "win";
-      els.statusText.textContent = `Fennec Love made ${currentBossName(target)} fall down and say "I love you." ${levelWinText()}`;
+      els.statusText.textContent = `${power.name} finished the fight. ${levelWinText()}`;
       if (advanceAfterWin()) {
         return;
       }
@@ -664,7 +688,20 @@
       draw();
       return;
     }
-    els.statusText.textContent = `Fennec Love! Freddy made ${currentBossName(target)} fall on the floor for 10 seconds. It took away ${heartText(damage)} of love.`;
+
+    if (power.id === "fennecLove") {
+      els.statusText.textContent = `Fennec Love! Freddy made ${currentBossName(target)} fall on the floor for 10 seconds. It took away ${heartText(damage)} of love.`;
+      updateHud();
+      draw();
+      return;
+    }
+    if (power.id === "fennecSneakBite") {
+      els.statusText.textContent = `Sneak Bite! Freddy snuck up before anyone noticed and bit ${currentBossName(target)} for ${heartText(damage)}.`;
+      updateHud();
+      draw();
+      return;
+    }
+    els.statusText.textContent = `Pounce! Freddy jumped onto ${currentBossName(target)}'s head. Now any attack can hit while he stays there.`;
     updateHud();
     draw();
   }
@@ -1134,6 +1171,7 @@
     const boss = currentBossPosition(target);
     const dx = Math.abs(state.heroX - boss.x);
     const dy = Math.abs(state.heroY - boss.y);
+    if (state.heroId === "freddy" && state.fennecPounceTarget === target) return true;
     const range = kind === "kick" ? 270 : 230;
     return dx <= range && dy <= 180;
   }
@@ -1465,6 +1503,9 @@
     }
     if (state.heroId === "frost") {
       return monkeyPowers[state.monkeyPowerStep % monkeyPowers.length].name;
+    }
+    if (state.heroId === "freddy") {
+      return fennecPowers[state.fennecPowerStep % fennecPowers.length].name;
     }
     return hero.firstPower;
   }
@@ -3016,6 +3057,12 @@
       } else if (state.action === "fennecLove") {
         drawFennecLoveEffect();
         drawImpact("LOVE!", 650, 215, "#f083bd");
+      } else if (state.action === "fennecSneakBite") {
+        drawFennecSneakBiteEffect();
+        drawImpact("SNEAK BITE!", 650, 215, "#f0cf62");
+      } else if (state.action === "fennecPounce") {
+        drawFennecPounceEffect();
+        drawImpact("POUNCE!", 650, 215, "#f0cf62");
       } else if (state.action === "polarTeeth") {
         drawPolarPowerEffect("teeth");
         drawImpact("TEETH ATTACK!", 650, 215, "#45a6db");
@@ -3177,6 +3224,59 @@
     ctx.moveTo(boss.x - 170, boss.y + 48);
     ctx.lineTo(boss.x + 20, boss.y + 18);
     ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawFennecSneakBiteEffect() {
+    const boss = currentBossPosition(state.playerTarget || currentTarget());
+    ctx.save();
+    ctx.strokeStyle = "rgba(240, 207, 98, 0.9)";
+    ctx.lineWidth = 5;
+    ctx.setLineDash([12, 12]);
+    ctx.beginPath();
+    ctx.moveTo(state.heroX - 70, state.heroY - 92);
+    ctx.quadraticCurveTo(590, 505, boss.x - 108, boss.y - 72);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = "#fffef7";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 4;
+    for (let tooth = 0; tooth < 4; tooth += 1) {
+      const x = boss.x - 132 + tooth * 20;
+      const y = boss.y - 102 + (tooth % 2) * 16;
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(x + 10, y + 25);
+      ctx.lineTo(x + 20, y);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+    }
+    ctx.fillStyle = "#171216";
+    ctx.font = "900 22px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText("1 HEART", boss.x - 90, boss.y - 136);
+    ctx.restore();
+  }
+
+  function drawFennecPounceEffect() {
+    const boss = currentBossPosition(state.fennecPounceTarget || state.playerTarget || currentTarget());
+    ctx.save();
+    ctx.strokeStyle = "#f0cf62";
+    ctx.lineWidth = 8;
+    ctx.beginPath();
+    ctx.arc(boss.x - 18, boss.y - 148, 42, Math.PI, Math.PI * 1.9);
+    ctx.stroke();
+    ctx.fillStyle = "#fffef7";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    roundRect(boss.x - 154, boss.y - 218, 164, 48, 10);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#17633c";
+    ctx.font = "900 20px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText("ON HEAD", boss.x - 72, boss.y - 188);
     ctx.restore();
   }
 
