@@ -1483,7 +1483,7 @@
   }
 
   function drawElephantHero() {
-    const color = "#8c98a4";
+    const color = "#3f8fd2";
     setupHeroLine(color, 8);
     ctx.fillStyle = color;
     ctx.beginPath();
@@ -1541,7 +1541,7 @@
   }
 
   function drawCheetahHero() {
-    const color = "#f2a51f";
+    const color = "#f5b62a";
     setupHeroLine(color, 8);
     ctx.fillStyle = color;
     ctx.beginPath();
@@ -1559,9 +1559,9 @@
     ctx.stroke();
     drawAnimalEyes();
     ctx.fillStyle = "#171216";
-    [-18, 0, 20, -8, 14].forEach((spot, index) => {
+    [-22, -4, 18, -15, 8, 25].forEach((spot, index) => {
       ctx.beginPath();
-      ctx.arc(spot, -70 + index * 14, 4, 0, Math.PI * 2);
+      ctx.arc(spot, -76 + index * 11, 4.5, 0, Math.PI * 2);
       ctx.fill();
     });
     setupHeroLine(color, 8);
@@ -1613,7 +1613,7 @@
   }
 
   function drawPolarBearHero() {
-    const color = "#fffef7";
+    const color = "#dfe5ea";
     setupHeroLine("#171216", 7);
     ctx.fillStyle = color;
     ctx.beginPath();
@@ -1631,12 +1631,12 @@
     ctx.beginPath();
     ctx.arc(0, -104, 5, 0, Math.PI * 2);
     ctx.fill();
-    drawHeroArms("#fffef7", true);
-    drawAnimalLegs("#fffef7");
+    drawHeroArms(color, true);
+    drawAnimalLegs(color);
   }
 
   function drawMonkeyHero() {
-    const color = "#8b5a2b";
+    const color = "#6b6f8e";
     setupHeroLine(color, 8);
     ctx.fillStyle = color;
     ctx.beginPath();
@@ -1650,7 +1650,7 @@
     ctx.fill();
     ctx.stroke();
     drawAnimalEyes();
-    ctx.fillStyle = "#d5a56c";
+    ctx.fillStyle = "#9b7045";
     ctx.beginPath();
     ctx.ellipse(0, -104, 16, 10, 0, 0, Math.PI * 2);
     ctx.fill();
