@@ -25,48 +25,48 @@
     },
     2: {
       title: "Level 2 Picnic Clearing",
-      intro: "Food Monster Fiasco is stomping around the forest picnic clearing.",
-      start: "Level 2 started in the picnic clearing. Dodge garbage and fight Food Monster Fiasco!"
+      intro: "Pick Mischievous Mayer or Yapping Yonatan in the picnic clearing.",
+      start: "Level 2 started in the picnic clearing. Pick your forest boss and fight!"
     },
     3: {
       title: "Level 3 Hollow Log Arena",
-      intro: "The Crazy Ball is rolling around inside the hollow log arena.",
-      start: "Level 3 started in the hollow log arena. Watch out when The Crazy Ball rolls!"
+      intro: "Pick Mischievous Mayer or Yapping Yonatan inside the hollow log arena.",
+      start: "Level 3 started in the hollow log arena. The boss is a little quicker now!"
     },
     4: {
-      title: "Level 4 Treetop Attacker",
-      intro: "The Airplane Attacker is circling above the treetops.",
-      start: "Level 4 started in the treetops. The Airplane Attacker dives from above!"
+      title: "Level 4 Treetop Path",
+      intro: "Pick Mischievous Mayer or Yapping Yonatan on the treetop path.",
+      start: "Level 4 started on the treetop path. The forest boss hits a little harder!"
     },
     5: {
       title: "Level 5 Leaf Pusher Trail",
-      intro: "The Paper Pusher is waiting on the leaf-covered trail.",
-      start: "Level 5 started on the leaf trail. The Paper Pusher tries to shove you backward!"
+      intro: "Pick Mischievous Mayer or Yapping Yonatan on the leaf-covered trail.",
+      start: "Level 5 started on the leaf trail. Watch for stronger boss powers!"
     },
     6: {
-      title: "Level 6 Windy Wing Canopy",
-      intro: "The Wing Whacker is flapping through the windy forest canopy.",
-      start: "Level 6 started in the canopy. The Wing Whacker swings its wings!"
+      title: "Level 6 Windy Canopy",
+      intro: "Pick Mischievous Mayer or Yapping Yonatan in the windy forest canopy.",
+      start: "Level 6 started in the canopy. The boss gets faster!"
     },
     7: {
-      title: "Level 7 Paintbrush Vine Archer",
-      intro: "The Art Archer is hiding behind painted vines.",
-      start: "Level 7 started by the painted vines. Paintbrushes come in slowly, so move up or down to dodge before you attack!"
+      title: "Level 7 Painted Vines",
+      intro: "Pick Mischievous Mayer or Yapping Yonatan by the painted vines.",
+      start: "Level 7 started by the painted vines. Choose your boss and move close to attack!"
     },
     8: {
-      title: "Level 8 Book Nest Launcher",
-      intro: "The Librarian Launcher is guarding a book nest in the trees.",
-      start: "Level 8 started by the book nest. BO-OK-S books come in slowly, so move up or down to dodge before you attack!"
+      title: "Level 8 Book Nest",
+      intro: "Pick Mischievous Mayer or Yapping Yonatan by the book nest.",
+      start: "Level 8 started by the book nest. The boss powers are getting sharper!"
     },
     9: {
-      title: "Level 9 Forest Trail Terror",
-      intro: "The Field Trip Terror is roaring down the forest trail.",
-      start: "Level 9 started on the forest trail. Do not get trapped by the stop sign!"
+      title: "Level 9 Forest Trail",
+      intro: "Pick Mischievous Mayer or Yapping Yonatan on the forest trail.",
+      start: "Level 9 started on the forest trail. The boss attacks more often!"
     },
     10: {
-      title: "Level 10 Tree Fort Robot",
-      intro: "The Robot Principal is waiting inside a giant tree fort.",
-      start: "Level 10 started in the tree fort. Fight the Robot Principal!"
+      title: "Level 10 Tree Fort",
+      intro: "Pick Mischievous Mayer or Yapping Yonatan inside the giant tree fort.",
+      start: "Level 10 started in the tree fort. Pick your forest boss and fight!"
     }
   };
 
@@ -168,9 +168,9 @@
   for (let level = 11; level <= 30; level += 1) {
     const trick = robotTricks[(level - 11) % robotTricks.length];
     levels[level] = {
-      title: `Level ${level} Deep Forest Robot Rematch`,
-      intro: `More forest robots are waiting deeper in the woods at level ${level}.`,
-      start: `Level ${level} started deeper in the forest. Robot Principal uses ${trick.label.toLowerCase()} tricks!`
+      title: `Level ${level} Deep Forest Showdown`,
+      intro: `Pick Mischievous Mayer or Yapping Yonatan deeper in the woods at level ${level}.`,
+      start: `Level ${level} started deeper in the forest. Pick your boss and get ready for stronger powers!`
     };
     bossLevels[level] = {
       target: "principal",
@@ -198,6 +198,18 @@
       description: "Does a strong word attack."
     }
   };
+
+  const elephantPowers = [
+    { id: "elephantTrunkGrab", name: "Elephant Trunk Grab", damage: 3 },
+    { id: "elephantForestStomp", name: "Forest Stomp", damage: 2 },
+    { id: "elephantTuskShield", name: "Tusk Shield", damage: 0 }
+  ];
+
+  const parrotPowers = [
+    { id: "parrotScream", name: "Parrot Power Scream", damage: 0 },
+    { id: "parrotWingBlast", name: "Wing Blast", damage: 1.5 },
+    { id: "parrotHealingFeather", name: "Healing Feather", damage: 0 }
+  ];
 
   const cheetahPowers = [
     { id: "cheetahSpeed", name: "Cheetah Super Speed", damage: 0.5 },
@@ -249,7 +261,7 @@
     kickButton: document.getElementById("kickButton"),
     jumpButton: document.getElementById("jumpButton"),
     hideButton: document.getElementById("hideButton"),
-    powerButton: document.getElementById("powerButton")
+    powerButtons: Array.from(document.querySelectorAll(".power-slot"))
   };
 
   const state = {
@@ -420,11 +432,11 @@
     const target = currentTarget();
     state.playerTarget = target;
     if (kind === "power" && state.heroId === "tats") {
-      elephantTrunkGrab(target);
+      elephantPowerAttack(target, powerSlot);
       return;
     }
     if (kind === "power" && state.heroId === "fary") {
-      parrotPowerScream(target);
+      parrotPowerAttack(target, powerSlot);
       return;
     }
     if (kind === "power" && state.heroId === "apple") {
@@ -567,6 +579,43 @@
     draw();
   }
 
+  function elephantPowerAttack(target, powerSlot = 0) {
+    const power = elephantPowers[Number.isInteger(powerSlot) ? powerSlot : 0] || elephantPowers[0];
+    if (power.id === "elephantTrunkGrab") {
+      elephantTrunkGrab(target);
+      return;
+    }
+    state.playerAction = "power";
+    state.playerTarget = target;
+    state.action = power.id;
+    if (power.id === "elephantTuskShield") {
+      state.armorBlocks += 2;
+      els.statusText.textContent = "Tusk Shield! Super Tats is protected from the next 2 boss hits.";
+      updateHud();
+      draw();
+      return;
+    }
+    if (!isCloseEnoughToAttack("kick", target)) {
+      state.action = "miss";
+      els.statusText.textContent = `${currentBossName(target)} is too far away for Forest Stomp. Move close, then stomp!`;
+      draw();
+      return;
+    }
+    damageBoss(target, heroAttackDamage(power.damage));
+    checkPowerRewards();
+    if (currentBossHp() === 0) {
+      state.won = true;
+      state.action = "win";
+      els.statusText.textContent = `Forest Stomp finished the fight. ${levelWinText()}`;
+      if (advanceAfterWin()) return;
+      setAttacks(true);
+      updateHud();
+      draw();
+      return;
+    }
+    finishAnimalPowerCounter(target, power);
+  }
+
   function elephantTrunkGrab(target) {
     state.playerAction = "power";
     if (!isCloseEnoughToAttack("kick", target)) {
@@ -601,6 +650,43 @@
 
   function isBossInTrunk(target) {
     return state.trunkGrabTarget === target && Date.now() < state.trunkGrabUntil;
+  }
+
+  function parrotPowerAttack(target, powerSlot = 0) {
+    const power = parrotPowers[Number.isInteger(powerSlot) ? powerSlot : 0] || parrotPowers[0];
+    if (power.id === "parrotScream") {
+      parrotPowerScream(target);
+      return;
+    }
+    state.playerAction = "power";
+    state.playerTarget = target;
+    state.action = power.id;
+    if (power.id === "parrotHealingFeather") {
+      state.heroHp = Math.min(HEARTS_PER_FIGHTER, state.heroHp + 2);
+      els.statusText.textContent = "Healing Feather! Mom Fary got 2 hearts back.";
+      updateHud();
+      draw();
+      return;
+    }
+    if (!isCloseEnoughToAttack("kick", target)) {
+      state.action = "miss";
+      els.statusText.textContent = `${currentBossName(target)} is too far away for Wing Blast. Move close, then flap!`;
+      draw();
+      return;
+    }
+    damageBoss(target, heroAttackDamage(power.damage));
+    checkPowerRewards();
+    if (currentBossHp() === 0) {
+      state.won = true;
+      state.action = "win";
+      els.statusText.textContent = `Wing Blast finished the fight. ${levelWinText()}`;
+      if (advanceAfterWin()) return;
+      setAttacks(true);
+      updateHud();
+      draw();
+      return;
+    }
+    finishAnimalPowerCounter(target, power);
   }
 
   function parrotPowerScream(target) {
@@ -1392,34 +1478,19 @@
   }
 
   function currentTarget() {
-    if (state.level === 1) {
-      return chooseAliveLevelOneTarget(state.chosenBossTarget);
-    }
-    if (state.level === 2) return "food";
-    if (state.level === 3) return "crazyBall";
-    return bossLevels[state.level].target;
+    return state.chosenBossTarget === "evil" ? "evil" : "math";
   }
 
   function currentBossHp() {
-    if (state.level === 1) return state.mathHp + state.evilHp;
-    if (state.level === 2) return state.foodHp;
-    if (state.level === 3) return state.crazyBallHp;
-    return state[bossLevels[state.level].hpKey];
+    return state.chosenBossTarget === "evil" ? state.evilHp : state.mathHp;
   }
 
   function currentBossMaxHp() {
-    if (state.level === 1) return HEARTS_PER_FIGHTER * 2;
-    if (state.level === 2) return HEARTS_PER_FIGHTER;
-    if (state.level === 3) return HEARTS_PER_FIGHTER;
-    if (state.level >= 4) return bossLevels[state.level].maxHp || HEARTS_PER_FIGHTER;
     return HEARTS_PER_FIGHTER;
   }
 
   function levelWinText() {
-    if (state.level === 1) return "You beat Mischievous Mayer and Yapping Yonatan!";
-    if (state.level === 2) return "You beat Food Monster Fiasco!";
-    if (state.level === 3) return "You beat The Crazy Ball in the hollow log arena!";
-    return `You beat ${bossLevels[state.level].name}!`;
+    return `You beat ${currentBossName()} in Level ${state.level}!`;
   }
 
   function currentBossName(target = currentTarget()) {
@@ -1428,12 +1499,12 @@
     if (target === "food") return "Food Monster Fiasco";
     if (target === "crazyBall") return "The Crazy Ball";
     if (target === "principal") return bossLevels[state.level].name;
-    return Object.values(bossLevels).find((boss) => boss.target === target).name;
+    return "Forest Boss";
   }
 
   function currentBossPosition(target = currentTarget()) {
-    if (target === "math") return { x: 900, y: 355 };
-    if (target === "evil") return { x: 1045, y: 410 };
+    if (target === "math") return { x: 940, y: 355 };
+    if (target === "evil") return { x: 990, y: 410 };
     if (target === "food") return { x: 950, y: 390 };
     if (target === "crazyBall") return { x: 950, y: 390 };
     return { x: 950, y: 380 };
@@ -1513,7 +1584,6 @@
   }
 
   function chooseBossTarget(target) {
-    if (state.level !== 1) return;
     const hp = target === "math" ? state.mathHp : state.evilHp;
     if (hp <= 0) {
       els.statusText.textContent = `${currentBossName(target)} is already defeated. Pick the other boss.`;
@@ -1531,7 +1601,7 @@
   function updateBossTargetChoices() {
     const targetSelect = document.getElementById("bossTargetSelect");
     if (!targetSelect) return;
-    const showPicker = state.level === 1 && currentBossHp() > 0;
+    const showPicker = currentBossHp() > 0;
     targetSelect.classList.toggle("hidden", !showPicker);
     state.chosenBossTarget = chooseAliveLevelOneTarget(state.chosenBossTarget);
     targetSelect.querySelectorAll(".target-choice").forEach((button) => {
@@ -1794,7 +1864,14 @@
   }
 
   function updatePowerButton() {
-    els.powerButton.textContent = currentPowerName();
+    const powers = powerNamesForHero();
+    const disabled = !state.started || state.won || state.lost;
+    els.powerButtons.forEach((button, index) => {
+      const name = powers[index];
+      button.classList.toggle("hidden", !name);
+      button.disabled = disabled || !name;
+      if (name) button.textContent = `${index + 1}. ${name}`;
+    });
   }
 
   function currentPowerName() {
@@ -1812,17 +1889,18 @@
   function powerNamesForHero() {
     const hero = heroes[state.heroId];
     if (!hero) return ["Use Power-Up"];
+    if (state.heroId === "tats") return elephantPowers.map((power) => power.name);
+    if (state.heroId === "fary") return parrotPowers.map((power) => power.name);
     if (state.heroId === "apple") return cheetahPowers.map((power) => power.name);
     if (state.heroId === "benji") return polarPowers.map((power) => power.name);
     if (state.heroId === "frost") return monkeyPowers.map((power) => power.name);
     if (state.heroId === "freddy") return fennecPowers.map((power) => power.name);
     if (state.heroId === "mayer") return mayerPowers.map((power) => power.name);
     if (state.heroId === "yonatan") return yonatanPowers.map((power) => power.name);
-    return [hero.firstPower];
+    return [hero.firstPower, "Forest Power", "Shield Power"];
   }
 
   function chooseAliveLevelOneTarget(target) {
-    if (state.level !== 1) return target;
     if (target === "evil" && state.evilHp > 0) return "evil";
     if (target === "math" && state.mathHp > 0) return "math";
     if (state.mathHp > 0) return "math";
@@ -1846,7 +1924,10 @@
     els.kickButton.disabled = disabled;
     els.jumpButton.disabled = disabled;
     els.hideButton.disabled = disabled;
-    els.powerButton.disabled = disabled;
+    const powers = powerNamesForHero();
+    els.powerButtons.forEach((button, index) => {
+      button.disabled = disabled || !powers[index];
+    });
     updatePowerButton();
   }
 
@@ -1855,15 +1936,12 @@
     drawSchool();
     drawHealthBars();
     drawHero(state.heroX, state.heroY);
-    if (state.level === 1) {
-      if (state.mathHp > 0) drawMischievousMayerBoss(900, 365);
-      if (state.evilHp > 0) drawYappingYonatanBoss(1045, 420);
-    } else if (state.level === 2 && state.foodHp > 0) {
-      drawFoodMonsterFiasco(950, 390);
-    } else if (state.level === 3 && state.crazyBallHp > 0) {
-      drawCrazyBall(950, 390);
-    } else if (state.level >= 4 && currentBossHp() > 0) {
-      drawBossCharacter(950, 380, bossLevels[state.level]);
+    if (currentBossHp() > 0) {
+      if (currentTarget() === "math") {
+        drawMischievousMayerBoss(940, 365);
+      } else {
+        drawYappingYonatanBoss(990, 420);
+      }
     }
     drawPrizeDrops();
     drawAction();
@@ -2199,14 +2277,19 @@
     if (state.level === 1) return "LEVEL 1: FOREST DUEL";
     if (state.level === 2) return "LEVEL 2: PICNIC CLEARING";
     if (state.level === 3) return "LEVEL 3: HOLLOW LOG";
-    return bossLevels[state.level].board;
+    if (state.level <= 6) return `LEVEL ${state.level}: FOREST PATH`;
+    if (state.level <= 10) return `LEVEL ${state.level}: TREE FORT WOODS`;
+    if (state.level <= 15) return `LEVEL ${state.level}: DEEP FOREST`;
+    if (state.level <= 24) return `LEVEL ${state.level}: PRIZE FOREST`;
+    return `LEVEL ${state.level}: FINAL FOREST`;
   }
 
   function boardNote() {
     if (state.level === 1) return "PICK YOUR BOSS!";
     if (state.level === 2) return "FOREST SNACK TROUBLE";
     if (state.level === 3) return "DODGE THE ROLL!";
-    return bossLevels[state.level].note;
+    if (state.level >= 16) return "BOSSES DROP PRIZES!";
+    return "MAYER OR YONATAN!";
   }
 
   function drawPaperOutsideDetails() {
@@ -2258,7 +2341,7 @@
   function drawHealthBars() {
     const hero = heroes[state.heroId];
     drawHeartBar(50, 44, 430, hero.name.toUpperCase(), state.heroHp, hero.hp, hero.accent);
-    drawHeartBar(800, 44, 430, state.level === 1 ? "SCHOOL BOSSES" : currentBossName().toUpperCase(), currentBossHp(), currentBossMaxHp(), "#d91f2e");
+    drawHeartBar(800, 44, 430, currentBossName().toUpperCase(), currentBossHp(), currentBossMaxHp(), "#d91f2e");
     drawLabel(`FIGHTING: ${currentBossName().toUpperCase()}`, 365, 122, "#ffd84a", 550);
   }
 
@@ -4550,7 +4633,7 @@
       const button = document.createElement("button");
       button.className = "level-choice";
       button.dataset.level = String(level);
-      button.textContent = level === 30 ? "Level 30 Final Robot Principal" : `Level ${level} Robot Principal`;
+      button.textContent = level === 30 ? "Level 30 Final Forest Showdown" : `Level ${level} Forest Boss Pick`;
       button.dataset.label = button.textContent;
       levelSelect.append(button);
     }
@@ -4572,7 +4655,9 @@
   els.kickButton.addEventListener("click", () => attack("kick"));
   els.jumpButton.addEventListener("click", () => attack("jump"));
   els.hideButton.addEventListener("click", () => attack("hide"));
-  els.powerButton.addEventListener("click", () => attack("power"));
+  els.powerButtons.forEach((button) => {
+    button.addEventListener("click", () => attack("power", Number(button.dataset.powerSlot)));
+  });
   document.querySelectorAll(".move-button").forEach((button) => {
     button.addEventListener("click", () => moveHero(button.dataset.move));
   });
@@ -4587,9 +4672,17 @@
       event.preventDefault();
       moveHero(moves[event.key]);
     }
-    if (event.key === "1") attack("punch");
-    if (event.key === "2") attack("kick");
-    if (event.key === "3") attack("power");
+    if (event.key === "1") attack("power", 0);
+    if (event.key === "2") attack("power", 1);
+    if (event.key === "3") attack("power", 2);
+    if (event.key === "4") attack("power", 3);
+    if (event.key.toLowerCase() === "j") attack("punch");
+    if (event.key.toLowerCase() === "k") attack("kick");
+    if (event.key === " " || event.key.toLowerCase() === "w") {
+      event.preventDefault();
+      attack("jump");
+    }
+    if (event.key.toLowerCase() === "h") attack("hide");
   });
 
   resetGame();

@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
     <title>Big Bad Boss Battle 3</title>
-    <link rel="stylesheet" href="styles.css?v=forest-prize-controls" />
+    <link rel="stylesheet" href="styles.css?v=bbb1-boss-pick-controls" />
   </head>
   <body>
     <main class="game-shell">
@@ -23,16 +23,16 @@
           <h2 id="selectedHeroName">Forest Showdown</h2>
           <p id="statusText">The forest bosses are waiting for the animal superheroes.</p>
           <div class="level-select" aria-label="Choose level">
-            <button class="level-choice selected" data-level="1">Level 1 Classroom</button>
+            <button class="level-choice selected" data-level="1">Level 1 Forest Duel</button>
             <button class="level-choice" data-level="2">Level 2 Picnic Clearing</button>
             <button class="level-choice" data-level="3">Level 3 Hollow Log Arena</button>
-            <button class="level-choice" data-level="4">Level 4 Treetop Attacker</button>
+            <button class="level-choice" data-level="4">Level 4 Treetop Path</button>
             <button class="level-choice" data-level="5">Level 5 Leaf Pusher Trail</button>
-            <button class="level-choice" data-level="6">Level 6 Windy Wing Canopy</button>
-            <button class="level-choice" data-level="7">Level 7 Paintbrush Vine Archer</button>
-            <button class="level-choice" data-level="8">Level 8 Book Nest Launcher</button>
-            <button class="level-choice" data-level="9">Level 9 Forest Trail Terror</button>
-            <button class="level-choice" data-level="10">Level 10 Tree Fort Robot</button>
+            <button class="level-choice" data-level="6">Level 6 Windy Canopy</button>
+            <button class="level-choice" data-level="7">Level 7 Painted Vines</button>
+            <button class="level-choice" data-level="8">Level 8 Book Nest</button>
+            <button class="level-choice" data-level="9">Level 9 Forest Trail</button>
+            <button class="level-choice" data-level="10">Level 10 Tree Fort</button>
           </div>
           <div id="bossTargetSelect" class="boss-target-select" aria-label="Choose boss">
             <button class="target-choice selected" data-target="math">Fight Mischievous Mayer</button>
@@ -59,21 +59,28 @@
         </aside>
         <div class="player-controls" aria-label="Player controls">
           <div class="controls-grid" aria-label="Move">
-            <button class="move-button up" data-move="up" aria-label="Move up">UP</button>
-            <button class="move-button left" data-move="left" aria-label="Move left">LEFT</button>
-            <button class="move-button right" data-move="right" aria-label="Move right">RIGHT</button>
-            <button class="move-button down" data-move="down" aria-label="Move down">DOWN</button>
+            <button class="move-button up" data-move="up" aria-label="Move up">&#9650;</button>
+            <button class="move-button left" data-move="left" aria-label="Move left">&#9664;</button>
+            <button class="move-button right" data-move="right" aria-label="Move right">&#9654;</button>
+            <button class="move-button down" data-move="down" aria-label="Move down">&#9660;</button>
           </div>
-          <div class="attack-row">
-            <button id="punchButton" class="comic-button attack">Punch</button>
-            <button id="kickButton" class="comic-button attack">Kick</button>
-            <button id="jumpButton" class="comic-button attack">Jump</button>
-            <button id="hideButton" class="comic-button attack">Hide</button>
-            <button id="powerButton" class="comic-button attack violet">Use Power-Up</button>
+          <div class="combat-controls">
+            <div class="attack-row">
+              <button id="punchButton" class="comic-button attack">Punch</button>
+              <button id="kickButton" class="comic-button attack">Kick</button>
+              <button id="jumpButton" class="comic-button attack">Jump</button>
+              <button id="hideButton" class="comic-button attack">Hide</button>
+            </div>
+            <div id="powerRow" class="power-row" aria-label="Hero powers">
+              <button class="comic-button attack violet power-slot" data-power-slot="0">Power 1</button>
+              <button class="comic-button attack violet power-slot" data-power-slot="1">Power 2</button>
+              <button class="comic-button attack violet power-slot" data-power-slot="2">Power 3</button>
+              <button class="comic-button attack violet power-slot" data-power-slot="3">Power 4</button>
+            </div>
           </div>
         </div>
       </section>
     </main>
-    <script src="game.js?v=forest-prize-controls"></script>
+    <script src="game.js?v=bbb1-boss-pick-controls"></script>
   </body>
 </html>

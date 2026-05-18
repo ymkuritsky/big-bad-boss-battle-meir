@@ -17,26 +17,17 @@ Starter version:
 - Level 1 is the Forest Duel.
 - Level 2 is the Picnic Clearing.
 - Level 3 is the Hollow Log Arena.
-- Level 4 has the Treetop Attacker.
-- Level 5 has the Leaf Pusher Trail.
-- Level 6 has the Windy Wing Canopy.
-- Level 7 has the Paintbrush Vine Archer.
-- Level 8 has the Book Nest Launcher.
-- Level 9 has the Forest Trail Terror.
-- Level 10 has the Tree Fort Robot.
-- Levels 11 through 30 are deep forest robot rematches with multiplying, giant, far-away, laser, and spinning tricks.
+- Every level lets the player pick Mischievous Mayer or Yapping Yonatan as the boss.
+- Levels 4 through 30 keep changing forest locations, but do not add random new villains.
+- Later levels make Mayer and Yonatan stronger and faster without adding boss hearts.
 - The Math Monster looks like a person made from numbers and math signs.
 - Evil LA looks like a blob full of letters, poems, rhymes, and words.
-- Food Monster Fiasco is two giant legs that shoots garbage. Each garbage hit takes half a heart.
-- The Crazy Ball is a blue ball with an evil face. Its roll can run over the player, but sometimes it misses.
-- The Airplane Attacker, Paper Pusher, and Wing Whacker are paper airplanes with evil faces and powers based on their names. Their levels take place outside.
-- The Art Archer shoots paintbrushes from a bow, the Librarian Launcher launches books, the Field Trip Terror drives around and uses a stop sign, and later Robot Principal levels add bigger robot tricks.
 - Everybody has 8 hearts in every level.
 - Bosses do not get more hearts, but the later levels get faster and more powerful.
 - After level 15, villains can drop magical prizes: donuts heal hearts, the bow makes attacks stronger, iron armor blocks hits, and the giant shield blocks more hits.
 - Player can move, punch, kick, and use Super Homework.
 - Levels now unlock in order after the player beats the previous level.
-- Each hero has one power button that rotates through that hero's animal powers.
+- The controls should feel like Big Bad Boss Battle 1, with the hero's powers visible as separate buttons.
 - Bosses fight back after attacks.
 - Character choices use heroes from Big Bad Boss Battle plus new playable choices: Super Tats, Mom Fary, Super Appie Juice, Freddy, Benji, Mr. 67, Super Ness, Captain Crayonstorm, Zap Hoodie, Mischievous Mayer, and Yapping Yonatan.
 - Defeating certain villains earns power-ups: Math Monster gives Homework Shield, and Evil LA gives Poetry Blast.
