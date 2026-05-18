@@ -13,8 +13,8 @@
     ness: { name: "Super Ness", color: "#c73583", accent: "#6bd8ff", hp: HEARTS_PER_FIGHTER, firstPower: "Super Kick" },
     crayon: { name: "Captain Crayonstorm", color: "#21a36c", accent: "#f5d129", hp: HEARTS_PER_FIGHTER, firstPower: "Crayon Barrage" },
     hoodie: { name: "Zap Hoodie", color: "#1f1f29", accent: "#49d9ff", hp: HEARTS_PER_FIGHTER, firstPower: "Zip Zap" },
-    mayer: { name: "Mischievous Mayer", color: "#6b28c7", accent: "#f08318", hp: HEARTS_PER_FIGHTER, firstPower: "Mischief Zap" },
-    yonatan: { name: "Yapping Yonatan", color: "#f07918", accent: "#d61f2f", hp: HEARTS_PER_FIGHTER, firstPower: "Yap Blast" }
+    mayer: { name: "Mischievous Mayer", color: "#6b28c7", accent: "#f08318", hp: HEARTS_PER_FIGHTER, firstPower: "Super Big Bock" },
+    yonatan: { name: "Yapping Yonatan", color: "#f07918", accent: "#d61f2f", hp: HEARTS_PER_FIGHTER, firstPower: "Crocodile Jaw" }
   };
 
   const levels = {
@@ -223,6 +223,19 @@
     { id: "fennecPounce", name: "Pounce", damage: 0 }
   ];
 
+  const mayerPowers = [
+    { id: "mayerBigBock", name: "Super Big Bock", damage: 0.5 },
+    { id: "mayerFlyUp", name: "Fly Up", damage: 0 },
+    { id: "mayerRoosterFlyers", name: "Chicken Cockadoodle Rooster Flyers", damage: 1 }
+  ];
+
+  const yonatanPowers = [
+    { id: "yonatanJaw", name: "Crocodile Jaw", damage: 1 },
+    { id: "yonatanChomper", name: "Crocodile Chomper", damage: 1 },
+    { id: "yonatanTailSwipe", name: "Tail Swipe", damage: 0.5 },
+    { id: "yonatanAlligatorMonsters", name: "Alligator Monsters", damage: 1 }
+  ];
+
   const els = {
     statusText: document.getElementById("statusText"),
     selectedHeroName: document.getElementById("selectedHeroName"),
@@ -289,6 +302,12 @@
     fennecLoveTarget: "",
     fennecPowerStep: 0,
     fennecPounceTarget: "",
+    mayerPowerStep: 0,
+    mayerBockUntil: 0,
+    mayerBockTarget: "",
+    yonatanPowerStep: 0,
+    yonatanChomperUntil: 0,
+    yonatanChomperTarget: "",
     tick: 0
   };
 
@@ -344,6 +363,12 @@
     state.fennecLoveTarget = "";
     state.fennecPowerStep = 0;
     state.fennecPounceTarget = "";
+    state.mayerPowerStep = 0;
+    state.mayerBockUntil = 0;
+    state.mayerBockTarget = "";
+    state.yonatanPowerStep = 0;
+    state.yonatanChomperUntil = 0;
+    state.yonatanChomperTarget = "";
     state.tick = 0;
     els.statusText.textContent = levels[state.level].intro;
     setAttacks(true);
@@ -405,6 +430,14 @@
     }
     if (kind === "power" && state.heroId === "frost") {
       monkeyPowerAttack(target);
+      return;
+    }
+    if (kind === "power" && state.heroId === "mayer") {
+      mayerPowerAttack(target);
+      return;
+    }
+    if (kind === "power" && state.heroId === "yonatan") {
+      yonatanPowerAttack(target);
       return;
     }
     if (kind === "power" && mustReachBossForPower(target) && !isCloseEnoughToAttack("kick", target)) {
@@ -477,6 +510,22 @@
     if (isBossInFennecLove(target)) {
       state.action = "fennecLove";
       els.statusText.textContent = `${attackName(kind)} hit ${currentBossName(target)} while they are on the floor saying "I love you." They cannot hit back yet!`;
+      updateHud();
+      draw();
+      return;
+    }
+
+    if (isBossBocked(target)) {
+      state.action = "mayerBigBock";
+      els.statusText.textContent = `${attackName(kind)} hit ${currentBossName(target)} while Super Big Bock has them on the floor.`;
+      updateHud();
+      draw();
+      return;
+    }
+
+    if (isBossChomped(target)) {
+      state.action = "yonatanChomper";
+      els.statusText.textContent = `${attackName(kind)} hit ${currentBossName(target)} while the floor is broken from Crocodile Chomper.`;
       updateHud();
       draw();
       return;
@@ -881,6 +930,136 @@
     return state.bananaSlipTarget === target && Date.now() < state.bananaSlipUntil;
   }
 
+  function mayerPowerAttack(target) {
+    const power = mayerPowers[state.mayerPowerStep % mayerPowers.length];
+    state.mayerPowerStep += 1;
+    state.playerAction = "power";
+    state.playerTarget = target;
+    state.action = power.id;
+    updatePowerButton();
+
+    if (!isCloseEnoughToAttack("kick", target) && power.id !== "mayerRoosterFlyers") {
+      state.action = "miss";
+      els.statusText.textContent = `${currentBossName(target)} is too far away for ${power.name}. Move close, then bock!`;
+      draw();
+      return;
+    }
+
+    if (power.id === "mayerFlyUp") {
+      state.jumpingUntil = Date.now() + 1000;
+      state.heroY = clamp(state.heroY - 48, 270, 470);
+    }
+    if (power.id === "mayerBigBock") {
+      state.mayerBockUntil = Date.now() + 4500;
+      state.mayerBockTarget = target;
+    }
+
+    damageBoss(target, power.damage);
+    checkPowerRewards();
+    state.chosenBossTarget = chooseAliveLevelOneTarget(state.chosenBossTarget);
+    updateBossTargetChoices();
+    if (currentBossHp() === 0) {
+      state.won = true;
+      state.action = "win";
+      els.statusText.textContent = `${power.name} finished the fight. ${levelWinText()}`;
+      if (advanceAfterWin()) return;
+      setAttacks(true);
+      updateLevelLocks();
+      updateHud();
+      draw();
+      return;
+    }
+    if (power.id === "mayerBigBock" || power.id === "mayerFlyUp") {
+      els.statusText.textContent = power.id === "mayerBigBock"
+        ? `Super Big Bock! Everyone falls down and ${currentBossName(target)} loses ${heartText(power.damage)}.`
+        : "Fly Up! Mischievous Mayer flew up for 1 second and avoided the next hit.";
+      updateHud();
+      draw();
+      return;
+    }
+    finishAnimalPowerCounter(target, power);
+  }
+
+  function yonatanPowerAttack(target) {
+    const power = yonatanPowers[state.yonatanPowerStep % yonatanPowers.length];
+    state.yonatanPowerStep += 1;
+    state.playerAction = "power";
+    state.playerTarget = target;
+    state.action = power.id;
+    updatePowerButton();
+
+    if (!isCloseEnoughToAttack("kick", target) && power.id !== "yonatanAlligatorMonsters") {
+      state.action = "miss";
+      els.statusText.textContent = `${currentBossName(target)} is too far away for ${power.name}. Move close, then chomp!`;
+      draw();
+      return;
+    }
+
+    if (power.id === "yonatanChomper") {
+      state.yonatanChomperUntil = Date.now() + 4500;
+      state.yonatanChomperTarget = target;
+    }
+
+    damageBoss(target, power.damage);
+    checkPowerRewards();
+    state.chosenBossTarget = chooseAliveLevelOneTarget(state.chosenBossTarget);
+    updateBossTargetChoices();
+    if (currentBossHp() === 0) {
+      state.won = true;
+      state.action = "win";
+      els.statusText.textContent = `${power.name} finished the fight. ${levelWinText()}`;
+      if (advanceAfterWin()) return;
+      setAttacks(true);
+      updateLevelLocks();
+      updateHud();
+      draw();
+      return;
+    }
+    if (power.id === "yonatanChomper") {
+      els.statusText.textContent = `Crocodile Chomper! Half the floor fell and ${currentBossName(target)} lost ${heartText(power.damage)}.`;
+      updateHud();
+      draw();
+      return;
+    }
+    finishAnimalPowerCounter(target, power);
+  }
+
+  function finishAnimalPowerCounter(target, power) {
+    if (isBossInTrunk(target) || isBossPowerSilenced(target) || isBossInIceTornado(target) || isBossSlippingOnBanana(target) || isBossInFennecLove(target) || isBossBocked(target) || isBossChomped(target)) {
+      els.statusText.textContent = `${power.name} hit ${currentBossName(target)} for ${heartText(power.damage)}. They cannot hit back yet!`;
+      updateHud();
+      draw();
+      return;
+    }
+    const laneDodged = canLaneDodge(target) && Date.now() < state.laneDodgeUntil && dodgeBeatsLane(state.laneDodgeDirection, state.projectileLane);
+    const dodged = Date.now() < state.hiddenUntil || Date.now() < state.jumpingUntil || laneDodged;
+    applyBossPower(target, false, dodged);
+    const bossAction = state.action;
+    const bossDamage = bossDamageForAction(bossAction);
+    state.heroHp = Math.max(0, state.heroHp - (dodged ? 0 : bossDamage));
+    if (state.heroHp === 0) {
+      state.lost = true;
+      state.action = "lost";
+      els.statusText.textContent = "The forest bosses won this round. Reset for a rematch.";
+      setAttacks(true);
+      updateHud();
+      draw();
+      return;
+    }
+    state.action = power.id;
+    els.statusText.textContent = `${power.name} hit ${currentBossName(target)} for ${heartText(power.damage)}. ${bossCounterText(target, false, dodged, laneDodged, bossAction, bossDamage)}`;
+    updateHud();
+    draw();
+  }
+
+  function isBossBocked(target) {
+    return state.mayerBockTarget === target && Date.now() < state.mayerBockUntil;
+  }
+
+  function isBossChomped(target) {
+    return state.yonatanChomperTarget === target && Date.now() < state.yonatanChomperUntil;
+  }
+
   function useDefenseMove(kind) {
     const now = Date.now();
     state.playerAction = kind;
@@ -939,6 +1118,14 @@
     }
     if (isBossInFennecLove(target)) {
       state.action = "fennecLove";
+      return;
+    }
+    if (isBossBocked(target)) {
+      state.action = "mayerBigBock";
+      return;
+    }
+    if (isBossChomped(target)) {
+      state.action = "yonatanChomper";
       return;
     }
     if (blocked) {
@@ -1381,6 +1568,16 @@
       els.statusText.textContent = `${currentBossName(target)} is still on the floor saying "I love you." Keep moving closer!`;
       return true;
     }
+    if (isBossBocked(target)) {
+      state.action = "mayerBigBock";
+      els.statusText.textContent = `${currentBossName(target)} is still knocked down from Super Big Bock. Keep moving closer!`;
+      return true;
+    }
+    if (isBossChomped(target)) {
+      state.action = "yonatanChomper";
+      els.statusText.textContent = `${currentBossName(target)} is stuck by the broken floor from Crocodile Chomper. Keep moving closer!`;
+      return true;
+    }
     state.bossPressureStep += 1;
     if (canLaneDodge(target)) {
       state.projectileLane = nextProjectileLane();
@@ -1506,6 +1703,12 @@
     }
     if (state.heroId === "freddy") {
       return fennecPowers[state.fennecPowerStep % fennecPowers.length].name;
+    }
+    if (state.heroId === "mayer") {
+      return mayerPowers[state.mayerPowerStep % mayerPowers.length].name;
+    }
+    if (state.heroId === "yonatan") {
+      return yonatanPowers[state.yonatanPowerStep % yonatanPowers.length].name;
     }
     return hero.firstPower;
   }
@@ -3081,6 +3284,27 @@
       } else if (state.action === "bananaSlip") {
         drawMonkeyPowerEffect("slip");
         drawImpact("BANANA SLIP!", 650, 215, "#ffd84a");
+      } else if (state.action === "mayerBigBock") {
+        drawMayerPowerEffect("bock");
+        drawImpact("BIG BOCK!", 650, 215, "#6b28c7");
+      } else if (state.action === "mayerFlyUp") {
+        drawMayerPowerEffect("fly");
+        drawImpact("FLY UP!", 650, 215, "#f08318");
+      } else if (state.action === "mayerRoosterFlyers") {
+        drawMayerPowerEffect("flyers");
+        drawImpact("ROOSTER FLYERS!", 650, 215, "#f08318");
+      } else if (state.action === "yonatanJaw") {
+        drawYonatanPowerEffect("jaw");
+        drawImpact("CROC JAW!", 650, 215, "#1f8f4d");
+      } else if (state.action === "yonatanChomper") {
+        drawYonatanPowerEffect("chomper");
+        drawImpact("CHOMPER!", 650, 215, "#1f8f4d");
+      } else if (state.action === "yonatanTailSwipe") {
+        drawYonatanPowerEffect("tail");
+        drawImpact("TAIL SWIPE!", 650, 215, "#1f8f4d");
+      } else if (state.action === "yonatanAlligatorMonsters") {
+        drawYonatanPowerEffect("monsters");
+        drawImpact("MONSTERS!", 650, 215, "#1f8f4d");
       } else if (state.action.startsWith("principal")) {
         drawPrincipalAttack(state.heroX, state.heroY, state.action);
         drawImpact("PRINCIPAL!", 650, 215, "#6f737a");
@@ -3424,6 +3648,121 @@
       ctx.font = "900 22px Trebuchet MS";
       ctx.textAlign = "center";
       ctx.fillText("SLIPPING", boss.x - 82, boss.y - 138);
+    }
+    ctx.restore();
+  }
+
+  function drawMayerPowerEffect(kind) {
+    const boss = currentBossPosition(state.playerTarget || state.mayerBockTarget || currentTarget());
+    ctx.save();
+    if (kind === "bock") {
+      ctx.strokeStyle = "#6b28c7";
+      ctx.lineWidth = 9;
+      for (let ring = 0; ring < 3; ring += 1) {
+        ctx.beginPath();
+        ctx.arc(boss.x - 82, boss.y - 70, 70 + ring * 36, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+      ctx.fillStyle = "#fffef7";
+      ctx.strokeStyle = "#171216";
+      ctx.lineWidth = 5;
+      roundRect(boss.x - 190, boss.y - 190, 210, 58, 12);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "#6b28c7";
+      ctx.font = "900 26px Trebuchet MS";
+      ctx.textAlign = "center";
+      ctx.fillText("BOCK!", boss.x - 85, boss.y - 152);
+    } else if (kind === "fly") {
+      ctx.strokeStyle = "#f08318";
+      ctx.lineWidth = 7;
+      ctx.beginPath();
+      ctx.moveTo(state.heroX - 70, state.heroY - 60);
+      ctx.quadraticCurveTo(state.heroX, state.heroY - 190, state.heroX + 70, state.heroY - 60);
+      ctx.stroke();
+      ctx.fillStyle = "#fffef7";
+      ctx.font = "900 22px Trebuchet MS";
+      ctx.textAlign = "center";
+      ctx.fillText("1 SECOND", state.heroX, state.heroY - 174);
+    } else {
+      for (let bot = 0; bot < 3; bot += 1) {
+        drawRoosterFlyer(boss.x - 200 + bot * 70, boss.y - 170 + bot * 30);
+      }
+    }
+    ctx.restore();
+  }
+
+  function drawRoosterFlyer(x, y) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.strokeStyle = "#171216";
+    ctx.fillStyle = "#c9ced6";
+    ctx.lineWidth = 4;
+    roundRect(-22, -14, 44, 34, 6);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#d91f2e";
+    ctx.beginPath();
+    ctx.arc(-6, -22, 8, 0, Math.PI * 2);
+    ctx.arc(6, -24, 8, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#ffd84a";
+    ctx.beginPath();
+    ctx.moveTo(20, -2);
+    ctx.lineTo(42, 6);
+    ctx.lineTo(20, 14);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawYonatanPowerEffect(kind) {
+    const boss = currentBossPosition(state.playerTarget || state.yonatanChomperTarget || currentTarget());
+    ctx.save();
+    if (kind === "jaw") {
+      ctx.strokeStyle = "#1f8f4d";
+      ctx.fillStyle = "#fffef7";
+      ctx.lineWidth = 6;
+      for (let tooth = 0; tooth < 6; tooth += 1) {
+        const x = boss.x - 170 + tooth * 26;
+        ctx.beginPath();
+        ctx.moveTo(x, boss.y - 132);
+        ctx.lineTo(x + 13, boss.y - 92);
+        ctx.lineTo(x + 26, boss.y - 132);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+      }
+    } else if (kind === "chomper") {
+      ctx.fillStyle = "#4b321f";
+      ctx.strokeStyle = "#171216";
+      ctx.lineWidth = 6;
+      ctx.beginPath();
+      ctx.moveTo(640, 548);
+      ctx.lineTo(1240, 548);
+      ctx.lineTo(1120, 638);
+      ctx.lineTo(690, 630);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "#fffef7";
+      ctx.font = "900 24px Trebuchet MS";
+      ctx.textAlign = "center";
+      ctx.fillText("HALF THE FLOOR FELL!", 930, 590);
+    } else if (kind === "tail") {
+      ctx.strokeStyle = "#1f8f4d";
+      ctx.lineWidth = 18;
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(boss.x - 30, boss.y + 10);
+      ctx.quadraticCurveTo(730, 545, state.heroX + 70, state.heroY - 30);
+      ctx.stroke();
+    } else {
+      drawTinyAlligator(boss.x - 205, boss.y - 54);
+      drawTinyAlligator(boss.x - 150, boss.y - 8);
+      drawTinyAlligator(boss.x - 95, boss.y - 48);
     }
     ctx.restore();
   }

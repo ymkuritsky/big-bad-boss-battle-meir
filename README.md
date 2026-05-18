@@ -145,6 +145,7 @@ Benji is a polar bear with Teeth Attack, Ice Chunk, and Ice Tornado. Ice Tornado
 Every BBB3 fighter has 8 hearts. Mr. 67 is a monkey with Poisonous Banana Storm, Banana Shoot, and Banana Peel Slip instead of his usual powers.
 Level 1 lets you choose whether to fight Mischievous Mayer or Yapping Yonatan while both bosses are alive.
 Freddy is a fennec fox with Fennec Love, Sneak Bite, and Pounce. Pounce puts him on the boss's head so any attack can hit.
+Mischievous Mayer has Super Big Bock, Fly Up, and Chicken Cockadoodle Rooster Flyers. Yapping Yonatan has Crocodile Jaw, Crocodile Chomper, Tail Swipe, and Alligator Monsters.
 
 GitHub repo:
 https://github.com/ymkuritsky/big-bad-boss-battle-meir
