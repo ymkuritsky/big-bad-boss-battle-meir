@@ -7,7 +7,7 @@
     tats: { name: "Super Tats", color: "#1478cf", accent: "#78c9ff", hp: HEARTS_PER_FIGHTER, firstPower: "Elephant Trunk Grab" },
     fary: { name: "Mom Fary", color: "#8542d8", accent: "#ff89c6", hp: HEARTS_PER_FIGHTER, firstPower: "Parrot Power Scream" },
     apple: { name: "Super Appie Juice", color: "#f18319", accent: "#ffcf54", hp: HEARTS_PER_FIGHTER, firstPower: "Cheetah Super Speed" },
-    freddy: { name: "Freddy", color: "#17633c", accent: "#f0cf62", hp: HEARTS_PER_FIGHTER, firstPower: "Mammal" },
+    freddy: { name: "Freddy", color: "#17633c", accent: "#f0cf62", hp: HEARTS_PER_FIGHTER, firstPower: "Fennec Love" },
     benji: { name: "Benji", color: "#6f737a", accent: "#45a6db", hp: HEARTS_PER_FIGHTER, firstPower: "Teeth Attack" },
     frost: { name: "Mr. 67", color: "#146e8f", accent: "#6cf0c2", hp: HEARTS_PER_FIGHTER, firstPower: "Poisonous Banana Storm" },
     ness: { name: "Super Ness", color: "#c73583", accent: "#6bd8ff", hp: HEARTS_PER_FIGHTER, firstPower: "Super Kick" },
@@ -279,6 +279,8 @@
     monkeyPowerStep: 0,
     bananaSlipUntil: 0,
     bananaSlipTarget: "",
+    fennecLoveUntil: 0,
+    fennecLoveTarget: "",
     tick: 0
   };
 
@@ -330,6 +332,8 @@
     state.monkeyPowerStep = 0;
     state.bananaSlipUntil = 0;
     state.bananaSlipTarget = "";
+    state.fennecLoveUntil = 0;
+    state.fennecLoveTarget = "";
     state.tick = 0;
     els.statusText.textContent = levels[state.level].intro;
     setAttacks(true);
@@ -379,6 +383,10 @@
     }
     if (kind === "power" && state.heroId === "apple") {
       cheetahPowerAttack(target);
+      return;
+    }
+    if (kind === "power" && state.heroId === "freddy") {
+      fennecLoveAttack(target);
       return;
     }
     if (kind === "power" && state.heroId === "benji") {
@@ -451,6 +459,14 @@
     if (isBossSlippingOnBanana(target)) {
       state.action = "bananaSlip";
       els.statusText.textContent = `${attackName(kind)} hit ${currentBossName(target)} while they are slipping on Mr. 67's banana peel. They cannot hit back yet!`;
+      updateHud();
+      draw();
+      return;
+    }
+
+    if (isBossInFennecLove(target)) {
+      state.action = "fennecLove";
+      els.statusText.textContent = `${attackName(kind)} hit ${currentBossName(target)} while they are on the floor saying "I love you." They cannot hit back yet!`;
       updateHud();
       draw();
       return;
@@ -615,6 +631,46 @@
     const dx = Math.abs(state.heroX - boss.x);
     const dy = Math.abs(state.heroY - boss.y);
     return dx <= 430 && dy <= 190;
+  }
+
+  function fennecLoveAttack(target) {
+    state.playerAction = "power";
+    state.playerTarget = target;
+    if (!isCloseEnoughToAttack("kick", target)) {
+      state.action = "miss";
+      els.statusText.textContent = `${currentBossName(target)} is too far away for Fennec Love. Move close with Freddy, then use it!`;
+      draw();
+      return;
+    }
+
+    state.fennecLoveUntil = Date.now() + 10000;
+    state.fennecLoveTarget = target;
+    state.action = "fennecLove";
+    const damage = 1;
+    damageBoss(target, damage);
+    checkPowerRewards();
+    state.chosenBossTarget = chooseAliveLevelOneTarget(state.chosenBossTarget);
+    updateBossTargetChoices();
+    if (currentBossHp() === 0) {
+      state.won = true;
+      state.action = "win";
+      els.statusText.textContent = `Fennec Love made ${currentBossName(target)} fall down and say "I love you." ${levelWinText()}`;
+      if (advanceAfterWin()) {
+        return;
+      }
+      setAttacks(true);
+      updateLevelLocks();
+      updateHud();
+      draw();
+      return;
+    }
+    els.statusText.textContent = `Fennec Love! Freddy made ${currentBossName(target)} fall on the floor for 10 seconds. It took away ${heartText(damage)} of love.`;
+    updateHud();
+    draw();
+  }
+
+  function isBossInFennecLove(target) {
+    return state.fennecLoveTarget === target && Date.now() < state.fennecLoveUntil;
   }
 
   function polarPowerAttack(target) {
@@ -842,6 +898,10 @@
     }
     if (isBossSlippingOnBanana(target)) {
       state.action = "bananaSlip";
+      return;
+    }
+    if (isBossInFennecLove(target)) {
+      state.action = "fennecLove";
       return;
     }
     if (blocked) {
@@ -1276,6 +1336,11 @@
     if (isBossSlippingOnBanana(target)) {
       state.action = "bananaSlip";
       els.statusText.textContent = `${currentBossName(target)} is slipping on Mr. 67's banana peel. Keep moving closer!`;
+      return true;
+    }
+    if (isBossInFennecLove(target)) {
+      state.action = "fennecLove";
+      els.statusText.textContent = `${currentBossName(target)} is still on the floor saying "I love you." Keep moving closer!`;
       return true;
     }
     state.bossPressureStep += 1;
@@ -2948,6 +3013,9 @@
       } else if (state.action === "cheetahClaws") {
         drawCheetahPowerEffect("claws");
         drawImpact("CLAW SCRATCH!", 650, 215, "#f18319");
+      } else if (state.action === "fennecLove") {
+        drawFennecLoveEffect();
+        drawImpact("LOVE!", 650, 215, "#f083bd");
       } else if (state.action === "polarTeeth") {
         drawPolarPowerEffect("teeth");
         drawImpact("TEETH ATTACK!", 650, 215, "#45a6db");
@@ -3077,6 +3145,50 @@
       ctx.textAlign = "center";
       ctx.fillText("SCRATCH", boss.x - 112, boss.y - 136);
     }
+    ctx.restore();
+  }
+
+  function drawFennecLoveEffect() {
+    const boss = currentBossPosition(state.fennecLoveTarget || state.playerTarget || currentTarget());
+    ctx.save();
+    ctx.strokeStyle = "#f083bd";
+    ctx.lineWidth = 7;
+    ctx.beginPath();
+    ctx.moveTo(state.heroX + 58, state.heroY - 116);
+    ctx.quadraticCurveTo(650, 140, boss.x - 94, boss.y - 118);
+    ctx.stroke();
+    ctx.fillStyle = "#f083bd";
+    [-38, 0, 38].forEach((offset, index) => {
+      drawHeartShape(boss.x - 100 + offset, boss.y - 150 - index * 18, 17);
+    });
+    ctx.fillStyle = "#fffef7";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    roundRect(boss.x - 190, boss.y - 224, 210, 66, 14);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#f083bd";
+    ctx.font = "900 27px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText("I love you", boss.x - 85, boss.y - 182);
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 6;
+    ctx.beginPath();
+    ctx.moveTo(boss.x - 170, boss.y + 48);
+    ctx.lineTo(boss.x + 20, boss.y + 18);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawHeartShape(x, y, size) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.beginPath();
+    ctx.moveTo(0, size);
+    ctx.bezierCurveTo(-size * 1.45, 0, -size, -size, 0, -size * 0.45);
+    ctx.bezierCurveTo(size, -size, size * 1.45, 0, 0, size);
+    ctx.fill();
+    ctx.stroke();
     ctx.restore();
   }
 
