@@ -5,7 +5,7 @@
   const heroes = {
     tats: { name: "Super Tats", color: "#1478cf", accent: "#78c9ff", hp: 5, firstPower: "Elephant Trunk Grab" },
     fary: { name: "Mom Fary", color: "#8542d8", accent: "#ff89c6", hp: 5, firstPower: "Parrot Power Scream" },
-    apple: { name: "Super Appie Juice", color: "#f18319", accent: "#ffcf54", hp: 5, firstPower: "Apple Juice Shot" },
+    apple: { name: "Super Appie Juice", color: "#f18319", accent: "#ffcf54", hp: 5, firstPower: "Cheetah Super Speed" },
     freddy: { name: "Freddy", color: "#17633c", accent: "#f0cf62", hp: 5, firstPower: "Mammal" },
     benji: { name: "Benji", color: "#6f737a", accent: "#45a6db", hp: 5, firstPower: "Tornado" },
     frost: { name: "Mr. 67", color: "#146e8f", accent: "#6cf0c2", hp: 5, firstPower: "Freeze Block" },
@@ -198,6 +198,12 @@
     }
   };
 
+  const cheetahPowers = [
+    { id: "cheetahSpeed", name: "Cheetah Super Speed", damage: 0.5 },
+    { id: "cheetahTailGrab", name: "Tail Grab", damage: 0.5 },
+    { id: "cheetahClaws", name: "Claw Scratch", damage: 0.5 }
+  ];
+
   const els = {
     statusText: document.getElementById("statusText"),
     selectedHeroName: document.getElementById("selectedHeroName"),
@@ -252,6 +258,7 @@
     trunkGrabTarget: "",
     powerSilenceUntil: 0,
     powerSilenceTarget: "",
+    cheetahPowerStep: 0,
     tick: 0
   };
 
@@ -295,6 +302,7 @@
     state.trunkGrabTarget = "";
     state.powerSilenceUntil = 0;
     state.powerSilenceTarget = "";
+    state.cheetahPowerStep = 0;
     state.tick = 0;
     els.statusText.textContent = levels[state.level].intro;
     setAttacks(true);
@@ -337,6 +345,10 @@
     }
     if (kind === "power" && state.heroId === "fary") {
       parrotPowerScream(target);
+      return;
+    }
+    if (kind === "power" && state.heroId === "apple") {
+      cheetahPowerAttack(target);
       return;
     }
     if (kind === "power" && mustReachBossForPower(target) && !isCloseEnoughToAttack("kick", target)) {
@@ -469,6 +481,86 @@
     return state.powerSilenceTarget === target && Date.now() < state.powerSilenceUntil;
   }
 
+  function cheetahPowerAttack(target) {
+    const power = cheetahPowers[state.cheetahPowerStep % cheetahPowers.length];
+    state.cheetahPowerStep += 1;
+    state.playerAction = "power";
+    state.playerTarget = target;
+    state.action = power.id;
+    updatePowerButton();
+
+    const closeEnough = power.id === "cheetahSpeed" ? isCloseEnoughToCheetahDash(target) : isCloseEnoughToAttack("kick", target);
+    if (!closeEnough) {
+      state.action = "miss";
+      els.statusText.textContent = `${currentBossName(target)} is too far away for ${power.name}. Run closer, then use the cheetah power!`;
+      draw();
+      return;
+    }
+
+    if (power.id === "cheetahSpeed") {
+      const boss = currentBossPosition(target);
+      state.heroX = clamp(boss.x - 245, 120, 1080);
+      state.heroY = clamp(boss.y + 18, 270, 470);
+    }
+
+    damageBoss(target, power.damage);
+    checkPowerRewards();
+    if (currentBossHp() === 0) {
+      state.won = true;
+      state.action = "win";
+      els.statusText.textContent = `${power.name} finished the fight for ${heartText(power.damage)}. ${levelWinText()}`;
+      if (advanceAfterWin()) {
+        return;
+      }
+      setAttacks(true);
+      updateLevelLocks();
+      updateHud();
+      draw();
+      return;
+    }
+
+    if (isBossInTrunk(target)) {
+      els.statusText.textContent = `${power.name} hit for ${heartText(power.damage)} while Elephant Trunk Grab is holding ${currentBossName(target)}.`;
+      updateHud();
+      draw();
+      return;
+    }
+
+    if (isBossPowerSilenced(target)) {
+      els.statusText.textContent = `${power.name} hit for ${heartText(power.damage)} while Parrot Power Scream is blocking ${currentBossName(target)}'s powers.`;
+      updateHud();
+      draw();
+      return;
+    }
+
+    const laneDodged = canLaneDodge(target) && Date.now() < state.laneDodgeUntil && dodgeBeatsLane(state.laneDodgeDirection, state.projectileLane);
+    const dodged = Date.now() < state.hiddenUntil || Date.now() < state.jumpingUntil || laneDodged;
+    applyBossPower(target, false, dodged);
+    const bossAction = state.action;
+    const bossDamage = bossDamageForAction(bossAction);
+    state.heroHp = Math.max(0, state.heroHp - (dodged ? 0 : bossDamage));
+    if (state.heroHp === 0) {
+      state.lost = true;
+      state.action = "lost";
+      els.statusText.textContent = "The forest bosses won this round. Reset for a rematch.";
+      setAttacks(true);
+      updateHud();
+      draw();
+      return;
+    }
+    state.action = power.id;
+    els.statusText.textContent = `${power.name} hit ${currentBossName(target)} for ${heartText(power.damage)}. ${bossCounterText(target, false, dodged, laneDodged, bossAction, bossDamage)}`;
+    updateHud();
+    draw();
+  }
+
+  function isCloseEnoughToCheetahDash(target) {
+    const boss = currentBossPosition(target);
+    const dx = Math.abs(state.heroX - boss.x);
+    const dy = Math.abs(state.heroY - boss.y);
+    return dx <= 430 && dy <= 190;
+  }
+
   function useDefenseMove(kind) {
     const now = Date.now();
     state.playerAction = kind;
@@ -582,7 +674,7 @@
   }
 
   function attackName(kind) {
-    if (kind === "power") return heroes[state.heroId].firstPower;
+    if (kind === "power") return currentPowerName();
     return kind === "kick" ? "Kick" : "Punch";
   }
 
@@ -1015,8 +1107,16 @@
   }
 
   function updatePowerButton() {
+    els.powerButton.textContent = currentPowerName();
+  }
+
+  function currentPowerName() {
     const hero = heroes[state.heroId];
-    els.powerButton.textContent = hero ? hero.firstPower : "Use Power-Up";
+    if (!hero) return "Use Power-Up";
+    if (state.heroId === "apple") {
+      return cheetahPowers[state.cheetahPowerStep % cheetahPowers.length].name;
+    }
+    return hero.firstPower;
   }
 
   function renderPowers() {
@@ -2530,6 +2630,15 @@
       } else if (state.action === "parrotScream") {
         drawParrotScreamEffect();
         drawImpact("POWER OFF!", 650, 215, "#8542d8");
+      } else if (state.action === "cheetahSpeed") {
+        drawCheetahPowerEffect("speed");
+        drawImpact("SUPER SPEED!", 650, 215, "#f18319");
+      } else if (state.action === "cheetahTailGrab") {
+        drawCheetahPowerEffect("tail");
+        drawImpact("TAIL GRAB!", 650, 215, "#f18319");
+      } else if (state.action === "cheetahClaws") {
+        drawCheetahPowerEffect("claws");
+        drawImpact("CLAW SCRATCH!", 650, 215, "#f18319");
       } else if (state.action.startsWith("principal")) {
         drawPrincipalAttack(state.heroX, state.heroY, state.action);
         drawImpact("PRINCIPAL!", 650, 215, "#6f737a");
@@ -2593,6 +2702,54 @@
     ctx.font = "900 24px Trebuchet MS";
     ctx.textAlign = "center";
     ctx.fillText("HELD", boss.x - 72, boss.y - 122);
+    ctx.restore();
+  }
+
+  function drawCheetahPowerEffect(kind) {
+    const boss = currentBossPosition(state.playerTarget || currentTarget());
+    ctx.save();
+    if (kind === "speed") {
+      ctx.strokeStyle = "#ffcf54";
+      ctx.lineWidth = 8;
+      for (let streak = 0; streak < 6; streak += 1) {
+        ctx.beginPath();
+        ctx.moveTo(state.heroX - 175 - streak * 18, state.heroY - 112 + streak * 18);
+        ctx.lineTo(state.heroX - 38 - streak * 10, state.heroY - 130 + streak * 14);
+        ctx.stroke();
+      }
+      ctx.fillStyle = "#171216";
+      ctx.font = "900 22px Trebuchet MS";
+      ctx.textAlign = "center";
+      ctx.fillText("0.5 HEART", boss.x - 82, boss.y - 128);
+    } else if (kind === "tail") {
+      ctx.strokeStyle = "#f18319";
+      ctx.lineWidth = 15;
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(state.heroX - 56, state.heroY - 70);
+      ctx.quadraticCurveTo(610, 470, boss.x - 92, boss.y - 48);
+      ctx.stroke();
+      ctx.fillStyle = "#ffcf54";
+      ctx.strokeStyle = "#171216";
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.arc(boss.x - 92, boss.y - 48, 20, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    } else {
+      ctx.strokeStyle = "#171216";
+      ctx.lineWidth = 5;
+      for (let slash = 0; slash < 3; slash += 1) {
+        ctx.beginPath();
+        ctx.moveTo(boss.x - 122 + slash * 28, boss.y - 118);
+        ctx.lineTo(boss.x - 164 + slash * 28, boss.y - 22);
+        ctx.stroke();
+      }
+      ctx.fillStyle = "#ffcf54";
+      ctx.font = "900 24px Trebuchet MS";
+      ctx.textAlign = "center";
+      ctx.fillText("SCRATCH", boss.x - 112, boss.y - 136);
+    }
     ctx.restore();
   }
 
