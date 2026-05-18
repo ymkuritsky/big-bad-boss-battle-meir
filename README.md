@@ -141,6 +141,7 @@ Big Bad Boss Battle 3 link:
 https://ymkuritsky.github.io/big-bad-boss-battle-meir/big-bad-boss-battle-3/
 
 Big Bad Boss Battle 3 has 30 level slots. Super Appie Juice is a cheetah with Cheetah Super Speed, Tail Grab, and Claw Scratch instead of apple juice powers.
+Benji is a polar bear with Teeth Attack, Ice Chunk, and Ice Tornado. Ice Tornado traps the villain for 10 seconds.
 
 GitHub repo:
 https://github.com/ymkuritsky/big-bad-boss-battle-meir

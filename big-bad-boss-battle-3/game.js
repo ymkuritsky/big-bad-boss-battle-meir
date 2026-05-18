@@ -7,7 +7,7 @@
     fary: { name: "Mom Fary", color: "#8542d8", accent: "#ff89c6", hp: 5, firstPower: "Parrot Power Scream" },
     apple: { name: "Super Appie Juice", color: "#f18319", accent: "#ffcf54", hp: 5, firstPower: "Cheetah Super Speed" },
     freddy: { name: "Freddy", color: "#17633c", accent: "#f0cf62", hp: 5, firstPower: "Mammal" },
-    benji: { name: "Benji", color: "#6f737a", accent: "#45a6db", hp: 5, firstPower: "Tornado" },
+    benji: { name: "Benji", color: "#6f737a", accent: "#45a6db", hp: 5, firstPower: "Teeth Attack" },
     frost: { name: "Mr. 67", color: "#146e8f", accent: "#6cf0c2", hp: 5, firstPower: "Freeze Block" },
     ness: { name: "Super Ness", color: "#c73583", accent: "#6bd8ff", hp: 5, firstPower: "Super Kick" },
     crayon: { name: "Captain Crayonstorm", color: "#21a36c", accent: "#f5d129", hp: 5, firstPower: "Crayon Barrage" },
@@ -204,6 +204,12 @@
     { id: "cheetahClaws", name: "Claw Scratch", damage: 0.5 }
   ];
 
+  const polarPowers = [
+    { id: "polarTeeth", name: "Teeth Attack", damage: 1.5 },
+    { id: "polarIceChunk", name: "Ice Chunk", damage: 1 },
+    { id: "polarIceTornado", name: "Ice Tornado", damage: 0.5 }
+  ];
+
   const els = {
     statusText: document.getElementById("statusText"),
     selectedHeroName: document.getElementById("selectedHeroName"),
@@ -259,6 +265,9 @@
     powerSilenceUntil: 0,
     powerSilenceTarget: "",
     cheetahPowerStep: 0,
+    polarPowerStep: 0,
+    iceTornadoUntil: 0,
+    iceTornadoTarget: "",
     tick: 0
   };
 
@@ -303,6 +312,9 @@
     state.powerSilenceUntil = 0;
     state.powerSilenceTarget = "";
     state.cheetahPowerStep = 0;
+    state.polarPowerStep = 0;
+    state.iceTornadoUntil = 0;
+    state.iceTornadoTarget = "";
     state.tick = 0;
     els.statusText.textContent = levels[state.level].intro;
     setAttacks(true);
@@ -351,6 +363,10 @@
       cheetahPowerAttack(target);
       return;
     }
+    if (kind === "power" && state.heroId === "benji") {
+      polarPowerAttack(target);
+      return;
+    }
     if (kind === "power" && mustReachBossForPower(target) && !isCloseEnoughToAttack("kick", target)) {
       state.action = "miss";
       state.playerAction = kind;
@@ -395,6 +411,14 @@
     if (isBossPowerSilenced(target)) {
       state.action = "parrotScream";
       els.statusText.textContent = `${attackName(kind)} hit ${currentBossName(target)} while Parrot Power Scream is blocking their powers. They cannot use a special attack yet!`;
+      updateHud();
+      draw();
+      return;
+    }
+
+    if (isBossInIceTornado(target)) {
+      state.action = "polarIceTornado";
+      els.statusText.textContent = `${attackName(kind)} hit ${currentBossName(target)} while Ice Tornado is trapping them. They cannot hit back yet!`;
       updateHud();
       draw();
       return;
@@ -561,6 +585,88 @@
     return dx <= 430 && dy <= 190;
   }
 
+  function polarPowerAttack(target) {
+    const power = polarPowers[state.polarPowerStep % polarPowers.length];
+    state.polarPowerStep += 1;
+    state.playerAction = "power";
+    state.playerTarget = target;
+    state.action = power.id;
+    updatePowerButton();
+
+    if (!isCloseEnoughToAttack("kick", target)) {
+      state.action = "miss";
+      els.statusText.textContent = `${currentBossName(target)} is too far away for ${power.name}. Move close with Benji, then use it!`;
+      draw();
+      return;
+    }
+
+    if (power.id === "polarIceTornado") {
+      state.iceTornadoUntil = Date.now() + 10000;
+      state.iceTornadoTarget = target;
+    }
+
+    damageBoss(target, power.damage);
+    checkPowerRewards();
+    if (currentBossHp() === 0) {
+      state.won = true;
+      state.action = "win";
+      els.statusText.textContent = `${power.name} finished the fight for ${heartText(power.damage)}. ${levelWinText()}`;
+      if (advanceAfterWin()) {
+        return;
+      }
+      setAttacks(true);
+      updateLevelLocks();
+      updateHud();
+      draw();
+      return;
+    }
+
+    if (isBossInTrunk(target)) {
+      els.statusText.textContent = `${power.name} hit for ${heartText(power.damage)} while Elephant Trunk Grab is holding ${currentBossName(target)}.`;
+      updateHud();
+      draw();
+      return;
+    }
+
+    if (isBossPowerSilenced(target)) {
+      els.statusText.textContent = `${power.name} hit for ${heartText(power.damage)} while Parrot Power Scream is blocking ${currentBossName(target)}'s powers.`;
+      updateHud();
+      draw();
+      return;
+    }
+
+    if (isBossInIceTornado(target)) {
+      els.statusText.textContent = `${power.name} hit for ${heartText(power.damage)}. Ice Tornado traps ${currentBossName(target)} in place for 10 seconds!`;
+      updateHud();
+      draw();
+      return;
+    }
+
+    const laneDodged = canLaneDodge(target) && Date.now() < state.laneDodgeUntil && dodgeBeatsLane(state.laneDodgeDirection, state.projectileLane);
+    const dodged = Date.now() < state.hiddenUntil || Date.now() < state.jumpingUntil || laneDodged;
+    applyBossPower(target, false, dodged);
+    const bossAction = state.action;
+    const bossDamage = bossDamageForAction(bossAction);
+    state.heroHp = Math.max(0, state.heroHp - (dodged ? 0 : bossDamage));
+    if (state.heroHp === 0) {
+      state.lost = true;
+      state.action = "lost";
+      els.statusText.textContent = "The forest bosses won this round. Reset for a rematch.";
+      setAttacks(true);
+      updateHud();
+      draw();
+      return;
+    }
+    state.action = power.id;
+    els.statusText.textContent = `${power.name} hit ${currentBossName(target)} for ${heartText(power.damage)}. ${bossCounterText(target, false, dodged, laneDodged, bossAction, bossDamage)}`;
+    updateHud();
+    draw();
+  }
+
+  function isBossInIceTornado(target) {
+    return state.iceTornadoTarget === target && Date.now() < state.iceTornadoUntil;
+  }
+
   function useDefenseMove(kind) {
     const now = Date.now();
     state.playerAction = kind;
@@ -607,6 +713,10 @@
   function applyBossPower(target, blocked, avoided = false) {
     if (isBossPowerSilenced(target)) {
       state.action = "parrotScream";
+      return;
+    }
+    if (isBossInIceTornado(target)) {
+      state.action = "polarIceTornado";
       return;
     }
     if (blocked) {
@@ -1000,6 +1110,11 @@
       els.statusText.textContent = `${currentBossName(target)} tried to use a power, but Parrot Power Scream is still blocking it. Keep moving closer!`;
       return true;
     }
+    if (isBossInIceTornado(target)) {
+      state.action = "polarIceTornado";
+      els.statusText.textContent = `${currentBossName(target)} is trapped in Benji's Ice Tornado. Keep moving closer!`;
+      return true;
+    }
     state.bossPressureStep += 1;
     if (canLaneDodge(target)) {
       state.projectileLane = nextProjectileLane();
@@ -1115,6 +1230,9 @@
     if (!hero) return "Use Power-Up";
     if (state.heroId === "apple") {
       return cheetahPowers[state.cheetahPowerStep % cheetahPowers.length].name;
+    }
+    if (state.heroId === "benji") {
+      return polarPowers[state.polarPowerStep % polarPowers.length].name;
     }
     return hero.firstPower;
   }
@@ -2639,6 +2757,15 @@
       } else if (state.action === "cheetahClaws") {
         drawCheetahPowerEffect("claws");
         drawImpact("CLAW SCRATCH!", 650, 215, "#f18319");
+      } else if (state.action === "polarTeeth") {
+        drawPolarPowerEffect("teeth");
+        drawImpact("TEETH ATTACK!", 650, 215, "#45a6db");
+      } else if (state.action === "polarIceChunk") {
+        drawPolarPowerEffect("chunk");
+        drawImpact("ICE CHUNK!", 650, 215, "#45a6db");
+      } else if (state.action === "polarIceTornado") {
+        drawPolarPowerEffect("tornado");
+        drawImpact("ICE TORNADO!", 650, 215, "#45a6db");
       } else if (state.action.startsWith("principal")) {
         drawPrincipalAttack(state.heroX, state.heroY, state.action);
         drawImpact("PRINCIPAL!", 650, 215, "#6f737a");
@@ -2749,6 +2876,76 @@
       ctx.font = "900 24px Trebuchet MS";
       ctx.textAlign = "center";
       ctx.fillText("SCRATCH", boss.x - 112, boss.y - 136);
+    }
+    ctx.restore();
+  }
+
+  function drawPolarPowerEffect(kind) {
+    const boss = currentBossPosition(state.playerTarget || state.iceTornadoTarget || currentTarget());
+    ctx.save();
+    if (kind === "teeth") {
+      ctx.fillStyle = "#fffef7";
+      ctx.strokeStyle = "#171216";
+      ctx.lineWidth = 4;
+      for (let bite = 0; bite < 3; bite += 1) {
+        const x = boss.x - 135 + bite * 36;
+        const y = boss.y - 124 + bite * 24;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + 18, y + 38);
+        ctx.lineTo(x + 36, y);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(x, y + 58);
+        ctx.lineTo(x + 18, y + 20);
+        ctx.lineTo(x + 36, y + 58);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+      }
+      ctx.fillStyle = "#45a6db";
+      ctx.font = "900 22px Trebuchet MS";
+      ctx.textAlign = "center";
+      ctx.fillText("3 x 0.5", boss.x - 86, boss.y - 152);
+    } else if (kind === "chunk") {
+      ctx.fillStyle = "#9edcff";
+      ctx.strokeStyle = "#171216";
+      ctx.lineWidth = 5;
+      ctx.beginPath();
+      ctx.moveTo(boss.x - 170, boss.y - 128);
+      ctx.lineTo(boss.x - 108, boss.y - 174);
+      ctx.lineTo(boss.x - 32, boss.y - 132);
+      ctx.lineTo(boss.x - 52, boss.y - 62);
+      ctx.lineTo(boss.x - 142, boss.y - 52);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx.strokeStyle = "#fffef7";
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(boss.x - 124, boss.y - 152);
+      ctx.lineTo(boss.x - 104, boss.y - 70);
+      ctx.moveTo(boss.x - 70, boss.y - 122);
+      ctx.lineTo(boss.x - 140, boss.y - 98);
+      ctx.stroke();
+    } else {
+      ctx.strokeStyle = "#45a6db";
+      ctx.lineWidth = 9;
+      for (let loop = 0; loop < 4; loop += 1) {
+        ctx.beginPath();
+        ctx.ellipse(boss.x - 82, boss.y - 76 + loop * 20, 104 - loop * 12, 24, -0.18, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+      ctx.fillStyle = "rgba(158, 220, 255, 0.28)";
+      ctx.beginPath();
+      ctx.ellipse(boss.x - 82, boss.y - 38, 116, 130, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#fffef7";
+      ctx.font = "900 22px Trebuchet MS";
+      ctx.textAlign = "center";
+      ctx.fillText("TRAPPED 10", boss.x - 82, boss.y - 178);
     }
     ctx.restore();
   }
