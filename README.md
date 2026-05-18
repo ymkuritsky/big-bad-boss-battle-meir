@@ -143,6 +143,7 @@ https://ymkuritsky.github.io/big-bad-boss-battle-meir/big-bad-boss-battle-3/
 Big Bad Boss Battle 3 has 30 level slots. Super Appie Juice is a cheetah with Cheetah Super Speed, Tail Grab, and Claw Scratch instead of apple juice powers.
 Benji is a polar bear with Teeth Attack, Ice Chunk, and Ice Tornado. Ice Tornado traps the villain for 10 seconds.
 Every BBB3 fighter has 8 hearts. Mr. 67 is a monkey with Poisonous Banana Storm, Banana Shoot, and Banana Peel Slip instead of his usual powers.
+Level 1 lets you choose whether to fight Mischievous Mayer or Yapping Yonatan while both bosses are alive.
 
 GitHub repo:
 https://github.com/ymkuritsky/big-bad-boss-battle-meir

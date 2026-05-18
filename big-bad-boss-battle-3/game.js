@@ -19,9 +19,9 @@
 
   const levels = {
     1: {
-      title: "Level 1 Classroom",
-      intro: "The Math Monster and Evil LA are waiting in the classroom.",
-      start: "Level 1 started in the classroom. Fight the Math Monster and Evil LA!"
+      title: "Level 1 Forest Duel",
+      intro: "Mischievous Mayer and Yapping Yonatan are waiting in their new animal forms.",
+      start: "Level 1 started in the forest. Pick Mischievous Mayer or Yapping Yonatan and fight!"
     },
     2: {
       title: "Level 2 Cafeteria",
@@ -189,12 +189,12 @@
   const powerUps = {
     homeworkShield: {
       name: "Homework Shield",
-      unlock: "Beat Math Monster",
+      unlock: "Beat Mischievous Mayer",
       description: "Blocks one boss hit."
     },
     poetryBlast: {
       name: "Poetry Blast",
-      unlock: "Beat Evil LA",
+      unlock: "Beat Yapping Yonatan",
       description: "Does a strong word attack."
     }
   };
@@ -259,6 +259,7 @@
     action: "",
     playerAction: "",
     playerTarget: "",
+    chosenBossTarget: "math",
     trappedUntil: 0,
     knockedDownUntil: 0,
     hiddenUntil: 0,
@@ -309,6 +310,7 @@
     state.action = "";
     state.playerAction = "";
     state.playerTarget = "";
+    state.chosenBossTarget = chooseAliveLevelOneTarget(state.chosenBossTarget);
     state.trappedUntil = 0;
     state.knockedDownUntil = 0;
     state.hiddenUntil = 0;
@@ -332,6 +334,7 @@
     els.statusText.textContent = levels[state.level].intro;
     setAttacks(true);
     updateHud();
+    updateBossTargetChoices();
     updateLevelLocks();
     renderPowers();
     draw();
@@ -350,6 +353,7 @@
     setAttacks(false);
     updateLevelLocks();
     updateHud();
+    updateBossTargetChoices();
     draw();
   }
 
@@ -362,6 +366,7 @@
       useDefenseMove(kind);
       return;
     }
+    state.chosenBossTarget = chooseAliveLevelOneTarget(state.chosenBossTarget);
     const target = currentTarget();
     state.playerTarget = target;
     if (kind === "power" && state.heroId === "tats") {
@@ -402,6 +407,8 @@
     const damage = kind === "power" ? usePowerDamage() : kind === "kick" ? 2 : 1;
     damageBoss(target, damage);
     checkPowerRewards();
+    state.chosenBossTarget = chooseAliveLevelOneTarget(state.chosenBossTarget);
+    updateBossTargetChoices();
 
     if (currentBossHp() === 0) {
       state.won = true;
@@ -953,8 +960,8 @@
   }
 
   function bossAttackText(target, bossAction = state.action) {
-    if (target === "math") return "Math Monster threw Number Nets.";
-    if (target === "evil") return "Evil LA shot letters.";
+    if (target === "math") return "Mischievous Mayer flapped in with a chicken mischief strike.";
+    if (target === "evil") return "Yapping Yonatan snapped with an alligator yap blast.";
     if (target === "food") return "Food Monster Fiasco shot garbage.";
     if (target === "airplane") return "Airplane Attacker flew high, bent its wings, and dove down.";
     if (target === "pusher") return "Paper Pusher rushed forward.";
@@ -978,10 +985,10 @@
       return "Homework Shield blocked the boss power!";
     }
     if (target === "math") {
-      return "Math Monster used Number Nets and caught you for 5 seconds!";
+      return "Mischievous Mayer used Chicken Mischief and caught you for 5 seconds!";
     }
     if (target === "evil") {
-      return "Evil LA shot letters at you and knocked you down!";
+      return "Yapping Yonatan used Alligator Yap Blast and knocked you down!";
     }
     if (target === "food") {
       return "Food Monster Fiasco shot garbage and took away half a heart!";
@@ -1017,7 +1024,7 @@
 
   function currentTarget() {
     if (state.level === 1) {
-      return state.mathHp > 0 ? "math" : "evil";
+      return chooseAliveLevelOneTarget(state.chosenBossTarget);
     }
     if (state.level === 2) return "food";
     if (state.level === 3) return "crazyBall";
@@ -1040,15 +1047,15 @@
   }
 
   function levelWinText() {
-    if (state.level === 1) return "You beat the Math Monster and Evil LA!";
+    if (state.level === 1) return "You beat Mischievous Mayer and Yapping Yonatan!";
     if (state.level === 2) return "You beat Food Monster Fiasco!";
     if (state.level === 3) return "You beat The Crazy Ball in the gym!";
     return `You beat ${bossLevels[state.level].name}!`;
   }
 
   function currentBossName(target = currentTarget()) {
-    if (target === "math") return "Math Monster";
-    if (target === "evil") return "Evil LA";
+    if (target === "math") return "Mischievous Mayer";
+    if (target === "evil") return "Yapping Yonatan";
     if (target === "food") return "Food Monster Fiasco";
     if (target === "crazyBall") return "The Crazy Ball";
     if (target === "principal") return bossLevels[state.level].name;
@@ -1097,13 +1104,13 @@
     if (!state.mathRewarded && state.mathHp === 0) {
       state.mathRewarded = true;
       state.earnedPowers.add("homeworkShield");
-      els.statusText.textContent = "Power-up earned: Homework Shield!";
+      els.statusText.textContent = "Power-up earned: Homework Shield from Mischievous Mayer!";
       renderPowers();
     }
     if (!state.evilRewarded && state.evilHp === 0) {
       state.evilRewarded = true;
       state.earnedPowers.add("poetryBlast");
-      els.statusText.textContent = "Power-up earned: Poetry Blast!";
+      els.statusText.textContent = "Power-up earned: Poetry Blast from Yapping Yonatan!";
       renderPowers();
     }
   }
@@ -1133,6 +1140,39 @@
     });
     els.startButton.textContent = `Start Level ${state.level}`;
     resetGame();
+  }
+
+  function chooseBossTarget(target) {
+    if (state.level !== 1) return;
+    const hp = target === "math" ? state.mathHp : state.evilHp;
+    if (hp <= 0) {
+      els.statusText.textContent = `${currentBossName(target)} is already defeated. Pick the other boss.`;
+      updateBossTargetChoices();
+      return;
+    }
+    state.chosenBossTarget = target;
+    state.playerTarget = target;
+    els.statusText.textContent = `Now fighting ${currentBossName(target)}.`;
+    updateBossTargetChoices();
+    updateHud();
+    draw();
+  }
+
+  function updateBossTargetChoices() {
+    const targetSelect = document.getElementById("bossTargetSelect");
+    if (!targetSelect) return;
+    const showPicker = state.level === 1 && currentBossHp() > 0;
+    targetSelect.classList.toggle("hidden", !showPicker);
+    state.chosenBossTarget = chooseAliveLevelOneTarget(state.chosenBossTarget);
+    targetSelect.querySelectorAll(".target-choice").forEach((button) => {
+      const target = button.dataset.target;
+      const hp = target === "math" ? state.mathHp : state.evilHp;
+      const defeated = hp <= 0;
+      button.disabled = defeated || !showPicker;
+      button.classList.toggle("defeated", defeated);
+      button.classList.toggle("selected", target === state.chosenBossTarget && showPicker);
+      button.textContent = `${target === "math" ? "Fight Mischievous Mayer" : "Fight Yapping Yonatan"} (${heartText(hp)})`;
+    });
   }
 
   function canPlayLevel(level) {
@@ -1319,6 +1359,7 @@
     renderHeartMeter(els.heroHearts, hero.name, state.heroHp, hero.hp);
     renderHeartMeter(els.bossHearts, state.level === 1 ? "Bosses" : currentBossName(), currentBossHp(), currentBossMaxHp());
     updatePowerButton();
+    updateBossTargetChoices();
   }
 
   function renderHeartMeter(element, label, hp, maxHp) {
@@ -1363,6 +1404,14 @@
     return hero.firstPower;
   }
 
+  function chooseAliveLevelOneTarget(target) {
+    if (state.level !== 1) return target;
+    if (target === "evil" && state.evilHp > 0) return "evil";
+    if (target === "math" && state.mathHp > 0) return "math";
+    if (state.mathHp > 0) return "math";
+    return "evil";
+  }
+
   function renderPowers() {
     els.powerInventory.innerHTML = "";
     Object.entries(powerUps).forEach(([id, power]) => {
@@ -1389,8 +1438,8 @@
     drawHealthBars();
     drawHero(state.heroX, state.heroY);
     if (state.level === 1) {
-      if (state.mathHp > 0) drawMathMonster(900, 355);
-      if (state.evilHp > 0) drawEvilLa(1045, 410);
+      if (state.mathHp > 0) drawMischievousMayerBoss(900, 365);
+      if (state.evilHp > 0) drawYappingYonatanBoss(1045, 420);
     } else if (state.level === 2 && state.foodHp > 0) {
       drawFoodMonsterFiasco(950, 390);
     } else if (state.level === 3 && state.crazyBallHp > 0) {
@@ -1663,14 +1712,14 @@
   }
 
   function boardTitle() {
-    if (state.level === 1) return "LEVEL 1: CLASSROOM";
+    if (state.level === 1) return "LEVEL 1: FOREST DUEL";
     if (state.level === 2) return "LEVEL 2: CAFETERIA";
     if (state.level === 3) return "LEVEL 3: GYM";
     return bossLevels[state.level].board;
   }
 
   function boardNote() {
-    if (state.level === 1) return "2 + 2 = BOSS?";
+    if (state.level === 1) return "PICK YOUR BOSS!";
     if (state.level === 2) return "TODAY'S LUNCH: TROUBLE";
     if (state.level === 3) return "DODGE THE ROLL!";
     return bossLevels[state.level].note;
@@ -2395,6 +2444,22 @@
     ctx.fillRect(16, -115, 18, 9);
   }
 
+  function drawMischievousMayerBoss(x, y) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(1.2, 1.2);
+    drawEvilChickenHero();
+    ctx.restore();
+  }
+
+  function drawYappingYonatanBoss(x, y) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(1.18, 1.18);
+    drawAlligatorHero();
+    ctx.restore();
+  }
+
   function drawMathMonster(x, y) {
     ctx.save();
     ctx.translate(x, y);
@@ -2831,10 +2896,10 @@
       drawPlayerAttack(state.playerAction, false);
       if (state.action === "numberNet") {
         drawNumberNet(state.heroX, state.heroY);
-        drawImpact("NUMBER NET!", 650, 215, "#7146d9");
+        drawImpact("MISCHIEF!", 650, 215, "#7146d9");
       } else if (state.action === "letterShot") {
         drawLetterShot(state.heroX, state.heroY);
-        drawImpact("LETTER SHOT!", 650, 215, "#d91f2e");
+        drawImpact("YAP BLAST!", 650, 215, "#d91f2e");
       } else if (state.action === "garbageShot") {
         drawGarbageShot(state.heroX, state.heroY);
         drawImpact("GARBAGE HIT!", 650, 215, "#d91f2e");
@@ -3642,6 +3707,9 @@
   els.resetButton.addEventListener("click", resetGame);
   document.querySelectorAll(".level-choice").forEach((button) => {
     button.addEventListener("click", () => chooseLevel(button.dataset.level));
+  });
+  document.querySelectorAll(".target-choice").forEach((button) => {
+    button.addEventListener("click", () => chooseBossTarget(button.dataset.target));
   });
   document.querySelectorAll(".hero-choice").forEach((button) => {
     button.addEventListener("click", () => chooseHero(button.dataset.hero));

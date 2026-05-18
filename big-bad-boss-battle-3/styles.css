@@ -64,6 +64,7 @@ h1 {
 .heart-row,
 .level-select,
 .character-select,
+.boss-target-select,
 .power-inventory {
   display: flex;
   flex-wrap: wrap;
@@ -134,12 +135,14 @@ h1 {
 
 .character-select,
 .level-select,
+.boss-target-select,
 .power-inventory {
   grid-column: auto;
 }
 
 .hero-choice,
 .level-choice,
+.target-choice,
 .power-pill {
   border: 3px solid var(--ink);
   border-radius: 6px;
@@ -154,15 +157,21 @@ h1 {
 
 .hero-choice.selected,
 .level-choice.selected,
+.target-choice.selected,
 .power-pill.earned {
   background: var(--green);
   color: white;
 }
 
-.level-choice.locked {
+.level-choice.locked,
+.target-choice.defeated {
   opacity: 0.5;
   filter: grayscale(0.6);
   cursor: not-allowed;
+}
+
+.boss-target-select.hidden {
+  display: none;
 }
 
 .power-pill.locked {

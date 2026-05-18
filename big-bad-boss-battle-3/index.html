@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
     <title>Big Bad Boss Battle 3</title>
-    <link rel="stylesheet" href="styles.css?v=monkey-powers-8-hearts" />
+    <link rel="stylesheet" href="styles.css?v=level-one-boss-picker" />
   </head>
   <body>
     <main class="game-shell">
@@ -33,6 +33,10 @@
             <button class="level-choice" data-level="8">Level 8 Librarian Launcher</button>
             <button class="level-choice" data-level="9">Level 9 Field Trip Terror</button>
             <button class="level-choice" data-level="10">Level 10 Robot Principal</button>
+          </div>
+          <div id="bossTargetSelect" class="boss-target-select" aria-label="Choose boss">
+            <button class="target-choice selected" data-target="math">Fight Mischievous Mayer</button>
+            <button class="target-choice" data-target="evil">Fight Yapping Yonatan</button>
           </div>
           <div id="characterSelect" class="character-select" aria-label="Choose character">
             <button class="hero-choice selected" data-hero="tats">Super Tats</button>
@@ -70,6 +74,6 @@
         </div>
       </section>
     </main>
-    <script src="game.js?v=monkey-powers-8-hearts"></script>
+    <script src="game.js?v=level-one-boss-picker"></script>
   </body>
 </html>
