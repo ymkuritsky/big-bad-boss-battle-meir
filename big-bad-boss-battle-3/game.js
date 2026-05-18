@@ -24,49 +24,49 @@
       start: "Level 1 started in the forest. Pick Mischievous Mayer or Yapping Yonatan and fight!"
     },
     2: {
-      title: "Level 2 Cafeteria",
-      intro: "Food Monster Fiasco is stomping around the cafeteria.",
-      start: "Level 2 started in the cafeteria. Dodge garbage and fight Food Monster Fiasco!"
+      title: "Level 2 Picnic Clearing",
+      intro: "Food Monster Fiasco is stomping around the forest picnic clearing.",
+      start: "Level 2 started in the picnic clearing. Dodge garbage and fight Food Monster Fiasco!"
     },
     3: {
-      title: "Level 3 Gym",
-      intro: "The Crazy Ball is rolling around the gym.",
-      start: "Level 3 started in the gym. Watch out when The Crazy Ball rolls!"
+      title: "Level 3 Hollow Log Arena",
+      intro: "The Crazy Ball is rolling around inside the hollow log arena.",
+      start: "Level 3 started in the hollow log arena. Watch out when The Crazy Ball rolls!"
     },
     4: {
-      title: "Level 4 Airplane Attacker",
-      intro: "The Airplane Attacker is circling outside the school.",
-      start: "Level 4 started. The Airplane Attacker dives at you from above!"
+      title: "Level 4 Treetop Attacker",
+      intro: "The Airplane Attacker is circling above the treetops.",
+      start: "Level 4 started in the treetops. The Airplane Attacker dives from above!"
     },
     5: {
-      title: "Level 5 Paper Pusher",
-      intro: "The Paper Pusher is waiting outside by the school yard.",
-      start: "Level 5 started. The Paper Pusher tries to push you across the floor!"
+      title: "Level 5 Leaf Pusher Trail",
+      intro: "The Paper Pusher is waiting on the leaf-covered trail.",
+      start: "Level 5 started on the leaf trail. The Paper Pusher tries to shove you backward!"
     },
     6: {
-      title: "Level 6 Wing Whacker",
-      intro: "The Wing Whacker is flapping around outside in the wind.",
-      start: "Level 6 started. The Wing Whacker swings its paper wings!"
+      title: "Level 6 Windy Wing Canopy",
+      intro: "The Wing Whacker is flapping through the windy forest canopy.",
+      start: "Level 6 started in the canopy. The Wing Whacker swings its wings!"
     },
     7: {
-      title: "Level 7 Art Archer",
-      intro: "The Art Archer is waiting in the art room.",
-      start: "Level 7 started in the art room. Paintbrushes come in slowly, so move up or down to dodge before you attack!"
+      title: "Level 7 Paintbrush Vine Archer",
+      intro: "The Art Archer is hiding behind painted vines.",
+      start: "Level 7 started by the painted vines. Paintbrushes come in slowly, so move up or down to dodge before you attack!"
     },
     8: {
-      title: "Level 8 Librarian Launcher",
-      intro: "The Librarian Launcher is guarding the library.",
-      start: "Level 8 started in the library. BO-OK-S books come in slowly, so move up or down to dodge before you attack!"
+      title: "Level 8 Book Nest Launcher",
+      intro: "The Librarian Launcher is guarding a book nest in the trees.",
+      start: "Level 8 started by the book nest. BO-OK-S books come in slowly, so move up or down to dodge before you attack!"
     },
     9: {
-      title: "Level 9 Field Trip Terror",
-      intro: "The Field Trip Terror is roaring in the parking lot.",
-      start: "Level 9 started in the parking lot. Do not get trapped by the stop sign!"
+      title: "Level 9 Forest Trail Terror",
+      intro: "The Field Trip Terror is roaring down the forest trail.",
+      start: "Level 9 started on the forest trail. Do not get trapped by the stop sign!"
     },
     10: {
-      title: "Level 10 Robot Principal's Office",
-      intro: "The Robot Principal is waiting inside the principal's office.",
-      start: "Level 10 started in the principal's office. Fight the Robot Principal!"
+      title: "Level 10 Tree Fort Robot",
+      intro: "The Robot Principal is waiting inside a giant tree fort.",
+      start: "Level 10 started in the tree fort. Fight the Robot Principal!"
     }
   };
 
@@ -79,7 +79,7 @@
       action: "airplaneAttack",
       color: "#f15b42",
       accent: "#ffd84a",
-      board: "LEVEL 4: OUTSIDE",
+      board: "LEVEL 4: TREETOPS",
       note: "DODGE THE DIVE!",
       maxHp: HEARTS_PER_FIGHTER
     },
@@ -91,7 +91,7 @@
       action: "paperPush",
       color: "#7146d9",
       accent: "#9edcff",
-      board: "LEVEL 5: SCHOOL YARD",
+      board: "LEVEL 5: LEAF TRAIL",
       note: "DON'T GET PUSHED!",
       maxHp: HEARTS_PER_FIGHTER
     },
@@ -103,7 +103,7 @@
       action: "wingWhack",
       color: "#18a66a",
       accent: "#fffef7",
-      board: "LEVEL 6: WINDY OUTSIDE",
+      board: "LEVEL 6: WINDY CANOPY",
       note: "WATCH THE WINGS!",
       maxHp: HEARTS_PER_FIGHTER
     },
@@ -115,7 +115,7 @@
       action: "paintbrushArrow",
       color: "#ef4fa3",
       accent: "#ffd84a",
-      board: "LEVEL 7: ART ROOM",
+      board: "LEVEL 7: PAINTED VINES",
       note: "PAINTBRUSH ARROWS!",
       maxHp: HEARTS_PER_FIGHTER
     },
@@ -127,7 +127,7 @@
       action: "bookLaunch",
       color: "#6a4b2b",
       accent: "#9edcff",
-      board: "LEVEL 8: LIBRARY",
+      board: "LEVEL 8: BOOK NEST",
       note: "BOOKS ARE FLYING!",
       maxHp: HEARTS_PER_FIGHTER
     },
@@ -139,7 +139,7 @@
       action: "busStop",
       color: "#ffd84a",
       accent: "#d91f2e",
-      board: "LEVEL 9: PARKING LOT",
+      board: "LEVEL 9: FOREST TRAIL",
       note: "STOP SIGN TRAP!",
       maxHp: HEARTS_PER_FIGHTER
     },
@@ -151,8 +151,8 @@
       action: "principalWarning",
       color: "#6f737a",
       accent: "#49d9ff",
-      board: "LEVEL 10: PRINCIPAL'S OFFICE",
-      note: "OFFICE BOSS!",
+      board: "LEVEL 10: TREE FORT",
+      note: "TREE FORT BOSS!",
       maxHp: HEARTS_PER_FIGHTER
     }
   };
@@ -168,9 +168,9 @@
   for (let level = 11; level <= 30; level += 1) {
     const trick = robotTricks[(level - 11) % robotTricks.length];
     levels[level] = {
-      title: `Level ${level} Robot Principal Rematch`,
-      intro: `More Robot Principals are waiting in level ${level}.`,
-      start: `Level ${level} started. Robot Principal uses ${trick.label.toLowerCase()} tricks!`
+      title: `Level ${level} Deep Forest Robot Rematch`,
+      intro: `More forest robots are waiting deeper in the woods at level ${level}.`,
+      start: `Level ${level} started deeper in the forest. Robot Principal uses ${trick.label.toLowerCase()} tricks!`
     };
     bossLevels[level] = {
       target: "principal",
@@ -180,7 +180,7 @@
       action: trick.action,
       color: level === 30 ? "#d91f2e" : "#6f737a",
       accent: level === 30 ? "#ffd84a" : "#49d9ff",
-      board: `LEVEL ${level}: ROBOT PRINCIPAL`,
+      board: `LEVEL ${level}: DEEP FOREST ROBOT`,
       note: trick.note,
       maxHp: HEARTS_PER_FIGHTER
     };
@@ -249,7 +249,7 @@
     kickButton: document.getElementById("kickButton"),
     jumpButton: document.getElementById("jumpButton"),
     hideButton: document.getElementById("hideButton"),
-    powerButtons: Array.from(document.querySelectorAll(".power-slot"))
+    powerButton: document.getElementById("powerButton")
   };
 
   const state = {
@@ -308,6 +308,11 @@
     yonatanPowerStep: 0,
     yonatanChomperUntil: 0,
     yonatanChomperTarget: "",
+    prizeDrops: [],
+    bowShots: 0,
+    armorBlocks: 0,
+    lastDefenseText: "",
+    nextDropId: 1,
     tick: 0
   };
 
@@ -369,6 +374,11 @@
     state.yonatanPowerStep = 0;
     state.yonatanChomperUntil = 0;
     state.yonatanChomperTarget = "";
+    state.prizeDrops = [];
+    state.bowShots = 0;
+    state.armorBlocks = 0;
+    state.lastDefenseText = "";
+    state.nextDropId = 1;
     state.tick = 0;
     els.statusText.textContent = levels[state.level].intro;
     setAttacks(true);
@@ -396,7 +406,8 @@
     draw();
   }
 
-  function attack(kind, powerSlot = 0) {
+  function attack(kind, powerSlot = null) {
+    state.lastDefenseText = "";
     if (!state.started || state.won || state.lost) {
       els.statusText.textContent = "Press Start Level first, then you can punch, kick, and use powers.";
       return;
@@ -455,7 +466,7 @@
       return;
     }
     state.playerAction = kind;
-    const damage = kind === "power" ? usePowerDamage() : kind === "kick" ? 2 : 1;
+    const damage = heroAttackDamage(kind === "power" ? usePowerDamage() : kind === "kick" ? 2 : 1);
     damageBoss(target, damage);
     checkPowerRewards();
     state.chosenBossTarget = chooseAliveLevelOneTarget(state.chosenBossTarget);
@@ -538,11 +549,11 @@
     applyBossPower(target, blocked, dodged);
     const bossAction = state.action;
     const bossDamage = bossDamageForAction(bossAction);
-    state.heroHp = Math.max(0, state.heroHp - (blocked || dodged ? 0 : bossDamage));
+    const takenDamage = blocked || dodged ? 0 : takeHeroDamage(bossDamage);
     if (state.heroHp === 0) {
       state.lost = true;
       state.action = "lost";
-      els.statusText.textContent = "The school bosses won this round. Reset for a rematch.";
+      els.statusText.textContent = "The forest bosses won this round. Reset for a rematch.";
       setAttacks(true);
       updateHud();
       draw();
@@ -551,7 +562,7 @@
 
     state.action = blocked ? `${kind}-${target}` : bossAction;
     const bossName = currentBossName(target);
-    els.statusText.textContent = `${attackName(kind)} hit ${bossName} for ${heartText(damage)}. ${bossCounterText(target, blocked, dodged, laneDodged, bossAction, bossDamage)}`;
+    els.statusText.textContent = `${attackName(kind)} hit ${bossName} for ${heartText(damage)}. ${bossCounterText(target, blocked, dodged, laneDodged, bossAction, takenDamage)}`;
     updateHud();
     draw();
   }
@@ -677,7 +688,7 @@
     applyBossPower(target, false, dodged);
     const bossAction = state.action;
     const bossDamage = bossDamageForAction(bossAction);
-    state.heroHp = Math.max(0, state.heroHp - (dodged ? 0 : bossDamage));
+    const takenDamage = dodged ? 0 : takeHeroDamage(bossDamage);
     if (state.heroHp === 0) {
       state.lost = true;
       state.action = "lost";
@@ -688,7 +699,7 @@
       return;
     }
     state.action = power.id;
-    els.statusText.textContent = `${power.name} hit ${currentBossName(target)} for ${heartText(power.damage)}. ${bossCounterText(target, false, dodged, laneDodged, bossAction, bossDamage)}`;
+    els.statusText.textContent = `${power.name} hit ${currentBossName(target)} for ${heartText(power.damage)}. ${bossCounterText(target, false, dodged, laneDodged, bossAction, takenDamage)}`;
     updateHud();
     draw();
   }
@@ -827,7 +838,7 @@
     applyBossPower(target, false, dodged);
     const bossAction = state.action;
     const bossDamage = bossDamageForAction(bossAction);
-    state.heroHp = Math.max(0, state.heroHp - (dodged ? 0 : bossDamage));
+    const takenDamage = dodged ? 0 : takeHeroDamage(bossDamage);
     if (state.heroHp === 0) {
       state.lost = true;
       state.action = "lost";
@@ -838,7 +849,7 @@
       return;
     }
     state.action = power.id;
-    els.statusText.textContent = `${power.name} hit ${currentBossName(target)} for ${heartText(power.damage)}. ${bossCounterText(target, false, dodged, laneDodged, bossAction, bossDamage)}`;
+    els.statusText.textContent = `${power.name} hit ${currentBossName(target)} for ${heartText(power.damage)}. ${bossCounterText(target, false, dodged, laneDodged, bossAction, takenDamage)}`;
     updateHud();
     draw();
   }
@@ -915,7 +926,7 @@
     applyBossPower(target, false, dodged);
     const bossAction = state.action;
     const bossDamage = bossDamageForAction(bossAction);
-    state.heroHp = Math.max(0, state.heroHp - (dodged ? 0 : bossDamage));
+    const takenDamage = dodged ? 0 : takeHeroDamage(bossDamage);
     if (state.heroHp === 0) {
       state.lost = true;
       state.action = "lost";
@@ -926,7 +937,7 @@
       return;
     }
     state.action = power.id;
-    els.statusText.textContent = `${power.name} hit ${currentBossName(target)} for ${heartText(power.damage)}. ${bossCounterText(target, false, dodged, laneDodged, bossAction, bossDamage)}`;
+    els.statusText.textContent = `${power.name} hit ${currentBossName(target)} for ${heartText(power.damage)}. ${bossCounterText(target, false, dodged, laneDodged, bossAction, takenDamage)}`;
     updateHud();
     draw();
   }
@@ -1039,7 +1050,7 @@
     applyBossPower(target, false, dodged);
     const bossAction = state.action;
     const bossDamage = bossDamageForAction(bossAction);
-    state.heroHp = Math.max(0, state.heroHp - (dodged ? 0 : bossDamage));
+    const takenDamage = dodged ? 0 : takeHeroDamage(bossDamage);
     if (state.heroHp === 0) {
       state.lost = true;
       state.action = "lost";
@@ -1050,7 +1061,7 @@
       return;
     }
     state.action = power.id;
-    els.statusText.textContent = `${power.name} hit ${currentBossName(target)} for ${heartText(power.damage)}. ${bossCounterText(target, false, dodged, laneDodged, bossAction, bossDamage)}`;
+    els.statusText.textContent = `${power.name} hit ${currentBossName(target)} for ${heartText(power.damage)}. ${bossCounterText(target, false, dodged, laneDodged, bossAction, takenDamage)}`;
     updateHud();
     draw();
   }
@@ -1104,6 +1115,74 @@
     } else if (target === "principal") {
       state.principalHp = Math.max(0, state.principalHp - damage);
     }
+    maybeDropPrize(target, damage);
+  }
+
+  function maybeDropPrize(target, damage) {
+    if (state.level < 16 || damage <= 0 || state.prizeDrops.length >= 3 || Math.random() > prizeDropChance()) {
+      return;
+    }
+    const boss = currentBossPosition(target);
+    const types = ["donut", "bow", "armor", "shield"];
+    const type = types[(state.nextDropId + state.level) % types.length];
+    state.prizeDrops.push({
+      id: state.nextDropId,
+      type,
+      x: clamp(boss.x - 160 - state.prizeDrops.length * 46, 180, 1020),
+      y: clamp(boss.y + 70 + (state.prizeDrops.length % 2) * 34, 285, 470)
+    });
+    state.nextDropId += 1;
+  }
+
+  function prizeDropChance() {
+    if (state.level >= 25) return 0.75;
+    if (state.level >= 20) return 0.58;
+    return 0.42;
+  }
+
+  function collectNearbyPrizes() {
+    const collected = [];
+    state.prizeDrops = state.prizeDrops.filter((drop) => {
+      const near = Math.abs(state.heroX - drop.x) <= 80 && Math.abs(state.heroY - drop.y) <= 80;
+      if (near) collected.push(drop);
+      return !near;
+    });
+    if (!collected.length) return "";
+    return collected.map(applyPrize).join(" ");
+  }
+
+  function applyPrize(drop) {
+    if (drop.type === "donut") {
+      state.heroHp = Math.min(HEARTS_PER_FIGHTER, state.heroHp + 3);
+      return "Magical Donut healed 3 hearts.";
+    }
+    if (drop.type === "bow") {
+      state.bowShots += 3;
+      return "Big bow and arrow earned: your next 3 attacks are stronger.";
+    }
+    if (drop.type === "armor") {
+      state.armorBlocks += 2;
+      return "Iron armor earned: it blocks the next 2 hits.";
+    }
+    state.armorBlocks += 4;
+    return "Giant shield earned: it blocks the next 4 hits.";
+  }
+
+  function heroAttackDamage(baseDamage) {
+    if (state.bowShots <= 0) return baseDamage;
+    state.bowShots -= 1;
+    return baseDamage + 2;
+  }
+
+  function takeHeroDamage(amount) {
+    if (amount <= 0) return 0;
+    if (state.armorBlocks > 0) {
+      state.armorBlocks -= 1;
+      state.lastDefenseText = "Your armor or giant shield blocked it, so you lost no hearts.";
+      return 0;
+    }
+    state.heroHp = Math.max(0, state.heroHp - amount);
+    return amount;
   }
 
   function applyBossPower(target, blocked, avoided = false) {
@@ -1216,6 +1295,9 @@
       }
       return `${bossAttackText(target, bossAction)} Your jump or hide made it miss, so you lost no hearts.`;
     }
+    if (state.lastDefenseText) {
+      return `${bossPowerText(target, false, bossAction)} ${state.lastDefenseText}`;
+    }
     if (bossDamage === 0) {
       return bossPowerText(target, false, bossAction);
     }
@@ -1257,7 +1339,7 @@
     if (target === "librarian") return "Librarian Launcher launched books.";
     if (target === "bus") return "Field Trip Terror flashed its stop sign.";
     if (target === "principal") {
-      if (bossAction === "principalWarning") return "Robot Principal stomped around the office.";
+      if (bossAction === "principalWarning") return "Robot Principal stomped around the tree fort.";
       if (bossAction === "principalMultiply") return "Robot Principal tried to multiply.";
       if (bossAction === "principalGiant") return "Robot Principal tried to turn giant.";
       if (bossAction === "principalFar") return "Robot Principal fired from farther away.";
@@ -1299,12 +1381,12 @@
       return "Field Trip Terror drove around you and stopped you with its stop sign!";
     }
     if (target === "principal") {
-      if (bossAction === "principalWarning") return "Robot Principal stomped around the office. No big power yet!";
+      if (bossAction === "principalWarning") return "Robot Principal stomped around the tree fort. No big power yet!";
       if (bossAction === "principalMultiply") return "Robot Principal multiplied into extra copies!";
       if (bossAction === "principalGiant") return "Robot Principal turned giant!";
       if (bossAction === "principalFar") return "Robot Principal attacked from farther away!";
-      if (bossAction === "principalSpin") return "Robot Principal spun around the office!";
-      return "Robot Principal fired a principal laser from the office!";
+      if (bossAction === "principalSpin") return "Robot Principal spun around the tree fort!";
+      return "Robot Principal fired a principal laser from the tree fort!";
     }
     return bossAction === "ballRollHit" ? "The Crazy Ball rolled on top of you and attacked!" : "The Crazy Ball rolled by and missed!";
   }
@@ -1336,7 +1418,7 @@
   function levelWinText() {
     if (state.level === 1) return "You beat Mischievous Mayer and Yapping Yonatan!";
     if (state.level === 2) return "You beat Food Monster Fiasco!";
-    if (state.level === 3) return "You beat The Crazy Ball in the gym!";
+    if (state.level === 3) return "You beat The Crazy Ball in the hollow log arena!";
     return `You beat ${bossLevels[state.level].name}!`;
   }
 
@@ -1510,6 +1592,7 @@
   }
 
   function moveHero(direction) {
+    state.lastDefenseText = "";
     if (!state.started || state.won || state.lost) {
       return;
     }
@@ -1526,8 +1609,10 @@
     state.heroX = clamp(state.heroX, 120, 1080);
     state.heroY = clamp(state.heroY, 270, 470);
     state.playerAction = "";
+    const prizeText = collectNearbyPrizes();
     const target = currentTarget();
     if (handleBossPressureWhileMoving(target, direction)) {
+      if (prizeText) els.statusText.textContent = `${els.statusText.textContent} ${prizeText}`;
       updateHud();
       draw();
       return;
@@ -1543,6 +1628,7 @@
       state.action = "";
       els.statusText.textContent = `Hero moved ${direction}.`;
     }
+    if (prizeText) els.statusText.textContent = `${els.statusText.textContent} ${prizeText}`;
     draw();
   }
 
@@ -1588,7 +1674,7 @@
     const laneDodged = canLaneDodge(target) && direction && dodgeBeatsLane(direction, state.projectileLane);
     const jumpOrHideDodged = Date.now() < state.hiddenUntil || Date.now() < state.jumpingUntil;
     const dodged = laneDodged || jumpOrHideDodged;
-    const canHitThisMove = canLaneDodge(target) ? !laneDodged : state.bossPressureStep % 3 === 0;
+    const canHitThisMove = canLaneDodge(target) ? !laneDodged : state.bossPressureStep % bossPressureInterval() === 0;
     applyBossPower(target, false, dodged || !canHitThisMove);
     const bossAction = state.action;
     if (laneDodged) {
@@ -1616,21 +1702,28 @@
       els.statusText.textContent = `${bossAttackText(target, bossAction)} It is aiming ${laneName(state.projectileLane)} and coming slowly. ${dodgeHint(state.projectileLane)}`;
       return true;
     }
-    const damage = bossDamageForAction(bossAction);
-    state.heroHp = Math.max(0, state.heroHp - damage);
+    const damage = takeHeroDamage(bossDamageForAction(bossAction));
     if (state.heroHp === 0) {
       state.lost = true;
       state.action = "lost";
-      els.statusText.textContent = "The school bosses won this round. Reset for a rematch.";
+      els.statusText.textContent = "The forest bosses won this round. Reset for a rematch.";
       setAttacks(true);
       return true;
     }
-    els.statusText.textContent = `${bossPowerText(target, false, bossAction)} You lost ${heartText(damage)}. Get closer to stop the attacks!`;
+    els.statusText.textContent = state.lastDefenseText
+      ? `${bossPowerText(target, false, bossAction)} ${state.lastDefenseText} Get closer to stop the attacks!`
+      : `${bossPowerText(target, false, bossAction)} You lost ${heartText(damage)}. Get closer to stop the attacks!`;
     return true;
   }
 
   function bossPressuresWhileMoving(target) {
     return target === "airplane" || target === "pusher" || target === "whacker" || target === "archer" || target === "librarian" || target === "bus";
+  }
+
+  function bossPressureInterval() {
+    if (state.level >= 25) return 1;
+    if (state.level >= 16) return 2;
+    return 3;
   }
 
   function nextProjectileLane() {
@@ -1661,8 +1754,20 @@
     els.selectedHeroName.textContent = hero.name;
     renderHeartMeter(els.heroHearts, hero.name, state.heroHp, hero.hp);
     renderHeartMeter(els.bossHearts, state.level === 1 ? "Bosses" : currentBossName(), currentBossHp(), currentBossMaxHp());
+    renderPrizeStatus();
     updatePowerButton();
     updateBossTargetChoices();
+  }
+
+  function renderPrizeStatus() {
+    const active = [];
+    if (state.bowShots > 0) active.push(`Bow x${state.bowShots}`);
+    if (state.armorBlocks > 0) active.push(`Shield x${state.armorBlocks}`);
+    if (!active.length) return;
+    const prizeLine = document.createElement("small");
+    prizeLine.className = "prize-status";
+    prizeLine.textContent = active.join(" | ");
+    els.heroHearts.append(prizeLine);
   }
 
   function renderHeartMeter(element, label, hp, maxHp) {
@@ -1689,20 +1794,19 @@
   }
 
   function updatePowerButton() {
-    const powers = powerNamesForHero();
-    const disabled = !state.started || state.won || state.lost;
-    els.powerButtons.forEach((button, index) => {
-      const name = powers[index];
-      button.classList.toggle("hidden", !name);
-      button.disabled = disabled || !name;
-      if (name) {
-        button.textContent = `${index + 1}. ${name}`;
-      }
-    });
+    els.powerButton.textContent = currentPowerName();
   }
 
   function currentPowerName() {
-    return powerNamesForHero()[0] || "Use Power-Up";
+    const hero = heroes[state.heroId];
+    if (!hero) return "Use Power-Up";
+    if (state.heroId === "apple") return cheetahPowers[state.cheetahPowerStep % cheetahPowers.length].name;
+    if (state.heroId === "benji") return polarPowers[state.polarPowerStep % polarPowers.length].name;
+    if (state.heroId === "frost") return monkeyPowers[state.monkeyPowerStep % monkeyPowers.length].name;
+    if (state.heroId === "freddy") return fennecPowers[state.fennecPowerStep % fennecPowers.length].name;
+    if (state.heroId === "mayer") return mayerPowers[state.mayerPowerStep % mayerPowers.length].name;
+    if (state.heroId === "yonatan") return yonatanPowers[state.yonatanPowerStep % yonatanPowers.length].name;
+    return hero.firstPower;
   }
 
   function powerNamesForHero() {
@@ -1742,10 +1846,7 @@
     els.kickButton.disabled = disabled;
     els.jumpButton.disabled = disabled;
     els.hideButton.disabled = disabled;
-    const powers = powerNamesForHero();
-    els.powerButtons.forEach((button, index) => {
-      button.disabled = disabled || !powers[index];
-    });
+    els.powerButton.disabled = disabled;
     updatePowerButton();
   }
 
@@ -1764,6 +1865,7 @@
     } else if (state.level >= 4 && currentBossHp() > 0) {
       drawBossCharacter(950, 380, bossLevels[state.level]);
     }
+    drawPrizeDrops();
     drawAction();
   }
 
@@ -1841,6 +1943,71 @@
     ctx.fill();
     ctx.stroke();
     ctx.restore();
+  }
+
+  function drawPrizeDrops() {
+    state.prizeDrops.forEach((drop) => {
+      ctx.save();
+      ctx.translate(drop.x, drop.y);
+      ctx.strokeStyle = "#171216";
+      ctx.lineWidth = 5;
+      if (drop.type === "donut") {
+        ctx.fillStyle = "#ffb74d";
+        ctx.beginPath();
+        ctx.arc(0, 0, 24, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = "#3fa65c";
+        ctx.beginPath();
+        ctx.arc(0, 0, 9, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = "#ff5fa8";
+        for (let sprinkle = 0; sprinkle < 6; sprinkle += 1) {
+          ctx.fillRect(-14 + sprinkle * 5, -10 + (sprinkle % 3) * 8, 7, 3);
+        }
+      } else if (drop.type === "bow") {
+        ctx.strokeStyle = "#8a4c2c";
+        ctx.lineWidth = 7;
+        ctx.beginPath();
+        ctx.arc(-8, 0, 24, -Math.PI / 2, Math.PI / 2);
+        ctx.stroke();
+        ctx.strokeStyle = "#171216";
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(-8, -24);
+        ctx.lineTo(-8, 24);
+        ctx.moveTo(-30, 0);
+        ctx.lineTo(30, 0);
+        ctx.stroke();
+      } else if (drop.type === "armor") {
+        ctx.fillStyle = "#b8c4ce";
+        ctx.beginPath();
+        ctx.moveTo(0, -28);
+        ctx.lineTo(26, -12);
+        ctx.lineTo(18, 24);
+        ctx.lineTo(0, 32);
+        ctx.lineTo(-18, 24);
+        ctx.lineTo(-26, -12);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+      } else {
+        ctx.fillStyle = "#49d9ff";
+        ctx.beginPath();
+        ctx.moveTo(0, -32);
+        ctx.quadraticCurveTo(32, -18, 24, 22);
+        ctx.quadraticCurveTo(0, 38, -24, 22);
+        ctx.quadraticCurveTo(-32, -18, 0, -32);
+        ctx.fill();
+        ctx.stroke();
+      }
+      ctx.fillStyle = "#171216";
+      ctx.font = "900 12px Trebuchet MS";
+      ctx.textAlign = "center";
+      ctx.fillText("PICK", 0, 48);
+      ctx.restore();
+    });
   }
 
   function drawBossLevelRoom(w, h) {
@@ -2030,14 +2197,14 @@
 
   function boardTitle() {
     if (state.level === 1) return "LEVEL 1: FOREST DUEL";
-    if (state.level === 2) return "LEVEL 2: CAFETERIA";
-    if (state.level === 3) return "LEVEL 3: GYM";
+    if (state.level === 2) return "LEVEL 2: PICNIC CLEARING";
+    if (state.level === 3) return "LEVEL 3: HOLLOW LOG";
     return bossLevels[state.level].board;
   }
 
   function boardNote() {
     if (state.level === 1) return "PICK YOUR BOSS!";
-    if (state.level === 2) return "TODAY'S LUNCH: TROUBLE";
+    if (state.level === 2) return "FOREST SNACK TROUBLE";
     if (state.level === 3) return "DODGE THE ROLL!";
     return bossLevels[state.level].note;
   }
@@ -2289,6 +2456,20 @@
     ctx.fill();
   }
 
+  function drawAnimalBadge(label, fill = "#fffef7") {
+    ctx.fillStyle = fill;
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.ellipse(0, -55, 18, 15, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#171216";
+    ctx.font = "900 15px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText(label, 0, -50);
+  }
+
   function drawElephantHero() {
     const color = "#3f8fd2";
     setupHeroLine(color, 8);
@@ -2332,6 +2513,7 @@
     ctx.stroke();
     drawHeroArms(color, true);
     drawAnimalLegs(color);
+    drawAnimalBadge("T", "#78c9ff");
   }
 
   function drawPurpleParrotHero() {
@@ -2379,6 +2561,7 @@
     ctx.fill();
     ctx.stroke();
     drawAnimalLegs(color);
+    drawAnimalBadge("MF", "#ff89c6");
   }
 
   function drawCheetahHero() {
@@ -2420,6 +2603,7 @@
     ctx.stroke();
     drawHeroArms(color);
     drawAnimalLegs(color);
+    drawAnimalBadge("AJ", "#ffcf54");
   }
 
   function drawFoxHero() {
@@ -2477,6 +2661,7 @@
     ctx.stroke();
     drawHeroArms(color);
     drawAnimalLegs(color);
+    drawAnimalBadge("F", "#fff4c8");
   }
 
   function drawPolarBearHero() {
@@ -2515,6 +2700,7 @@
     ctx.stroke();
     drawHeroArms(color, true);
     drawAnimalLegs(color);
+    drawAnimalBadge("B", "#45a6db");
   }
 
   function drawMonkeyHero() {
@@ -2550,6 +2736,7 @@
     ctx.stroke();
     drawHeroArms(color);
     drawAnimalLegs(color);
+    drawAnimalBadge("67", "#6cf0c2");
   }
 
   function drawEvilChickenHero() {
@@ -2603,6 +2790,7 @@
     }
     drawHeroArms(color);
     drawAnimalLegs(color);
+    drawAnimalBadge("M", "#f08318");
   }
 
   function drawAlligatorHero() {
@@ -2648,6 +2836,7 @@
     drawAnimalLegs(color);
     drawTinyAlligator(-68, 35);
     drawTinyAlligator(78, 38);
+    drawAnimalBadge("Y", "#d61f2f");
   }
 
   function drawTinyAlligator(x, y) {
@@ -4383,9 +4572,7 @@
   els.kickButton.addEventListener("click", () => attack("kick"));
   els.jumpButton.addEventListener("click", () => attack("jump"));
   els.hideButton.addEventListener("click", () => attack("hide"));
-  els.powerButtons.forEach((button) => {
-    button.addEventListener("click", () => attack("power", Number(button.dataset.powerSlot)));
-  });
+  els.powerButton.addEventListener("click", () => attack("power"));
   document.querySelectorAll(".move-button").forEach((button) => {
     button.addEventListener("click", () => moveHero(button.dataset.move));
   });
@@ -4400,17 +4587,9 @@
       event.preventDefault();
       moveHero(moves[event.key]);
     }
-    if (event.key === "1") attack("power", 0);
-    if (event.key === "2") attack("power", 1);
-    if (event.key === "3") attack("power", 2);
-    if (event.key === "4") attack("power", 3);
-    if (event.key.toLowerCase() === "j") attack("punch");
-    if (event.key.toLowerCase() === "k") attack("kick");
-    if (event.key.toLowerCase() === "h") attack("hide");
-    if (event.key === " " || event.key.toLowerCase() === "w") {
-      event.preventDefault();
-      attack("jump");
-    }
+    if (event.key === "1") attack("punch");
+    if (event.key === "2") attack("kick");
+    if (event.key === "3") attack("power");
   });
 
   resetGame();
