@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
     <title>Big Bad Boss Battle 3</title>
-    <link rel="stylesheet" href="styles.css?v=bbb1-boss-pick-controls" />
+    <link rel="stylesheet" href="styles.css?v=choose-boss-board" />
   </head>
   <body>
     <main class="game-shell">
@@ -21,7 +21,7 @@
         <aside class="hud-panel">
           <p id="levelEyebrow" class="eyebrow">Level 1</p>
           <h2 id="selectedHeroName">Forest Showdown</h2>
-          <p id="statusText">The forest bosses are waiting for the animal superheroes.</p>
+          <p id="statusText">Who do you want to choose: Mischievous Mayer or Yapping Yonatan?</p>
           <div class="level-select" aria-label="Choose level">
             <button class="level-choice selected" data-level="1">Level 1 Forest Duel</button>
             <button class="level-choice" data-level="2">Level 2 Picnic Clearing</button>
@@ -35,8 +35,8 @@
             <button class="level-choice" data-level="10">Level 10 Tree Fort</button>
           </div>
           <div id="bossTargetSelect" class="boss-target-select" aria-label="Choose boss">
-            <button class="target-choice selected" data-target="math">Fight Mischievous Mayer</button>
-            <button class="target-choice" data-target="evil">Fight Yapping Yonatan</button>
+            <button class="target-choice selected" data-target="math">Choose Mischievous Mayer</button>
+            <button class="target-choice" data-target="evil">Choose Yapping Yonatan</button>
           </div>
           <div id="characterSelect" class="character-select" aria-label="Choose character">
             <button class="hero-choice selected" data-hero="tats">Super Tats</button>
@@ -81,6 +81,6 @@
         </div>
       </section>
     </main>
-    <script src="game.js?v=bbb1-boss-pick-controls"></script>
+    <script src="game.js?v=choose-boss-board"></script>
   </body>
 </html>

@@ -20,53 +20,53 @@
   const levels = {
     1: {
       title: "Level 1 Forest Duel",
-      intro: "Mischievous Mayer and Yapping Yonatan are waiting in their new animal forms.",
-      start: "Level 1 started in the forest. Pick Mischievous Mayer or Yapping Yonatan and fight!"
+      intro: "Who do you want to choose: Mischievous Mayer or Yapping Yonatan?",
+      start: "Level 1 started in the forest. Fight the boss you chose!"
     },
     2: {
       title: "Level 2 Picnic Clearing",
-      intro: "Pick Mischievous Mayer or Yapping Yonatan in the picnic clearing.",
-      start: "Level 2 started in the picnic clearing. Pick your forest boss and fight!"
+      intro: "Who do you want to choose: Mischievous Mayer or Yapping Yonatan?",
+      start: "Level 2 started in the picnic clearing. Fight the boss you chose!"
     },
     3: {
       title: "Level 3 Hollow Log Arena",
-      intro: "Pick Mischievous Mayer or Yapping Yonatan inside the hollow log arena.",
+      intro: "Who do you want to choose: Mischievous Mayer or Yapping Yonatan?",
       start: "Level 3 started in the hollow log arena. The boss is a little quicker now!"
     },
     4: {
       title: "Level 4 Treetop Path",
-      intro: "Pick Mischievous Mayer or Yapping Yonatan on the treetop path.",
+      intro: "Who do you want to choose: Mischievous Mayer or Yapping Yonatan?",
       start: "Level 4 started on the treetop path. The forest boss hits a little harder!"
     },
     5: {
       title: "Level 5 Leaf Pusher Trail",
-      intro: "Pick Mischievous Mayer or Yapping Yonatan on the leaf-covered trail.",
+      intro: "Who do you want to choose: Mischievous Mayer or Yapping Yonatan?",
       start: "Level 5 started on the leaf trail. Watch for stronger boss powers!"
     },
     6: {
       title: "Level 6 Windy Canopy",
-      intro: "Pick Mischievous Mayer or Yapping Yonatan in the windy forest canopy.",
+      intro: "Who do you want to choose: Mischievous Mayer or Yapping Yonatan?",
       start: "Level 6 started in the canopy. The boss gets faster!"
     },
     7: {
       title: "Level 7 Painted Vines",
-      intro: "Pick Mischievous Mayer or Yapping Yonatan by the painted vines.",
+      intro: "Who do you want to choose: Mischievous Mayer or Yapping Yonatan?",
       start: "Level 7 started by the painted vines. Choose your boss and move close to attack!"
     },
     8: {
       title: "Level 8 Book Nest",
-      intro: "Pick Mischievous Mayer or Yapping Yonatan by the book nest.",
+      intro: "Who do you want to choose: Mischievous Mayer or Yapping Yonatan?",
       start: "Level 8 started by the book nest. The boss powers are getting sharper!"
     },
     9: {
       title: "Level 9 Forest Trail",
-      intro: "Pick Mischievous Mayer or Yapping Yonatan on the forest trail.",
+      intro: "Who do you want to choose: Mischievous Mayer or Yapping Yonatan?",
       start: "Level 9 started on the forest trail. The boss attacks more often!"
     },
     10: {
       title: "Level 10 Tree Fort",
-      intro: "Pick Mischievous Mayer or Yapping Yonatan inside the giant tree fort.",
-      start: "Level 10 started in the tree fort. Pick your forest boss and fight!"
+      intro: "Who do you want to choose: Mischievous Mayer or Yapping Yonatan?",
+      start: "Level 10 started in the tree fort. Fight the boss you chose!"
     }
   };
 
@@ -169,8 +169,8 @@
     const trick = robotTricks[(level - 11) % robotTricks.length];
     levels[level] = {
       title: `Level ${level} Deep Forest Showdown`,
-      intro: `Pick Mischievous Mayer or Yapping Yonatan deeper in the woods at level ${level}.`,
-      start: `Level ${level} started deeper in the forest. Pick your boss and get ready for stronger powers!`
+      intro: "Who do you want to choose: Mischievous Mayer or Yapping Yonatan?",
+      start: `Level ${level} started deeper in the forest. Fight the boss you chose and get ready for stronger powers!`
     };
     bossLevels[level] = {
       target: "principal",
@@ -1592,7 +1592,7 @@
     }
     state.chosenBossTarget = target;
     state.playerTarget = target;
-    els.statusText.textContent = `Now fighting ${currentBossName(target)}.`;
+    els.statusText.textContent = `You chose ${currentBossName(target)}. Press Start Level ${state.level} to play.`;
     updateBossTargetChoices();
     updateHud();
     draw();
@@ -1611,7 +1611,7 @@
       button.disabled = defeated || !showPicker;
       button.classList.toggle("defeated", defeated);
       button.classList.toggle("selected", target === state.chosenBossTarget && showPicker);
-      button.textContent = `${target === "math" ? "Fight Mischievous Mayer" : "Fight Yapping Yonatan"} (${heartText(hp)})`;
+      button.textContent = target === "math" ? "Choose Mischievous Mayer" : "Choose Yapping Yonatan";
     });
   }
 
