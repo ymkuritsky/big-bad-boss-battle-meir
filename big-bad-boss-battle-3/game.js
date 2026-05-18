@@ -1,19 +1,20 @@
 (() => {
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
+  const HEARTS_PER_FIGHTER = 8;
 
   const heroes = {
-    tats: { name: "Super Tats", color: "#1478cf", accent: "#78c9ff", hp: 5, firstPower: "Elephant Trunk Grab" },
-    fary: { name: "Mom Fary", color: "#8542d8", accent: "#ff89c6", hp: 5, firstPower: "Parrot Power Scream" },
-    apple: { name: "Super Appie Juice", color: "#f18319", accent: "#ffcf54", hp: 5, firstPower: "Cheetah Super Speed" },
-    freddy: { name: "Freddy", color: "#17633c", accent: "#f0cf62", hp: 5, firstPower: "Mammal" },
-    benji: { name: "Benji", color: "#6f737a", accent: "#45a6db", hp: 5, firstPower: "Teeth Attack" },
-    frost: { name: "Mr. 67", color: "#146e8f", accent: "#6cf0c2", hp: 5, firstPower: "Freeze Block" },
-    ness: { name: "Super Ness", color: "#c73583", accent: "#6bd8ff", hp: 5, firstPower: "Super Kick" },
-    crayon: { name: "Captain Crayonstorm", color: "#21a36c", accent: "#f5d129", hp: 5, firstPower: "Crayon Barrage" },
-    hoodie: { name: "Zap Hoodie", color: "#1f1f29", accent: "#49d9ff", hp: 5, firstPower: "Zip Zap" },
-    mayer: { name: "Mischievous Mayer", color: "#6b28c7", accent: "#f08318", hp: 5, firstPower: "Mischief Zap" },
-    yonatan: { name: "Yapping Yonatan", color: "#f07918", accent: "#d61f2f", hp: 5, firstPower: "Yap Blast" }
+    tats: { name: "Super Tats", color: "#1478cf", accent: "#78c9ff", hp: HEARTS_PER_FIGHTER, firstPower: "Elephant Trunk Grab" },
+    fary: { name: "Mom Fary", color: "#8542d8", accent: "#ff89c6", hp: HEARTS_PER_FIGHTER, firstPower: "Parrot Power Scream" },
+    apple: { name: "Super Appie Juice", color: "#f18319", accent: "#ffcf54", hp: HEARTS_PER_FIGHTER, firstPower: "Cheetah Super Speed" },
+    freddy: { name: "Freddy", color: "#17633c", accent: "#f0cf62", hp: HEARTS_PER_FIGHTER, firstPower: "Mammal" },
+    benji: { name: "Benji", color: "#6f737a", accent: "#45a6db", hp: HEARTS_PER_FIGHTER, firstPower: "Teeth Attack" },
+    frost: { name: "Mr. 67", color: "#146e8f", accent: "#6cf0c2", hp: HEARTS_PER_FIGHTER, firstPower: "Poisonous Banana Storm" },
+    ness: { name: "Super Ness", color: "#c73583", accent: "#6bd8ff", hp: HEARTS_PER_FIGHTER, firstPower: "Super Kick" },
+    crayon: { name: "Captain Crayonstorm", color: "#21a36c", accent: "#f5d129", hp: HEARTS_PER_FIGHTER, firstPower: "Crayon Barrage" },
+    hoodie: { name: "Zap Hoodie", color: "#1f1f29", accent: "#49d9ff", hp: HEARTS_PER_FIGHTER, firstPower: "Zip Zap" },
+    mayer: { name: "Mischievous Mayer", color: "#6b28c7", accent: "#f08318", hp: HEARTS_PER_FIGHTER, firstPower: "Mischief Zap" },
+    yonatan: { name: "Yapping Yonatan", color: "#f07918", accent: "#d61f2f", hp: HEARTS_PER_FIGHTER, firstPower: "Yap Blast" }
   };
 
   const levels = {
@@ -80,7 +81,7 @@
       accent: "#ffd84a",
       board: "LEVEL 4: OUTSIDE",
       note: "DODGE THE DIVE!",
-      maxHp: 7
+      maxHp: HEARTS_PER_FIGHTER
     },
     5: {
       target: "pusher",
@@ -92,7 +93,7 @@
       accent: "#9edcff",
       board: "LEVEL 5: SCHOOL YARD",
       note: "DON'T GET PUSHED!",
-      maxHp: 7
+      maxHp: HEARTS_PER_FIGHTER
     },
     6: {
       target: "whacker",
@@ -104,7 +105,7 @@
       accent: "#fffef7",
       board: "LEVEL 6: WINDY OUTSIDE",
       note: "WATCH THE WINGS!",
-      maxHp: 7
+      maxHp: HEARTS_PER_FIGHTER
     },
     7: {
       target: "archer",
@@ -116,7 +117,7 @@
       accent: "#ffd84a",
       board: "LEVEL 7: ART ROOM",
       note: "PAINTBRUSH ARROWS!",
-      maxHp: 7
+      maxHp: HEARTS_PER_FIGHTER
     },
     8: {
       target: "librarian",
@@ -128,7 +129,7 @@
       accent: "#9edcff",
       board: "LEVEL 8: LIBRARY",
       note: "BOOKS ARE FLYING!",
-      maxHp: 7
+      maxHp: HEARTS_PER_FIGHTER
     },
     9: {
       target: "bus",
@@ -140,7 +141,7 @@
       accent: "#d91f2e",
       board: "LEVEL 9: PARKING LOT",
       note: "STOP SIGN TRAP!",
-      maxHp: 7
+      maxHp: HEARTS_PER_FIGHTER
     },
     10: {
       target: "principal",
@@ -152,7 +153,7 @@
       accent: "#49d9ff",
       board: "LEVEL 10: PRINCIPAL'S OFFICE",
       note: "OFFICE BOSS!",
-      maxHp: 7
+      maxHp: HEARTS_PER_FIGHTER
     }
   };
 
@@ -181,7 +182,7 @@
       accent: level === 30 ? "#ffd84a" : "#49d9ff",
       board: `LEVEL ${level}: ROBOT PRINCIPAL`,
       note: trick.note,
-      maxHp: 7
+      maxHp: HEARTS_PER_FIGHTER
     };
   }
 
@@ -210,6 +211,12 @@
     { id: "polarIceTornado", name: "Ice Tornado", damage: 0.5 }
   ];
 
+  const monkeyPowers = [
+    { id: "bananaStorm", name: "Poisonous Banana Storm", damage: 1.5 },
+    { id: "bananaShoot", name: "Banana Shoot", damage: 1 },
+    { id: "bananaSlip", name: "Banana Peel Slip", damage: 0.5 }
+  ];
+
   const els = {
     statusText: document.getElementById("statusText"),
     selectedHeroName: document.getElementById("selectedHeroName"),
@@ -232,18 +239,18 @@
     lost: false,
     level: 1,
     heroId: "tats",
-    heroHp: 6,
-    mathHp: 7,
-    evilHp: 6,
-    foodHp: 7,
-    crazyBallHp: 7,
-    airplaneHp: 7,
-    pusherHp: 7,
-    whackerHp: 7,
-    archerHp: 7,
-    librarianHp: 7,
-    busHp: 7,
-    principalHp: 7,
+    heroHp: HEARTS_PER_FIGHTER,
+    mathHp: HEARTS_PER_FIGHTER,
+    evilHp: HEARTS_PER_FIGHTER,
+    foodHp: HEARTS_PER_FIGHTER,
+    crazyBallHp: HEARTS_PER_FIGHTER,
+    airplaneHp: HEARTS_PER_FIGHTER,
+    pusherHp: HEARTS_PER_FIGHTER,
+    whackerHp: HEARTS_PER_FIGHTER,
+    archerHp: HEARTS_PER_FIGHTER,
+    librarianHp: HEARTS_PER_FIGHTER,
+    busHp: HEARTS_PER_FIGHTER,
+    principalHp: HEARTS_PER_FIGHTER,
     earnedPowers: new Set(),
     mathRewarded: false,
     evilRewarded: false,
@@ -268,6 +275,9 @@
     polarPowerStep: 0,
     iceTornadoUntil: 0,
     iceTornadoTarget: "",
+    monkeyPowerStep: 0,
+    bananaSlipUntil: 0,
+    bananaSlipTarget: "",
     tick: 0
   };
 
@@ -280,16 +290,16 @@
     state.won = false;
     state.lost = false;
     state.heroHp = heroes[state.heroId].hp;
-    state.mathHp = 7;
-    state.evilHp = 6;
-    state.foodHp = 7;
-    state.crazyBallHp = 7;
-    state.airplaneHp = 7;
-    state.pusherHp = 7;
-    state.whackerHp = 7;
-    state.archerHp = 7;
-    state.librarianHp = 7;
-    state.busHp = 7;
+    state.mathHp = HEARTS_PER_FIGHTER;
+    state.evilHp = HEARTS_PER_FIGHTER;
+    state.foodHp = HEARTS_PER_FIGHTER;
+    state.crazyBallHp = HEARTS_PER_FIGHTER;
+    state.airplaneHp = HEARTS_PER_FIGHTER;
+    state.pusherHp = HEARTS_PER_FIGHTER;
+    state.whackerHp = HEARTS_PER_FIGHTER;
+    state.archerHp = HEARTS_PER_FIGHTER;
+    state.librarianHp = HEARTS_PER_FIGHTER;
+    state.busHp = HEARTS_PER_FIGHTER;
     state.principalHp = currentBossMaxHp();
     state.earnedPowers = new Set();
     state.mathRewarded = false;
@@ -315,6 +325,9 @@
     state.polarPowerStep = 0;
     state.iceTornadoUntil = 0;
     state.iceTornadoTarget = "";
+    state.monkeyPowerStep = 0;
+    state.bananaSlipUntil = 0;
+    state.bananaSlipTarget = "";
     state.tick = 0;
     els.statusText.textContent = levels[state.level].intro;
     setAttacks(true);
@@ -365,6 +378,10 @@
     }
     if (kind === "power" && state.heroId === "benji") {
       polarPowerAttack(target);
+      return;
+    }
+    if (kind === "power" && state.heroId === "frost") {
+      monkeyPowerAttack(target);
       return;
     }
     if (kind === "power" && mustReachBossForPower(target) && !isCloseEnoughToAttack("kick", target)) {
@@ -419,6 +436,14 @@
     if (isBossInIceTornado(target)) {
       state.action = "polarIceTornado";
       els.statusText.textContent = `${attackName(kind)} hit ${currentBossName(target)} while Ice Tornado is trapping them. They cannot hit back yet!`;
+      updateHud();
+      draw();
+      return;
+    }
+
+    if (isBossSlippingOnBanana(target)) {
+      state.action = "bananaSlip";
+      els.statusText.textContent = `${attackName(kind)} hit ${currentBossName(target)} while they are slipping on Mr. 67's banana peel. They cannot hit back yet!`;
       updateHud();
       draw();
       return;
@@ -667,6 +692,95 @@
     return state.iceTornadoTarget === target && Date.now() < state.iceTornadoUntil;
   }
 
+  function monkeyPowerAttack(target) {
+    const power = monkeyPowers[state.monkeyPowerStep % monkeyPowers.length];
+    state.monkeyPowerStep += 1;
+    state.playerAction = "power";
+    state.playerTarget = target;
+    state.action = power.id;
+    updatePowerButton();
+
+    if (!isCloseEnoughToAttack("kick", target)) {
+      state.action = "miss";
+      els.statusText.textContent = `${currentBossName(target)} is too far away for ${power.name}. Move close with Mr. 67, then use the banana power!`;
+      draw();
+      return;
+    }
+
+    if (power.id === "bananaSlip") {
+      state.bananaSlipUntil = Date.now() + 6000;
+      state.bananaSlipTarget = target;
+    }
+
+    damageBoss(target, power.damage);
+    checkPowerRewards();
+    if (currentBossHp() === 0) {
+      state.won = true;
+      state.action = "win";
+      els.statusText.textContent = `${power.name} finished the fight for ${heartText(power.damage)}. ${levelWinText()}`;
+      if (advanceAfterWin()) {
+        return;
+      }
+      setAttacks(true);
+      updateLevelLocks();
+      updateHud();
+      draw();
+      return;
+    }
+
+    if (isBossInTrunk(target)) {
+      els.statusText.textContent = `${power.name} hit for ${heartText(power.damage)} while Elephant Trunk Grab is holding ${currentBossName(target)}.`;
+      updateHud();
+      draw();
+      return;
+    }
+
+    if (isBossPowerSilenced(target)) {
+      els.statusText.textContent = `${power.name} hit for ${heartText(power.damage)} while Parrot Power Scream is blocking ${currentBossName(target)}'s powers.`;
+      updateHud();
+      draw();
+      return;
+    }
+
+    if (isBossInIceTornado(target)) {
+      els.statusText.textContent = `${power.name} hit for ${heartText(power.damage)} while Ice Tornado is trapping ${currentBossName(target)}.`;
+      updateHud();
+      draw();
+      return;
+    }
+
+    if (isBossSlippingOnBanana(target)) {
+      els.statusText.textContent = `${power.name} hit for ${heartText(power.damage)}. ${currentBossName(target)} slipped on the banana peel and cannot hit back for a few seconds!`;
+      updateHud();
+      draw();
+      return;
+    }
+
+    const laneDodged = canLaneDodge(target) && Date.now() < state.laneDodgeUntil && dodgeBeatsLane(state.laneDodgeDirection, state.projectileLane);
+    const dodged = Date.now() < state.hiddenUntil || Date.now() < state.jumpingUntil || laneDodged;
+    applyBossPower(target, false, dodged);
+    const bossAction = state.action;
+    const bossDamage = bossDamageForAction(bossAction);
+    state.heroHp = Math.max(0, state.heroHp - (dodged ? 0 : bossDamage));
+    if (state.heroHp === 0) {
+      state.lost = true;
+      state.action = "lost";
+      els.statusText.textContent = "The forest bosses won this round. Reset for a rematch.";
+      setAttacks(true);
+      updateHud();
+      draw();
+      return;
+    }
+    state.action = power.id;
+    els.statusText.textContent = `${power.name} hit ${currentBossName(target)} for ${heartText(power.damage)}. ${bossCounterText(target, false, dodged, laneDodged, bossAction, bossDamage)}`;
+    updateHud();
+    draw();
+  }
+
+  function isBossSlippingOnBanana(target) {
+    return state.bananaSlipTarget === target && Date.now() < state.bananaSlipUntil;
+  }
+
   function useDefenseMove(kind) {
     const now = Date.now();
     state.playerAction = kind;
@@ -717,6 +831,10 @@
     }
     if (isBossInIceTornado(target)) {
       state.action = "polarIceTornado";
+      return;
+    }
+    if (isBossSlippingOnBanana(target)) {
+      state.action = "bananaSlip";
       return;
     }
     if (blocked) {
@@ -914,11 +1032,11 @@
   }
 
   function currentBossMaxHp() {
-    if (state.level === 1) return 13;
-    if (state.level === 2) return 7;
-    if (state.level === 3) return 7;
-    if (state.level >= 4) return bossLevels[state.level].maxHp || 5;
-    return 7;
+    if (state.level === 1) return HEARTS_PER_FIGHTER * 2;
+    if (state.level === 2) return HEARTS_PER_FIGHTER;
+    if (state.level === 3) return HEARTS_PER_FIGHTER;
+    if (state.level >= 4) return bossLevels[state.level].maxHp || HEARTS_PER_FIGHTER;
+    return HEARTS_PER_FIGHTER;
   }
 
   function levelWinText() {
@@ -1115,6 +1233,11 @@
       els.statusText.textContent = `${currentBossName(target)} is trapped in Benji's Ice Tornado. Keep moving closer!`;
       return true;
     }
+    if (isBossSlippingOnBanana(target)) {
+      state.action = "bananaSlip";
+      els.statusText.textContent = `${currentBossName(target)} is slipping on Mr. 67's banana peel. Keep moving closer!`;
+      return true;
+    }
     state.bossPressureStep += 1;
     if (canLaneDodge(target)) {
       state.projectileLane = nextProjectileLane();
@@ -1233,6 +1356,9 @@
     }
     if (state.heroId === "benji") {
       return polarPowers[state.polarPowerStep % polarPowers.length].name;
+    }
+    if (state.heroId === "frost") {
+      return monkeyPowers[state.monkeyPowerStep % monkeyPowers.length].name;
     }
     return hero.firstPower;
   }
@@ -2766,6 +2892,15 @@
       } else if (state.action === "polarIceTornado") {
         drawPolarPowerEffect("tornado");
         drawImpact("ICE TORNADO!", 650, 215, "#45a6db");
+      } else if (state.action === "bananaStorm") {
+        drawMonkeyPowerEffect("storm");
+        drawImpact("BANANA STORM!", 650, 215, "#a4c43a");
+      } else if (state.action === "bananaShoot") {
+        drawMonkeyPowerEffect("shoot");
+        drawImpact("BANANA SHOOT!", 650, 215, "#ffd84a");
+      } else if (state.action === "bananaSlip") {
+        drawMonkeyPowerEffect("slip");
+        drawImpact("BANANA SLIP!", 650, 215, "#ffd84a");
       } else if (state.action.startsWith("principal")) {
         drawPrincipalAttack(state.heroX, state.heroY, state.action);
         drawImpact("PRINCIPAL!", 650, 215, "#6f737a");
@@ -2946,6 +3081,72 @@
       ctx.font = "900 22px Trebuchet MS";
       ctx.textAlign = "center";
       ctx.fillText("TRAPPED 10", boss.x - 82, boss.y - 178);
+    }
+    ctx.restore();
+  }
+
+  function drawMonkeyPowerEffect(kind) {
+    const boss = currentBossPosition(state.playerTarget || state.bananaSlipTarget || currentTarget());
+    ctx.save();
+    if (kind === "storm") {
+      ctx.fillStyle = "#ffd84a";
+      ctx.strokeStyle = "#171216";
+      ctx.lineWidth = 4;
+      for (let drop = 0; drop < 3; drop += 1) {
+        const x = boss.x - 168 + drop * 54;
+        const y = boss.y - 164 + drop * 42;
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(-0.65 + drop * 0.35);
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 16, 38, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.restore();
+      }
+      ctx.fillStyle = "#6ca122";
+      ctx.font = "900 22px Trebuchet MS";
+      ctx.textAlign = "center";
+      ctx.fillText("3 x 0.5", boss.x - 92, boss.y - 186);
+    } else if (kind === "shoot") {
+      ctx.strokeStyle = "#ffd84a";
+      ctx.lineWidth = 12;
+      ctx.beginPath();
+      ctx.moveTo(state.heroX + 56, state.heroY - 112);
+      ctx.quadraticCurveTo(650, 190, boss.x - 88, boss.y - 88);
+      ctx.stroke();
+      ctx.fillStyle = "#ffd84a";
+      ctx.strokeStyle = "#171216";
+      ctx.lineWidth = 5;
+      ctx.save();
+      ctx.translate(boss.x - 88, boss.y - 88);
+      ctx.rotate(-0.5);
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 20, 48, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+    } else {
+      ctx.fillStyle = "#ffd84a";
+      ctx.strokeStyle = "#171216";
+      ctx.lineWidth = 5;
+      ctx.save();
+      ctx.translate(boss.x - 92, boss.y + 42);
+      ctx.rotate(1.25);
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 16, 54, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+      ctx.strokeStyle = "#6ca122";
+      ctx.lineWidth = 7;
+      ctx.beginPath();
+      ctx.arc(boss.x - 82, boss.y - 46, 76, 0.15, Math.PI * 1.35);
+      ctx.stroke();
+      ctx.fillStyle = "#fffef7";
+      ctx.font = "900 22px Trebuchet MS";
+      ctx.textAlign = "center";
+      ctx.fillText("SLIPPING", boss.x - 82, boss.y - 138);
     }
     ctx.restore();
   }
