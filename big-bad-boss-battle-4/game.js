@@ -4,17 +4,17 @@
   const HEARTS_PER_FIGHTER = 8;
 
   const heroes = {
-    tats: { name: "Super Tats", color: "#1478cf", accent: "#78c9ff", hp: HEARTS_PER_FIGHTER, firstPower: "Elephant Trunk Grab" },
-    fary: { name: "Mom Fary", color: "#8542d8", accent: "#ff89c6", hp: HEARTS_PER_FIGHTER, firstPower: "Parrot Power Scream" },
-    apple: { name: "Super Appie Juice", color: "#f18319", accent: "#ffcf54", hp: HEARTS_PER_FIGHTER, firstPower: "Cheetah Super Speed" },
-    freddy: { name: "Freddy", color: "#17633c", accent: "#f0cf62", hp: HEARTS_PER_FIGHTER, firstPower: "Fennec Love" },
-    benji: { name: "Benji", color: "#6f737a", accent: "#45a6db", hp: HEARTS_PER_FIGHTER, firstPower: "Teeth Attack" },
-    frost: { name: "Mr. 67", color: "#146e8f", accent: "#6cf0c2", hp: HEARTS_PER_FIGHTER, firstPower: "Poisonous Banana Storm" },
+    tats: { name: "Super Tats", color: "#1478cf", accent: "#78c9ff", hp: HEARTS_PER_FIGHTER, firstPower: "Giant Punch" },
+    fary: { name: "Mom Fary", color: "#8542d8", accent: "#ff89c6", hp: HEARTS_PER_FIGHTER, firstPower: "Wing Gust" },
+    apple: { name: "Super Appie Juice", color: "#f18319", accent: "#ffcf54", hp: HEARTS_PER_FIGHTER, firstPower: "Apple Juice Shot" },
+    freddy: { name: "Freddy", color: "#17633c", accent: "#f0cf62", hp: HEARTS_PER_FIGHTER, firstPower: "Mammal" },
+    benji: { name: "Benji", color: "#6f737a", accent: "#45a6db", hp: HEARTS_PER_FIGHTER, firstPower: "Tornado" },
+    frost: { name: "Mr. 67", color: "#146e8f", accent: "#6cf0c2", hp: HEARTS_PER_FIGHTER, firstPower: "Freeze Block" },
     ness: { name: "Super Ness", color: "#c73583", accent: "#6bd8ff", hp: HEARTS_PER_FIGHTER, firstPower: "Super Kick" },
     crayon: { name: "Captain Crayonstorm", color: "#21a36c", accent: "#f5d129", hp: HEARTS_PER_FIGHTER, firstPower: "Crayon Barrage" },
     hoodie: { name: "Zap Hoodie", color: "#1f1f29", accent: "#49d9ff", hp: HEARTS_PER_FIGHTER, firstPower: "Zip Zap" },
-    mayer: { name: "Mischievous Mayer", color: "#6b28c7", accent: "#f08318", hp: HEARTS_PER_FIGHTER, firstPower: "Super Big Bock" },
-    yonatan: { name: "Yapping Yonatan", color: "#f07918", accent: "#d61f2f", hp: HEARTS_PER_FIGHTER, firstPower: "Crocodile Jaw" }
+    mayer: { name: "Mischievous Mayer", color: "#6b28c7", accent: "#f08318", hp: HEARTS_PER_FIGHTER, firstPower: "Flying Boots" },
+    yonatan: { name: "Yapping Yonatan", color: "#f07918", accent: "#d61f2f", hp: HEARTS_PER_FIGHTER, firstPower: "Mouth Monsters" }
   };
 
   const travelStops = [
@@ -26,52 +26,52 @@
   const levels = {
     1: {
       title: "Level 1 Florida",
-      intro: "Who do you want to choose: Mischievous Mayer or Yapping Yonatan?",
+      intro: "Who do you want to choose: Mischievous Mayer, Yapping Yonatan, or Ice Boss?",
       start: "Level 1 started in Florida. Fight the boss you chose!"
     },
     2: {
       title: "Level 2 New York",
-      intro: "Who do you want to choose: Mischievous Mayer or Yapping Yonatan?",
+      intro: "Who do you want to choose: Mischievous Mayer, Yapping Yonatan, or Ice Boss?",
       start: "Level 2 started in New York. Fight the boss you chose!"
     },
     3: {
       title: "Level 3 Paris",
-      intro: "Who do you want to choose: Mischievous Mayer or Yapping Yonatan?",
+      intro: "Who do you want to choose: Mischievous Mayer, Yapping Yonatan, or Ice Boss?",
       start: "Level 3 started in Paris. The boss is a little quicker now!"
     },
     4: {
       title: "Level 4 Antarctica",
-      intro: "Who do you want to choose: Mischievous Mayer or Yapping Yonatan?",
+      intro: "Who do you want to choose: Mischievous Mayer, Yapping Yonatan, or Ice Boss?",
       start: "Level 4 started in Antarctica. The boss hits a little harder!"
     },
     5: {
       title: "Level 5 London",
-      intro: "Who do you want to choose: Mischievous Mayer or Yapping Yonatan?",
+      intro: "Who do you want to choose: Mischievous Mayer, Yapping Yonatan, or Ice Boss?",
       start: "Level 5 started in London. Watch for stronger boss powers!"
     },
     6: {
       title: "Level 6 Tokyo",
-      intro: "Who do you want to choose: Mischievous Mayer or Yapping Yonatan?",
+      intro: "Who do you want to choose: Mischievous Mayer, Yapping Yonatan, or Ice Boss?",
       start: "Level 6 started in Tokyo. The boss gets faster!"
     },
     7: {
       title: "Level 7 Egypt",
-      intro: "Who do you want to choose: Mischievous Mayer or Yapping Yonatan?",
+      intro: "Who do you want to choose: Mischievous Mayer, Yapping Yonatan, or Ice Boss?",
       start: "Level 7 started in Egypt. Choose your boss and move close to attack!"
     },
     8: {
       title: "Level 8 Amazon",
-      intro: "Who do you want to choose: Mischievous Mayer or Yapping Yonatan?",
+      intro: "Who do you want to choose: Mischievous Mayer, Yapping Yonatan, or Ice Boss?",
       start: "Level 8 started in the Amazon. The boss powers are getting sharper!"
     },
     9: {
       title: "Level 9 Hawaii",
-      intro: "Who do you want to choose: Mischievous Mayer or Yapping Yonatan?",
+      intro: "Who do you want to choose: Mischievous Mayer, Yapping Yonatan, or Ice Boss?",
       start: "Level 9 started in Hawaii. The boss attacks more often!"
     },
     10: {
       title: "Level 10 Australia",
-      intro: "Who do you want to choose: Mischievous Mayer or Yapping Yonatan?",
+      intro: "Who do you want to choose: Mischievous Mayer, Yapping Yonatan, or Ice Boss?",
       start: "Level 10 started in Australia. Fight the boss you chose!"
     }
   };
@@ -176,7 +176,7 @@
     const place = travelStops[level - 1];
     levels[level] = {
       title: `Level ${level} ${place}`,
-      intro: "Who do you want to choose: Mischievous Mayer or Yapping Yonatan?",
+      intro: "Who do you want to choose: Mischievous Mayer, Yapping Yonatan, or Ice Boss?",
       start: `Level ${level} started in ${place}. Fight the boss you chose and get ready for stronger powers!`
     };
     bossLevels[level] = {
@@ -207,52 +207,52 @@
   };
 
   const elephantPowers = [
-    { id: "elephantTrunkGrab", name: "Elephant Trunk Grab", damage: 3 },
-    { id: "elephantForestStomp", name: "Forest Stomp", damage: 2 },
-    { id: "elephantTuskShield", name: "Tusk Shield", damage: 0 }
+    { id: "elephantTrunkGrab", name: "Giant Punch", damage: 3 },
+    { id: "elephantForestStomp", name: "Super Stomp", damage: 2 },
+    { id: "elephantTuskShield", name: "Gorilla Jump", damage: 0 }
   ];
 
   const parrotPowers = [
-    { id: "parrotScream", name: "Parrot Power Scream", damage: 0 },
-    { id: "parrotWingBlast", name: "Wing Blast", damage: 1.5 },
-    { id: "parrotHealingFeather", name: "Healing Feather", damage: 0 }
+    { id: "parrotScream", name: "Wing Gust", damage: 0 },
+    { id: "parrotWingBlast", name: "Fly", damage: 1.5 },
+    { id: "parrotHealingFeather", name: "Takeoff Jump", damage: 0 }
   ];
 
   const cheetahPowers = [
-    { id: "cheetahSpeed", name: "Cheetah Super Speed", damage: 0.5 },
-    { id: "cheetahTailGrab", name: "Tail Grab", damage: 0.5 },
-    { id: "cheetahClaws", name: "Claw Scratch", damage: 0.5 }
+    { id: "cheetahSpeed", name: "Apple Juice Shot", damage: 0.5 },
+    { id: "cheetahTailGrab", name: "Apple Juice Tornado", damage: 0.5 },
+    { id: "cheetahClaws", name: "Apple Juice Lightning", damage: 0.5 }
   ];
 
   const polarPowers = [
-    { id: "polarTeeth", name: "Teeth Attack", damage: 1.5 },
-    { id: "polarIceChunk", name: "Ice Chunk", damage: 1 },
-    { id: "polarIceTornado", name: "Ice Tornado", damage: 0.5 }
+    { id: "polarTeeth", name: "Tornado", damage: 1.5 },
+    { id: "polarIceChunk", name: "Teleport", damage: 1 },
+    { id: "polarIceTornado", name: "Sharks", damage: 0.5 }
   ];
 
   const monkeyPowers = [
-    { id: "bananaStorm", name: "Poisonous Banana Storm", damage: 1.5 },
-    { id: "bananaShoot", name: "Banana Shoot", damage: 1 },
-    { id: "bananaSlip", name: "Banana Peel Slip", damage: 0.5 }
+    { id: "bananaStorm", name: "Freeze Block", damage: 1.5 },
+    { id: "bananaShoot", name: "Burrow Strike", damage: 1 },
+    { id: "bananaSlip", name: "Poison Storm", damage: 0.5 }
   ];
 
   const fennecPowers = [
-    { id: "fennecLove", name: "Fennec Love", damage: 1 },
-    { id: "fennecSneakBite", name: "Sneak Bite", damage: 1 },
-    { id: "fennecPounce", name: "Pounce", damage: 0 }
+    { id: "fennecLove", name: "Mammal", damage: 1 },
+    { id: "fennecSneakBite", name: "Reptile", damage: 1 },
+    { id: "fennecPounce", name: "Multiplication", damage: 0 }
   ];
 
   const mayerPowers = [
-    { id: "mayerBigBock", name: "Super Big Bock", damage: 0.5 },
-    { id: "mayerFlyUp", name: "Fly Up", damage: 0 },
-    { id: "mayerRoosterFlyers", name: "Chicken Cockadoodle Rooster Flyers", damage: 1 }
+    { id: "mayerBigBock", name: "Flying Boots", damage: 0.5 },
+    { id: "mayerFlyUp", name: "Mayor Bots", damage: 0 },
+    { id: "mayerRoosterFlyers", name: "Laser Ray", damage: 1 }
   ];
 
   const yonatanPowers = [
-    { id: "yonatanJaw", name: "Crocodile Jaw", damage: 1 },
-    { id: "yonatanChomper", name: "Crocodile Chomper", damage: 1 },
-    { id: "yonatanTailSwipe", name: "Tail Swipe", damage: 0.5 },
-    { id: "yonatanAlligatorMonsters", name: "Alligator Monsters", damage: 1 }
+    { id: "yonatanJaw", name: "Mouth Monsters", damage: 1 },
+    { id: "yonatanChomper", name: "Yap Blast", damage: 1 },
+    { id: "yonatanTailSwipe", name: "Super Yap", damage: 0.5 },
+    { id: "yonatanAlligatorMonsters", name: "Mega Mouth Monster", damage: 1 }
   ];
 
   const els = {
@@ -280,6 +280,7 @@
     heroHp: HEARTS_PER_FIGHTER,
     mathHp: HEARTS_PER_FIGHTER,
     evilHp: HEARTS_PER_FIGHTER,
+    iceHp: HEARTS_PER_FIGHTER,
     foodHp: HEARTS_PER_FIGHTER,
     crazyBallHp: HEARTS_PER_FIGHTER,
     airplaneHp: HEARTS_PER_FIGHTER,
@@ -292,6 +293,7 @@
     earnedPowers: new Set(),
     mathRewarded: false,
     evilRewarded: false,
+    iceRewarded: false,
     heroX: 235,
     heroY: 410,
     action: "",
@@ -336,7 +338,7 @@
   };
 
   const progress = {
-    unlockedLevel: Number(localStorage.getItem("bbb3UnlockedLevel") || "1")
+    unlockedLevel: Number(localStorage.getItem("bbb4UnlockedLevel") || "1")
   };
 
   function resetGame() {
@@ -346,6 +348,7 @@
     state.heroHp = heroes[state.heroId].hp;
     state.mathHp = HEARTS_PER_FIGHTER;
     state.evilHp = HEARTS_PER_FIGHTER;
+    state.iceHp = HEARTS_PER_FIGHTER;
     state.foodHp = HEARTS_PER_FIGHTER;
     state.crazyBallHp = HEARTS_PER_FIGHTER;
     state.airplaneHp = HEARTS_PER_FIGHTER;
@@ -358,6 +361,7 @@
     state.earnedPowers = new Set();
     state.mathRewarded = false;
     state.evilRewarded = false;
+    state.iceRewarded = false;
     state.heroX = 235;
     state.heroY = 410;
     state.action = "";
@@ -488,7 +492,6 @@
     const damage = heroAttackDamage(kind === "power" ? usePowerDamage() : kind === "kick" ? 2 : 1);
     damageBoss(target, damage);
     checkPowerRewards();
-    state.chosenBossTarget = chooseAliveLevelOneTarget(state.chosenBossTarget);
     updateBossTargetChoices();
 
     if (currentBossHp() === 0) {
@@ -507,7 +510,7 @@
 
     if (isBossInTrunk(target)) {
       state.action = "trunkGrab";
-      els.statusText.textContent = `${attackName(kind)} hit ${currentBossName(target)} while Elephant Trunk Grab is holding them. They cannot hit back yet!`;
+      els.statusText.textContent = `${attackName(kind)} hit ${currentBossName(target)} while Giant Punch knocked them back. They cannot hit back yet!`;
       updateHud();
       draw();
       return;
@@ -515,7 +518,7 @@
 
     if (isBossPowerSilenced(target)) {
       state.action = "parrotScream";
-      els.statusText.textContent = `${attackName(kind)} hit ${currentBossName(target)} while Parrot Power Scream is blocking their powers. They cannot use a special attack yet!`;
+      els.statusText.textContent = `${attackName(kind)} hit ${currentBossName(target)} while Wing Gust is blocking their powers. They cannot use a special attack yet!`;
       updateHud();
       draw();
       return;
@@ -555,7 +558,7 @@
 
     if (isBossChomped(target)) {
       state.action = "yonatanChomper";
-      els.statusText.textContent = `${attackName(kind)} hit ${currentBossName(target)} while the floor is broken from Crocodile Chomper.`;
+      els.statusText.textContent = `${attackName(kind)} hit ${currentBossName(target)} while the floor is broken from Yap Blast.`;
       updateHud();
       draw();
       return;
@@ -572,7 +575,7 @@
     if (state.heroHp === 0) {
       state.lost = true;
       state.action = "lost";
-      els.statusText.textContent = "The forest bosses won this round. Reset for a rematch.";
+      els.statusText.textContent = "The world bosses won this round. Reset for a rematch.";
       setAttacks(true);
       updateHud();
       draw();
@@ -604,7 +607,7 @@
     }
     if (!isCloseEnoughToAttack("kick", target)) {
       state.action = "miss";
-      els.statusText.textContent = `${currentBossName(target)} is too far away for Forest Stomp. Move close, then stomp!`;
+      els.statusText.textContent = `${currentBossName(target)} is too far away for Super Stomp. Move close, then stomp!`;
       draw();
       return;
     }
@@ -613,7 +616,7 @@
     if (currentBossHp() === 0) {
       state.won = true;
       state.action = "win";
-      els.statusText.textContent = `Forest Stomp finished the fight. ${levelWinText()}`;
+      els.statusText.textContent = `Super Stomp finished the fight. ${levelWinText()}`;
       if (advanceAfterWin()) return;
       setAttacks(true);
       updateHud();
@@ -627,7 +630,7 @@
     state.playerAction = "power";
     if (!isCloseEnoughToAttack("kick", target)) {
       state.action = "miss";
-      els.statusText.textContent = `${currentBossName(target)} is too far away for Elephant Trunk Grab. Move close, then grab with the trunk!`;
+      els.statusText.textContent = `${currentBossName(target)} is too far away for Giant Punch. Move close, then punch!`;
       draw();
       return;
     }
@@ -650,7 +653,7 @@
       draw();
       return;
     }
-    els.statusText.textContent = `Elephant Trunk Grab! Super Tats grabbed ${currentBossName(target)}, held them in his trunk, and threw them for ${heartText(damage)}. They cannot hit back for 30 seconds.`;
+    els.statusText.textContent = `Giant Punch! Super Tats grabbed ${currentBossName(target)}, hit them with a huge superhero punch for ${heartText(damage)}. They cannot hit back for 30 seconds.`;
     updateHud();
     draw();
   }
@@ -700,14 +703,14 @@
     state.playerAction = "power";
     if (!isCloseEnoughToAttack("kick", target)) {
       state.action = "miss";
-      els.statusText.textContent = `${currentBossName(target)} is too far away for Parrot Power Scream. Move close, then scream!`;
+      els.statusText.textContent = `${currentBossName(target)} is too far away for Wing Gust. Move close, then gust!`;
       draw();
       return;
     }
     state.powerSilenceUntil = Date.now() + 30000;
     state.powerSilenceTarget = target;
     state.action = "parrotScream";
-    els.statusText.textContent = `Parrot Power Scream! Mom Fary screamed so loud that ${currentBossName(target)} lost their powers for 30 seconds. They can still move, but no special powers!`;
+    els.statusText.textContent = `Wing Gust! Mom Fary blasted a wing gust so strong that ${currentBossName(target)} lost their powers for 30 seconds. They can still move, but no special powers!`;
     updateHud();
     draw();
   }
@@ -763,14 +766,14 @@
     }
 
     if (isBossInTrunk(target)) {
-      els.statusText.textContent = `${power.name} hit for ${heartText(power.damage)} while Elephant Trunk Grab is holding ${currentBossName(target)}.`;
+      els.statusText.textContent = `${power.name} hit for ${heartText(power.damage)} while Giant Punch stunned ${currentBossName(target)}.`;
       updateHud();
       draw();
       return;
     }
 
     if (isBossPowerSilenced(target)) {
-      els.statusText.textContent = `${power.name} hit for ${heartText(power.damage)} while Parrot Power Scream is blocking ${currentBossName(target)}'s powers.`;
+      els.statusText.textContent = `${power.name} hit for ${heartText(power.damage)} while Wing Gust is blocking ${currentBossName(target)}'s powers.`;
       updateHud();
       draw();
       return;
@@ -785,7 +788,7 @@
     if (state.heroHp === 0) {
       state.lost = true;
       state.action = "lost";
-      els.statusText.textContent = "The forest bosses won this round. Reset for a rematch.";
+      els.statusText.textContent = "The world bosses won this round. Reset for a rematch.";
       setAttacks(true);
       updateHud();
       draw();
@@ -833,7 +836,6 @@
     const damage = power.damage;
     damageBoss(target, damage);
     checkPowerRewards();
-    state.chosenBossTarget = chooseAliveLevelOneTarget(state.chosenBossTarget);
     updateBossTargetChoices();
     if (currentBossHp() === 0) {
       state.won = true;
@@ -850,7 +852,7 @@
     }
 
     if (power.id === "fennecLove") {
-      els.statusText.textContent = `Fennec Love! Freddy made ${currentBossName(target)} fall on the floor for 10 seconds. It took away ${heartText(damage)} of love.`;
+      els.statusText.textContent = `Mammal Power! Freddy made ${currentBossName(target)} fall on the floor for 10 seconds. It took away ${heartText(damage)} of love.`;
       updateHud();
       draw();
       return;
@@ -906,14 +908,14 @@
     }
 
     if (isBossInTrunk(target)) {
-      els.statusText.textContent = `${power.name} hit for ${heartText(power.damage)} while Elephant Trunk Grab is holding ${currentBossName(target)}.`;
+      els.statusText.textContent = `${power.name} hit for ${heartText(power.damage)} while Giant Punch stunned ${currentBossName(target)}.`;
       updateHud();
       draw();
       return;
     }
 
     if (isBossPowerSilenced(target)) {
-      els.statusText.textContent = `${power.name} hit for ${heartText(power.damage)} while Parrot Power Scream is blocking ${currentBossName(target)}'s powers.`;
+      els.statusText.textContent = `${power.name} hit for ${heartText(power.damage)} while Wing Gust is blocking ${currentBossName(target)}'s powers.`;
       updateHud();
       draw();
       return;
@@ -935,7 +937,7 @@
     if (state.heroHp === 0) {
       state.lost = true;
       state.action = "lost";
-      els.statusText.textContent = "The forest bosses won this round. Reset for a rematch.";
+      els.statusText.textContent = "The world bosses won this round. Reset for a rematch.";
       setAttacks(true);
       updateHud();
       draw();
@@ -987,14 +989,14 @@
     }
 
     if (isBossInTrunk(target)) {
-      els.statusText.textContent = `${power.name} hit for ${heartText(power.damage)} while Elephant Trunk Grab is holding ${currentBossName(target)}.`;
+      els.statusText.textContent = `${power.name} hit for ${heartText(power.damage)} while Giant Punch stunned ${currentBossName(target)}.`;
       updateHud();
       draw();
       return;
     }
 
     if (isBossPowerSilenced(target)) {
-      els.statusText.textContent = `${power.name} hit for ${heartText(power.damage)} while Parrot Power Scream is blocking ${currentBossName(target)}'s powers.`;
+      els.statusText.textContent = `${power.name} hit for ${heartText(power.damage)} while Wing Gust is blocking ${currentBossName(target)}'s powers.`;
       updateHud();
       draw();
       return;
@@ -1023,7 +1025,7 @@
     if (state.heroHp === 0) {
       state.lost = true;
       state.action = "lost";
-      els.statusText.textContent = "The forest bosses won this round. Reset for a rematch.";
+      els.statusText.textContent = "The world bosses won this round. Reset for a rematch.";
       setAttacks(true);
       updateHud();
       draw();
@@ -1064,7 +1066,6 @@
 
     damageBoss(target, power.damage);
     checkPowerRewards();
-    state.chosenBossTarget = chooseAliveLevelOneTarget(state.chosenBossTarget);
     updateBossTargetChoices();
     if (currentBossHp() === 0) {
       state.won = true;
@@ -1109,7 +1110,6 @@
 
     damageBoss(target, power.damage);
     checkPowerRewards();
-    state.chosenBossTarget = chooseAliveLevelOneTarget(state.chosenBossTarget);
     updateBossTargetChoices();
     if (currentBossHp() === 0) {
       state.won = true;
@@ -1123,7 +1123,7 @@
       return;
     }
     if (power.id === "yonatanChomper") {
-      els.statusText.textContent = `Crocodile Chomper! Half the floor fell and ${currentBossName(target)} lost ${heartText(power.damage)}.`;
+      els.statusText.textContent = `Yap Blast! Half the floor fell and ${currentBossName(target)} lost ${heartText(power.damage)}.`;
       updateHud();
       draw();
       return;
@@ -1147,7 +1147,7 @@
     if (state.heroHp === 0) {
       state.lost = true;
       state.action = "lost";
-      els.statusText.textContent = "The forest bosses won this round. Reset for a rematch.";
+      els.statusText.textContent = "The world bosses won this round. Reset for a rematch.";
       setAttacks(true);
       updateHud();
       draw();
@@ -1189,6 +1189,8 @@
       state.mathHp = Math.max(0, state.mathHp - damage);
     } else if (target === "evil") {
       state.evilHp = Math.max(0, state.evilHp - damage);
+    } else if (target === "ice") {
+      state.iceHp = Math.max(0, state.iceHp - damage);
     } else if (target === "food") {
       state.foodHp = Math.max(0, state.foodHp - damage);
     } else if (target === "crazyBall") {
@@ -1315,6 +1317,12 @@
         state.heroY = clamp(state.heroY + 38, 270, 470);
       }
       state.action = "letterShot";
+    } else if (target === "ice") {
+      if (!avoided) {
+        state.trappedUntil = Date.now() + 2200;
+        state.heroX = clamp(state.heroX - 34, 120, 560);
+      }
+      state.action = "iceBossFreeze";
     } else if (target === "food") {
       if (!avoided) state.heroY = clamp(state.heroY + 28, 270, 470);
       state.action = "garbageShot";
@@ -1422,8 +1430,9 @@
   }
 
   function bossAttackText(target, bossAction = state.action) {
-    if (target === "math") return "Mischievous Mayer flapped in with a chicken mischief strike.";
-    if (target === "evil") return "Yapping Yonatan snapped with an alligator yap blast.";
+    if (target === "math") return "Mischievous Mayer rushed in with a mischief strike.";
+    if (target === "evil") return "Yapping Yonatan blasted a huge yap attack.";
+    if (target === "ice") return "Ice Boss stomped and sent freezing blue ice at you.";
     if (target === "food") return "Food Monster Fiasco shot garbage.";
     if (target === "airplane") return "Airplane Attacker flew high, bent its wings, and dove down.";
     if (target === "pusher") return "Paper Pusher rushed forward.";
@@ -1447,10 +1456,13 @@
       return "Homework Shield blocked the boss power!";
     }
     if (target === "math") {
-      return "Mischievous Mayer used Chicken Mischief and caught you for 5 seconds!";
+      return "Mischievous Mayer used Mischief Trap and caught you for 5 seconds!";
     }
     if (target === "evil") {
-      return "Yapping Yonatan used Alligator Yap Blast and knocked you down!";
+      return "Yapping Yonatan used Yap Blast and knocked you down!";
+    }
+    if (target === "ice") {
+      return "Ice Boss used Freeze Stomp and froze the ground under you!";
     }
     if (target === "food") {
       return "Food Monster Fiasco shot garbage and took away half a heart!";
@@ -1484,12 +1496,20 @@
     return bossAction === "ballRollHit" ? "The Crazy Ball rolled on top of you and attacked!" : "The Crazy Ball rolled by and missed!";
   }
 
+  function bossHpFor(target) {
+    if (target === "evil") return state.evilHp;
+    if (target === "ice") return state.iceHp;
+    return state.mathHp;
+  }
+
   function currentTarget() {
-    return state.chosenBossTarget === "evil" ? "evil" : "math";
+    if (state.chosenBossTarget === "evil") return "evil";
+    if (state.chosenBossTarget === "ice") return "ice";
+    return "math";
   }
 
   function currentBossHp() {
-    return state.chosenBossTarget === "evil" ? state.evilHp : state.mathHp;
+    return bossHpFor(currentTarget());
   }
 
   function currentBossMaxHp() {
@@ -1503,15 +1523,17 @@
   function currentBossName(target = currentTarget()) {
     if (target === "math") return "Mischievous Mayer";
     if (target === "evil") return "Yapping Yonatan";
+    if (target === "ice") return "Ice Boss";
     if (target === "food") return "Food Monster Fiasco";
     if (target === "crazyBall") return "The Crazy Ball";
     if (target === "principal") return bossLevels[state.level].name;
-    return "Forest Boss";
+    return "World Boss";
   }
 
   function currentBossPosition(target = currentTarget()) {
     if (target === "math") return { x: 940, y: 355 };
     if (target === "evil") return { x: 990, y: 410 };
+    if (target === "ice") return { x: 965, y: 390 };
     if (target === "food") return { x: 950, y: 390 };
     if (target === "crazyBall") return { x: 950, y: 390 };
     return { x: 950, y: 380 };
@@ -1561,6 +1583,12 @@
       els.statusText.textContent = "Power-up earned: Poetry Blast from Yapping Yonatan!";
       renderPowers();
     }
+    if (!state.iceRewarded && state.iceHp === 0) {
+      state.iceRewarded = true;
+      state.earnedPowers.add("homeworkShield");
+      els.statusText.textContent = "Power-up earned: Ice Shield from Ice Boss!";
+      renderPowers();
+    }
   }
 
   function chooseHero(id) {
@@ -1569,7 +1597,7 @@
     document.querySelectorAll(".hero-choice").forEach((button) => {
       button.classList.toggle("selected", button.dataset.hero === id);
     });
-    els.statusText.textContent = `${heroes[id].name} is ready for Big Bad Boss Battle 3.`;
+    els.statusText.textContent = `${heroes[id].name} is ready for Big Bad Boss Battle 4.`;
     updatePowerButton();
     updateHud();
     draw();
@@ -1595,9 +1623,9 @@
       els.statusText.textContent = "Finish this fight or press Reset before choosing a different boss.";
       return;
     }
-    const hp = target === "math" ? state.mathHp : state.evilHp;
+    const hp = bossHpFor(target);
     if (hp <= 0) {
-      els.statusText.textContent = `${currentBossName(target)} is already defeated. Pick the other boss.`;
+      els.statusText.textContent = `${currentBossName(target)} is already defeated. Pick a different boss.`;
       updateBossTargetChoices();
       return;
     }
@@ -1616,12 +1644,14 @@
     targetSelect.classList.toggle("hidden", !showPicker);
     targetSelect.querySelectorAll(".target-choice").forEach((button) => {
       const target = button.dataset.target;
-      const hp = target === "math" ? state.mathHp : state.evilHp;
+      const hp = bossHpFor(target);
       const defeated = hp <= 0 && state.started;
       button.disabled = !showPicker || defeated;
       button.classList.toggle("defeated", defeated);
       button.classList.toggle("selected", target === state.chosenBossTarget && showPicker);
-      button.textContent = target === "math" ? "Choose Mischievous Mayer" : "Choose Yapping Yonatan";
+      if (target === "math") button.textContent = "Choose Mischievous Mayer";
+      else if (target === "evil") button.textContent = "Choose Yapping Yonatan";
+      else button.textContent = "Choose Ice Boss";
     });
   }
 
@@ -1632,7 +1662,7 @@
   function unlockNextLevel() {
     if (state.level < 30 && progress.unlockedLevel < state.level + 1) {
       progress.unlockedLevel = state.level + 1;
-      localStorage.setItem("bbb3UnlockedLevel", String(progress.unlockedLevel));
+      localStorage.setItem("bbb4UnlockedLevel", String(progress.unlockedLevel));
       els.statusText.textContent = `${levelWinText()} Level ${progress.unlockedLevel} unlocked!`;
     }
   }
@@ -1719,7 +1749,7 @@
     }
     if (isBossPowerSilenced(target)) {
       state.action = "parrotScream";
-      els.statusText.textContent = `${currentBossName(target)} tried to use a power, but Parrot Power Scream is still blocking it. Keep moving closer!`;
+      els.statusText.textContent = `${currentBossName(target)} tried to use a power, but Wing Gust is still blocking it. Keep moving closer!`;
       return true;
     }
     if (isBossInIceTornado(target)) {
@@ -1744,7 +1774,7 @@
     }
     if (isBossChomped(target)) {
       state.action = "yonatanChomper";
-      els.statusText.textContent = `${currentBossName(target)} is stuck by the broken floor from Crocodile Chomper. Keep moving closer!`;
+      els.statusText.textContent = `${currentBossName(target)} is stuck by the broken floor from Yap Blast. Keep moving closer!`;
       return true;
     }
     state.bossPressureStep += 1;
@@ -1786,7 +1816,7 @@
     if (state.heroHp === 0) {
       state.lost = true;
       state.action = "lost";
-      els.statusText.textContent = "The forest bosses won this round. Reset for a rematch.";
+      els.statusText.textContent = "The world bosses won this round. Reset for a rematch.";
       setAttacks(true);
       return true;
     }
@@ -1833,7 +1863,7 @@
     els.levelEyebrow.textContent = `Level ${state.level}`;
     els.selectedHeroName.textContent = hero.name;
     renderHeartMeter(els.heroHearts, hero.name, state.heroHp, hero.hp);
-    renderHeartMeter(els.bossHearts, state.level === 1 ? "Bosses" : currentBossName(), currentBossHp(), currentBossMaxHp());
+    renderHeartMeter(els.bossHearts, currentBossName(), currentBossHp(), currentBossMaxHp());
     renderPrizeStatus();
     updatePowerButton();
     updateBossTargetChoices();
@@ -1867,7 +1897,7 @@
       } else {
         heart.classList.add("empty");
       }
-      heart.textContent = "♥";
+      heart.textContent = "â™¥";
       hearts.append(heart);
     }
     element.append(name, hearts);
@@ -1907,14 +1937,16 @@
     if (state.heroId === "freddy") return fennecPowers.map((power) => power.name);
     if (state.heroId === "mayer") return mayerPowers.map((power) => power.name);
     if (state.heroId === "yonatan") return yonatanPowers.map((power) => power.name);
-    return [hero.firstPower, "Forest Power", "Shield Power"];
+    return [hero.firstPower, "World Power", "Shield Power"];
   }
 
   function chooseAliveLevelOneTarget(target) {
     if (target === "evil" && state.evilHp > 0) return "evil";
+    if (target === "ice" && state.iceHp > 0) return "ice";
     if (target === "math" && state.mathHp > 0) return "math";
     if (state.mathHp > 0) return "math";
-    return "evil";
+    if (state.evilHp > 0) return "evil";
+    return "ice";
   }
 
   function renderPowers() {
@@ -1949,11 +1981,14 @@
     if (!state.started) {
       drawMischievousMayerBoss(900, 365);
       drawYappingYonatanBoss(1045, 420);
+      drawIceBoss(970, 405);
     } else if (currentBossHp() > 0) {
       if (currentTarget() === "math") {
         drawMischievousMayerBoss(940, 365);
-      } else {
+      } else if (currentTarget() === "evil") {
         drawYappingYonatanBoss(990, 420);
+      } else {
+        drawIceBoss(965, 390);
       }
     }
     drawPrizeDrops();
@@ -2483,15 +2518,15 @@
       ctx.lineWidth = 4;
       ctx.strokeStyle = "#171216";
       ctx.fillStyle = "#f1dada";
-      ctx.strokeText("♥", heartX, y);
-      ctx.fillText("♥", heartX, y);
+      ctx.strokeText("â™¥", heartX, y);
+      ctx.fillText("â™¥", heartX, y);
       if (fillAmount > 0) {
         ctx.beginPath();
         ctx.rect(heartX - 2, y - size, (size + 6) * fillAmount, size * 1.45);
         ctx.clip();
         ctx.fillStyle = color;
-        ctx.strokeText("♥", heartX, y);
-        ctx.fillText("♥", heartX, y);
+        ctx.strokeText("â™¥", heartX, y);
+        ctx.fillText("â™¥", heartX, y);
       }
       ctx.restore();
     }
@@ -2507,17 +2542,17 @@
       ctx.globalAlpha = 0.38;
     }
     ctx.scale(0.9, 0.9);
-    if (state.heroId === "tats") drawElephantHero();
-    else if (state.heroId === "fary") drawPurpleParrotHero();
-    else if (state.heroId === "apple") drawCheetahHero();
-    else if (state.heroId === "freddy") drawFoxHero();
-    else if (state.heroId === "benji") drawPolarBearHero();
-    else if (state.heroId === "frost") drawMonkeyHero();
+    if (state.heroId === "tats") drawTatsHero();
+    else if (state.heroId === "fary") drawFaryHero();
+    else if (state.heroId === "apple") drawAppleHero();
+    else if (state.heroId === "freddy") drawFreddyHero();
+    else if (state.heroId === "benji") drawBenjiHero();
+    else if (state.heroId === "frost") drawFrostHero();
     else if (state.heroId === "ness") drawNessHero();
     else if (state.heroId === "crayon") drawCrayonHero();
     else if (state.heroId === "hoodie") drawHoodieHero();
-    else if (state.heroId === "mayer") drawEvilChickenHero();
-    else if (state.heroId === "yonatan") drawAlligatorHero();
+    else if (state.heroId === "mayer") drawMayorHero();
+    else if (state.heroId === "yonatan") drawYappingHero();
     ctx.restore();
   }
 
@@ -2930,7 +2965,7 @@
     drawAnimalBadge("67", "#6cf0c2");
   }
 
-  function drawEvilChickenHero() {
+  function drawEvilMischiefHero() {
     const color = "#6b28c7";
     setupHeroLine(color, 8);
     ctx.fillStyle = color;
@@ -3251,7 +3286,7 @@
     ctx.save();
     ctx.translate(x, y);
     ctx.scale(1.2, 1.2);
-    drawEvilChickenHero();
+    drawMayorHero();
     ctx.restore();
   }
 
@@ -3259,7 +3294,80 @@
     ctx.save();
     ctx.translate(x, y);
     ctx.scale(1.18, 1.18);
-    drawAlligatorHero();
+    drawYappingHero();
+    ctx.restore();
+  }
+
+  function drawIceBoss(x, y) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 8;
+    ctx.lineJoin = "round";
+    ctx.fillStyle = "#55bff2";
+    ctx.beginPath();
+    ctx.ellipse(0, -34, 72, 92, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#9be8ff";
+    ctx.beginPath();
+    ctx.ellipse(0, -102, 54, 45, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#d9fbff";
+    [-28, 0, 28].forEach((xPoint) => {
+      ctx.beginPath();
+      ctx.moveTo(xPoint - 15, -138);
+      ctx.lineTo(xPoint, -184);
+      ctx.lineTo(xPoint + 15, -138);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+    });
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 7;
+    ctx.beginPath();
+    ctx.moveTo(-26, -114);
+    ctx.lineTo(-8, -103);
+    ctx.moveTo(26, -114);
+    ctx.lineTo(8, -103);
+    ctx.stroke();
+    ctx.fillStyle = "#171216";
+    ctx.beginPath();
+    ctx.arc(-18, -96, 5, 0, Math.PI * 2);
+    ctx.arc(18, -96, 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 6;
+    ctx.beginPath();
+    ctx.moveTo(-22, -76);
+    ctx.quadraticCurveTo(0, -91, 24, -75);
+    ctx.stroke();
+    setupHeroLine("#2480c2", 13);
+    ctx.beginPath();
+    ctx.moveTo(-58, -44);
+    ctx.lineTo(-112, 14);
+    ctx.moveTo(58, -44);
+    ctx.lineTo(112, 14);
+    ctx.moveTo(-34, 42);
+    ctx.lineTo(-60, 112);
+    ctx.moveTo(34, 42);
+    ctx.lineTo(60, 112);
+    ctx.stroke();
+    ctx.fillStyle = "#d9fbff";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    [-112, 112, -60, 60].forEach((xPoint, index) => {
+      const yPoint = index < 2 ? 14 : 112;
+      ctx.beginPath();
+      ctx.arc(xPoint, yPoint, 18, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    });
+    ctx.fillStyle = "#fffef7";
+    ctx.font = "900 24px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText("ICE", 0, -22);
     ctx.restore();
   }
 
@@ -3307,7 +3415,7 @@
     ctx.fillText("+", 24, -70);
     ctx.fillText("12", -24, -8);
     ctx.fillText("-", 34, -8);
-    ctx.fillText("÷", -28, 48);
+    ctx.fillText("Ã·", -28, 48);
     ctx.fillText("3", 30, 50);
     ctx.fillText("=", 0, 82);
     ctx.restore();
@@ -3703,6 +3811,9 @@
       } else if (state.action === "letterShot") {
         drawLetterShot(state.heroX, state.heroY);
         drawImpact("YAP BLAST!", 650, 215, "#d91f2e");
+      } else if (state.action === "iceBossFreeze") {
+        drawIceBossFreeze(state.heroX, state.heroY);
+        drawImpact("FREEZE!", 650, 215, "#45a6db");
       } else if (state.action === "garbageShot") {
         drawGarbageShot(state.heroX, state.heroY);
         drawImpact("GARBAGE HIT!", 650, 215, "#d91f2e");
@@ -3806,6 +3917,33 @@
         drawImpact("BLOCKED!", 650, 215, "#18a66a");
       }
     }
+    ctx.restore();
+  }
+
+  function drawIceBossFreeze(x, y) {
+    ctx.save();
+    ctx.strokeStyle = "#45a6db";
+    ctx.fillStyle = "rgba(155, 232, 255, 0.55)";
+    ctx.lineWidth = 7;
+    for (let shard = 0; shard < 7; shard += 1) {
+      const sx = x - 88 + shard * 29;
+      const height = 42 + (shard % 3) * 18;
+      ctx.beginPath();
+      ctx.moveTo(sx - 13, y + 58);
+      ctx.lineTo(sx, y + 58 - height);
+      ctx.lineTo(sx + 13, y + 58);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+    }
+    ctx.beginPath();
+    ctx.moveTo(835, 330);
+    ctx.quadraticCurveTo(690, 250, x + 20, y - 70);
+    ctx.stroke();
+    ctx.fillStyle = "#fffef7";
+    ctx.font = "900 24px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText("ICE STOMP", x, y - 125);
     ctx.restore();
   }
 
@@ -4352,7 +4490,7 @@
     ctx.fillStyle = "#ffd84a";
     ctx.font = "900 24px Trebuchet MS";
     ctx.textAlign = "center";
-    ctx.fillText("1 2 + 7 ÷", x, y - 68);
+    ctx.fillText("1 2 + 7 Ã·", x, y - 68);
     ctx.restore();
   }
 
@@ -4795,4 +4933,3 @@
 
   resetGame();
 })();
-

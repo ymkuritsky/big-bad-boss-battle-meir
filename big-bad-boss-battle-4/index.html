@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
     <title>Big Bad Boss Battle 4</title>
-    <link rel="stylesheet" href="styles.css?v=bbb4-world-travel-start" />
+    <link rel="stylesheet" href="styles.css?v=bbb4-ice-boss-original-style" />
   </head>
   <body>
     <main class="game-shell">
@@ -21,7 +21,7 @@
         <aside class="hud-panel">
           <p id="levelEyebrow" class="eyebrow">Level 1</p>
           <h2 id="selectedHeroName">World Trip Showdown</h2>
-          <p id="statusText">Who do you want to choose: Mischievous Mayer or Yapping Yonatan?</p>
+          <p id="statusText">Who do you want to choose: Mischievous Mayer, Yapping Yonatan, or Ice Boss?</p>
           <div class="level-select" aria-label="Choose level">
             <button class="level-choice selected" data-level="1">Level 1 Florida</button>
             <button class="level-choice" data-level="2">Level 2 New York</button>
@@ -37,6 +37,7 @@
           <div id="bossTargetSelect" class="boss-target-select" aria-label="Choose boss">
             <button class="target-choice selected" data-target="math">Choose Mischievous Mayer</button>
             <button class="target-choice" data-target="evil">Choose Yapping Yonatan</button>
+            <button class="target-choice" data-target="ice">Choose Ice Boss</button>
           </div>
           <div id="characterSelect" class="character-select" aria-label="Choose character">
             <button class="hero-choice selected" data-hero="tats">Super Tats</button>
@@ -52,13 +53,13 @@
             <button class="hero-choice" data-hero="yonatan">Yapping Yonatan</button>
           </div>
           <div class="game-nav-links" aria-label="Go to another game">
-            <a class="game-nav-link" href="https://ymkuritsky.github.io/big-bad-boss-battle-meir/index.html?fresh=bbb4-world-travel-start">Go back to Big Bad Boss Battle</a>
-            <a class="game-nav-link sequel-two" href="https://ymkuritsky.github.io/big-bad-boss-battle-meir/big-bad-boss-battle-2/index.html?fresh=bbb4-world-travel-start">Go back to Big Bad Boss Battle 2</a>
-            <a class="game-nav-link sequel-three" href="https://ymkuritsky.github.io/big-bad-boss-battle-meir/big-bad-boss-battle-3/index.html?fresh=bbb4-world-travel-start">Go back to Big Bad Boss Battle 3</a>
+            <a class="game-nav-link" href="https://ymkuritsky.github.io/big-bad-boss-battle-meir/index.html?fresh=bbb4-ice-boss-original-style">Go back to Big Bad Boss Battle</a>
+            <a class="game-nav-link sequel-two" href="https://ymkuritsky.github.io/big-bad-boss-battle-meir/big-bad-boss-battle-2/index.html?fresh=bbb4-ice-boss-original-style">Go back to Big Bad Boss Battle 2</a>
+            <a class="game-nav-link sequel-three" href="https://ymkuritsky.github.io/big-bad-boss-battle-meir/big-bad-boss-battle-3/index.html?fresh=bbb4-ice-boss-original-style">Go back to Big Bad Boss Battle 3</a>
           </div>
           <div class="heart-row">
             <span id="heroHearts">Hero: 8</span>
-            <span id="bossHearts">Bosses: 16</span>
+            <span id="bossHearts">Boss: 8</span>
           </div>
           <div id="powerInventory" class="power-inventory" aria-label="Earned power ups"></div>
         </aside>
@@ -86,6 +87,6 @@
         </div>
       </section>
     </main>
-    <script src="game.js?v=bbb4-world-travel-start"></script>
+    <script src="game.js?v=bbb4-ice-boss-original-style"></script>
   </body>
 </html>
