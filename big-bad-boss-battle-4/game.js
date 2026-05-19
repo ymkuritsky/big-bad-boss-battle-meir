@@ -2410,6 +2410,11 @@
     state.heroX = clamp(state.heroX, 105, 1125);
     state.heroY = clamp(state.heroY, 315, 465);
 
+    if (isAtPenguinTreasureChest()) {
+      openAntarcticaTreasure(`${heroes[state.heroId].name} opened the Penguin Treasure chest`);
+      return;
+    }
+
     chaseHeroInAntarctica(direction);
     state.treasurePowerX -= direction === "right" ? 54 : 28;
     if (state.treasurePowerX < 90) state.treasurePowerX = 850;
@@ -2419,10 +2424,7 @@
 
     if (state.heroX >= 1110) {
       if (state.treasurePart >= 3) {
-        els.statusText.textContent = "You reached the Penguin Treasure chest. Press punch, kick, or a power to open it!";
-        state.heroX = 1090;
-        updateHud();
-        draw();
+        openAntarcticaTreasure(`${heroes[state.heroId].name} opened the Penguin Treasure chest`);
         return;
       }
       state.treasurePart += 1;
@@ -2469,14 +2471,7 @@
     state.playerTarget = currentTarget();
     const atChest = isAtPenguinTreasureChest();
     if (atChest && state.treasurePart >= 3) {
-      state.won = true;
-      state.action = "win";
-      els.statusText.textContent = `${attackName(kind)} opened the Penguin Treasure chest. ${levelWinText()}`;
-      if (advanceAfterWin()) return;
-      setAttacks(true);
-      updateLevelLocks();
-      updateHud();
-      draw();
+      openAntarcticaTreasure(`${attackName(kind)} opened the Penguin Treasure chest`);
       return;
     }
 
@@ -2528,7 +2523,20 @@
   }
 
   function isAtPenguinTreasureChest() {
-    return state.treasurePart >= 3 && state.heroX >= 1010 && state.heroY >= 345 && state.heroY <= 465;
+    return state.treasurePart >= 3 && state.heroX >= 990 && state.heroY >= 330 && state.heroY <= 470;
+  }
+
+  function openAntarcticaTreasure(message) {
+    clearLevelTimer();
+    state.won = true;
+    state.action = "treasureOpen";
+    state.heroX = clamp(state.heroX, 990, 1095);
+    els.statusText.textContent = `${message}. A golden penguin trophy, heart gems, and an ice crown popped out! ${levelWinText()}`;
+    unlockNextLevel();
+    setAttacks(true);
+    updateLevelLocks();
+    updateHud();
+    draw();
   }
 
   function isCloseEnoughToAntarcticaBoss(kind) {
@@ -3859,7 +3867,7 @@
 
     drawPenguin(905, 440, 0.72);
     drawPenguin(985, 468, 0.55);
-    drawTreasureChest(1090, 405);
+    drawTreasureChest(1090, 405, state.action === "treasureOpen");
 
     ctx.fillStyle = "#fffef7";
     ctx.strokeStyle = "#171216";
@@ -3911,7 +3919,7 @@
     ctx.restore();
   }
 
-  function drawTreasureChest(x, y) {
+  function drawTreasureChest(x, y, open = false) {
     ctx.save();
     ctx.translate(x, y);
     ctx.fillStyle = "#8a4c2c";
@@ -3920,6 +3928,19 @@
     roundRect(-52, -24, 104, 64, 8);
     ctx.fill();
     ctx.stroke();
+    if (open) {
+      ctx.save();
+      ctx.translate(0, -44);
+      ctx.rotate(-0.22);
+      ctx.fillStyle = "#8a4c2c";
+      ctx.strokeStyle = "#171216";
+      ctx.lineWidth = 5;
+      roundRect(-54, -32, 108, 28, 8);
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+      drawAntarcticaTreasurePrize(0, -76);
+    }
     ctx.fillStyle = "#ffd84a";
     ctx.fillRect(-8, -24, 16, 64);
     ctx.fillRect(-52, 0, 104, 12);
@@ -3930,6 +3951,58 @@
     ctx.textAlign = "center";
     ctx.fillText("PENGUIN", 0, -45);
     ctx.fillText("TREASURE", 0, -28);
+    ctx.restore();
+  }
+
+  function drawAntarcticaTreasurePrize(x, y) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 4;
+    ctx.fillStyle = "#ffd84a";
+    ctx.beginPath();
+    ctx.arc(0, 0, 24, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#fffef7";
+    ctx.beginPath();
+    ctx.ellipse(0, 4, 13, 19, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "#f18319";
+    ctx.beginPath();
+    ctx.moveTo(0, -2);
+    ctx.lineTo(18, 4);
+    ctx.lineTo(0, 10);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#d91f2e";
+    for (let gem = 0; gem < 4; gem += 1) {
+      const gx = -58 + gem * 36;
+      const gy = 20 + (gem % 2) * 12;
+      ctx.beginPath();
+      ctx.moveTo(gx, gy - 13);
+      ctx.lineTo(gx + 13, gy);
+      ctx.lineTo(gx, gy + 13);
+      ctx.lineTo(gx - 13, gy);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+    }
+    ctx.fillStyle = "#9be8ff";
+    ctx.beginPath();
+    ctx.moveTo(-36, -22);
+    ctx.lineTo(-12, -50);
+    ctx.lineTo(0, -25);
+    ctx.lineTo(16, -52);
+    ctx.lineTo(40, -22);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#fffef7";
+    ctx.font = "900 18px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText("PRIZE!", 0, -66);
     ctx.restore();
   }
 
@@ -6657,6 +6730,8 @@
     } else if (state.action === "heroHide") {
       drawDefenseMove("hide");
       drawImpact("HIDE!", 650, 215, "#6f737a");
+    } else if (state.action === "treasureOpen") {
+      drawImpact("TREASURE!", 650, 215, "#ffd84a");
     } else if (state.action === "wallEscape") {
       drawImpact("WALL ESCAPE!", 650, 215, "#2f6f52");
     } else if (state.action === "israelTag") {
