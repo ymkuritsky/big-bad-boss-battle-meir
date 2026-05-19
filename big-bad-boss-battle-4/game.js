@@ -3033,14 +3033,19 @@
     for (let index = 1; index <= wholeHearts; index += 1) {
       const heart = document.createElement("span");
       heart.className = "heart";
+      const fill = document.createElement("span");
+      fill.className = "heart-fill";
       if (hp >= index) {
         heart.classList.add("full");
+        fill.style.width = "100%";
       } else if (hp > index - 1) {
         heart.classList.add("half");
+        fill.style.width = `${Math.round((hp - (index - 1)) * 100)}%`;
       } else {
         heart.classList.add("empty");
+        fill.style.width = "0%";
       }
-      heart.textContent = "Ã¢â„¢Â¥";
+      heart.append(fill);
       hearts.append(heart);
     }
     element.append(name, hearts);
@@ -5111,27 +5116,37 @@
     const size = total > 18 ? 14 : total > 13 ? 18 : total > 10 ? 22 : 30;
     const gap = total > 18 ? 2 : total > 13 ? 3 : total > 10 ? 4 : 8;
     for (let index = 0; index < total; index += 1) {
-      const heartX = x + index * (size + gap);
+      const heartX = x + index * (size + gap) + size * 0.5;
       const fillAmount = clamp(hp - index, 0, 1);
       ctx.save();
-      ctx.font = `900 ${size}px Trebuchet MS`;
-      ctx.textAlign = "left";
-      ctx.textBaseline = "middle";
-      ctx.lineWidth = 4;
+      ctx.lineWidth = Math.max(2, size * 0.1);
       ctx.strokeStyle = "#171216";
       ctx.fillStyle = "#f1dada";
-      ctx.strokeText("Ã¢â„¢Â¥", heartX, y);
-      ctx.fillText("Ã¢â„¢Â¥", heartX, y);
+      drawHeartPath(heartX, y - size * 0.35, size * 0.52);
+      ctx.fill();
+      ctx.stroke();
       if (fillAmount > 0) {
+        ctx.save();
         ctx.beginPath();
-        ctx.rect(heartX - 2, y - size, (size + 6) * fillAmount, size * 1.45);
+        ctx.rect(heartX - size * 0.8, y - size * 1.1, size * 1.6 * fillAmount, size * 1.7);
         ctx.clip();
         ctx.fillStyle = color;
-        ctx.strokeText("Ã¢â„¢Â¥", heartX, y);
-        ctx.fillText("Ã¢â„¢Â¥", heartX, y);
+        drawHeartPath(heartX, y - size * 0.35, size * 0.52);
+        ctx.fill();
+        ctx.restore();
       }
+      drawHeartPath(heartX, y - size * 0.35, size * 0.52);
+      ctx.stroke();
       ctx.restore();
     }
+  }
+
+  function drawHeartPath(x, y, size) {
+    ctx.beginPath();
+    ctx.moveTo(x, y + size);
+    ctx.bezierCurveTo(x - size * 1.45, y, x - size, y - size, x, y - size * 0.45);
+    ctx.bezierCurveTo(x + size, y - size, x + size * 1.45, y, x, y + size);
+    ctx.closePath();
   }
 
   function drawHero(x, y) {

@@ -244,7 +244,8 @@ h1 {
 
 .heart-icons {
   display: flex;
-  gap: 2px;
+  align-items: center;
+  gap: 5px;
   line-height: 1;
 }
 
@@ -255,23 +256,29 @@ h1 {
 }
 
 .heart {
-  border: 0;
-  padding: 0;
-  background: transparent;
-  color: #d91f2e;
-  font-size: 24px;
-  text-shadow: 2px 2px 0 var(--ink);
+  position: relative;
+  display: inline-block;
+  width: 22px;
+  height: 20px;
+  overflow: hidden;
+  background: #f1dada;
+  clip-path: polygon(50% 95%, 8% 54%, 0 34%, 4% 15%, 18% 3%, 35% 3%, 50% 18%, 65% 3%, 82% 3%, 96% 15%, 100% 34%, 92% 54%);
+  filter:
+    drop-shadow(1px 0 0 var(--ink))
+    drop-shadow(-1px 0 0 var(--ink))
+    drop-shadow(0 1px 0 var(--ink))
+    drop-shadow(0 -1px 0 var(--ink));
 }
 
-.heart.half {
-  background: linear-gradient(90deg, #d91f2e 0 52%, #f1dada 52% 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+.heart-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0;
+  background: #d91f2e;
 }
 
 .heart.empty {
-  color: #f1dada;
+  background: #f1dada;
 }
 
 .controls-grid {
