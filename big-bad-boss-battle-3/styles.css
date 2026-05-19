@@ -66,6 +66,7 @@ h1 {
 .level-select,
 .character-select,
 .boss-target-select,
+.game-nav-links,
 .power-inventory {
   display: flex;
   flex-wrap: wrap;
@@ -137,6 +138,7 @@ h1 {
 .character-select,
 .level-select,
 .boss-target-select,
+.game-nav-links,
 .power-inventory {
   grid-column: auto;
 }
@@ -189,6 +191,30 @@ h1 {
 
 .boss-target-select.hidden {
   display: none;
+}
+
+.game-nav-link {
+  flex: 1 1 150px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 7px 9px;
+  border: 3px solid var(--ink);
+  border-radius: 6px;
+  background: var(--gold);
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 900;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.16);
+}
+
+.game-nav-link.sequel-two {
+  background: var(--blue);
+  color: #fff;
 }
 
 .power-pill.locked {
@@ -397,6 +423,7 @@ h1 {
   .power-row,
   .level-select,
   .character-select,
+  .game-nav-links,
   .power-inventory,
   .controls-grid {
     grid-column: auto;
