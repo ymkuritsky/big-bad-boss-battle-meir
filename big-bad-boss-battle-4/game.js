@@ -1877,20 +1877,22 @@
   }
 
   function updateBossTargetChoices() {
-    const targetSelect = document.getElementById("bossTargetSelect");
-    if (!targetSelect) return;
+    const targetSelects = document.querySelectorAll(".boss-target-select");
+    if (!targetSelects.length) return;
     const showPicker = !state.started || state.won || state.lost;
-    targetSelect.classList.toggle("hidden", !showPicker);
-    targetSelect.querySelectorAll(".target-choice").forEach((button) => {
-      const target = button.dataset.target;
-      const hp = bossHpFor(target);
-      const defeated = hp <= 0 && state.started;
-      button.disabled = !showPicker || defeated;
-      button.classList.toggle("defeated", defeated);
-      button.classList.toggle("selected", target === state.chosenBossTarget && showPicker);
-      if (target === "math") button.textContent = "Choose Mischievous Mayer";
-      else if (target === "evil") button.textContent = "Choose Yapping Yonatan";
-      else button.textContent = "Choose Ice Boss";
+    targetSelects.forEach((targetSelect) => {
+      targetSelect.classList.toggle("hidden", !showPicker);
+      targetSelect.querySelectorAll(".target-choice").forEach((button) => {
+        const target = button.dataset.target;
+        const hp = bossHpFor(target);
+        const defeated = hp <= 0 && state.started;
+        button.disabled = !showPicker || defeated;
+        button.classList.toggle("defeated", defeated);
+        button.classList.toggle("selected", target === state.chosenBossTarget && showPicker);
+        if (target === "math") button.textContent = "Choose Mischievous Mayer";
+        else if (target === "evil") button.textContent = "Choose Yapping Yonatan";
+        else button.textContent = "Choose Ice Boss";
+      });
     });
   }
 
@@ -3328,46 +3330,116 @@
     }
 
     ctx.save();
-    ctx.translate(160, 70);
     ctx.fillStyle = "#7ec7b4";
     ctx.strokeStyle = "#171216";
     ctx.lineWidth = 7;
-    roundRect(220, 60, 340, 460, 24);
+    roundRect(255, 500, 545, 72, 12);
+    ctx.fill();
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(360, 500);
+    ctx.lineTo(465, 185);
+    ctx.quadraticCurveTo(528, 124, 620, 174);
+    ctx.lineTo(725, 500);
+    ctx.closePath();
     ctx.fill();
     ctx.stroke();
     ctx.fillStyle = "#5db09c";
-    roundRect(275, 0, 230, 106, 18);
-    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(485, 280);
+    ctx.quadraticCurveTo(540, 330, 512, 500);
+    ctx.moveTo(575, 260);
+    ctx.quadraticCurveTo(650, 360, 635, 500);
     ctx.stroke();
     ctx.fillStyle = "#83d6c2";
     ctx.beginPath();
-    ctx.moveTo(318, 0);
-    ctx.lineTo(384, -58);
-    ctx.lineTo(450, 0);
+    ctx.moveTo(545, 170);
+    ctx.lineTo(468, 328);
+    ctx.lineTo(416, 306);
+    ctx.lineTo(500, 188);
     ctx.closePath();
     ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#7ec7b4";
+    ctx.beginPath();
+    ctx.moveTo(617, 205);
+    ctx.lineTo(736, 250);
+    ctx.lineTo(724, 302);
+    ctx.lineTo(610, 258);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#8ad8c4";
+    ctx.beginPath();
+    ctx.arc(546, 128, 58, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    for (let spike = 0; spike < 7; spike += 1) {
+      const angle = -Math.PI * 0.95 + spike * Math.PI * 0.31;
+      const sx = 546 + Math.cos(angle) * 58;
+      const sy = 128 + Math.sin(angle) * 58;
+      ctx.beginPath();
+      ctx.moveTo(sx, sy);
+      ctx.lineTo(546 + Math.cos(angle) * 98, 128 + Math.sin(angle) * 98);
+      ctx.lineTo(546 + Math.cos(angle + 0.12) * 62, 128 + Math.sin(angle + 0.12) * 62);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+    }
+    ctx.fillStyle = "#171216";
+    ctx.beginPath();
+    ctx.arc(526, 125, 5, 0, Math.PI * 2);
+    ctx.arc(566, 125, 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(546, 146, 16, 0.15, Math.PI - 0.15);
     ctx.stroke();
     ctx.fillStyle = "#ffd84a";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 6;
     ctx.beginPath();
-    ctx.moveTo(384, -124);
-    ctx.lineTo(398, -68);
-    ctx.lineTo(368, -68);
+    ctx.moveTo(395, 140);
+    ctx.lineTo(430, 78);
+    ctx.lineTo(465, 140);
     ctx.closePath();
     ctx.fill();
     ctx.stroke();
+    ctx.fillStyle = "#6bc6b5";
+    roundRect(692, 272, 70, 115, 7);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#171216";
+    ctx.font = "900 20px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText("JULY", 727, 318);
+    ctx.fillText("4", 727, 348);
 
-    ctx.fillStyle = "#dff8ef";
+    ctx.fillStyle = "rgba(223,248,239,0.94)";
     ctx.strokeStyle = "#171216";
     ctx.lineWidth = 5;
     statueMazePaths().forEach((rect) => {
-      roundRect(rect.x - 160, rect.y - 70, rect.w, rect.h, 8);
+      roundRect(rect.x, rect.y, rect.w, rect.h, 8);
       ctx.fill();
       ctx.stroke();
     });
+    ctx.fillStyle = "#8ad8c4";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 4;
+    roundRect(690, 112, 155, 82, 8);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#dff8ef";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 4;
+    roundRect(704, 124, 124, 58, 8);
+    ctx.fill();
+    ctx.stroke();
     ctx.fillStyle = "#d91f2e";
     ctx.font = "900 31px Trebuchet MS";
     ctx.textAlign = "center";
-    ctx.fillText("EXIT", 575, 74);
+    ctx.fillText("EXIT", 766, 163);
     ctx.restore();
 
     ctx.fillStyle = "#fffef7";
@@ -3385,25 +3457,96 @@
   }
 
   function drawMazeFacePlayer(x, y) {
+    const hero = heroes[state.heroId] || heroes.tats;
     ctx.save();
     ctx.translate(x, y);
-    ctx.fillStyle = "#f2c99d";
+    ctx.fillStyle = hero.accent;
     ctx.strokeStyle = "#171216";
     ctx.lineWidth = 5;
     ctx.beginPath();
-    ctx.arc(0, 0, 24, 0, Math.PI * 2);
+    ctx.arc(0, 0, 27, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
+    ctx.fillStyle = hero.color;
+    ctx.beginPath();
+    ctx.ellipse(0, -23, 30, 14, 0, Math.PI, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    if (state.heroId === "apple") {
+      ctx.fillStyle = "#ff4d3d";
+      ctx.beginPath();
+      ctx.arc(0, -36, 10, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.strokeStyle = "#1f7f45";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(4, -44);
+      ctx.quadraticCurveTo(18, -52, 22, -38);
+      ctx.stroke();
+    } else if (state.heroId === "fary") {
+      ctx.fillStyle = "#ff89c6";
+      ctx.beginPath();
+      ctx.moveTo(-30, -6);
+      ctx.lineTo(-56, -28);
+      ctx.lineTo(-38, 8);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(30, -6);
+      ctx.lineTo(56, -28);
+      ctx.lineTo(38, 8);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+    } else if (state.heroId === "frost") {
+      ctx.fillStyle = "#9be8ff";
+      ctx.beginPath();
+      ctx.moveTo(-12, -36);
+      ctx.lineTo(0, -58);
+      ctx.lineTo(12, -36);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+    } else if (state.heroId === "mayer") {
+      ctx.fillStyle = "#ffd84a";
+      ctx.beginPath();
+      ctx.moveTo(-20, -32);
+      ctx.lineTo(-10, -52);
+      ctx.lineTo(0, -32);
+      ctx.lineTo(12, -52);
+      ctx.lineTo(22, -32);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+    } else if (state.heroId === "yonatan") {
+      ctx.fillStyle = "#fffef7";
+      ctx.beginPath();
+      ctx.arc(0, -36, 9, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    }
     ctx.fillStyle = "#171216";
     ctx.beginPath();
-    ctx.arc(-8, -4, 3.5, 0, Math.PI * 2);
-    ctx.arc(8, -4, 3.5, 0, Math.PI * 2);
+    ctx.arc(-9, -3, 4, 0, Math.PI * 2);
+    ctx.arc(9, -3, 4, 0, Math.PI * 2);
     ctx.fill();
     ctx.strokeStyle = "#171216";
     ctx.lineWidth = 3;
     ctx.beginPath();
-    ctx.arc(0, 7, 8, 0.15, Math.PI - 0.15);
+    ctx.arc(0, 9, 9, 0.15, Math.PI - 0.15);
     ctx.stroke();
+    ctx.fillStyle = "#fffef7";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 3;
+    roundRect(-38, 31, 76, 24, 6);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = hero.color;
+    ctx.font = "900 10px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText(hero.name.split(" ")[0].toUpperCase(), 0, 47);
     ctx.restore();
   }
 

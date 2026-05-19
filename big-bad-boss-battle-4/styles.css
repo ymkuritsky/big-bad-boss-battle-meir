@@ -79,7 +79,7 @@ h1 {
   grid-template-columns: minmax(0, 1fr) 360px;
   align-items: stretch;
   gap: 10px;
-  padding: 10px 10px 106px;
+  padding: 10px 10px 138px;
   min-height: 0;
   background: #130f1f;
 }
@@ -292,7 +292,7 @@ h1 {
   bottom: max(10px, env(safe-area-inset-bottom));
   z-index: 20;
   display: grid;
-  grid-template-columns: 168px minmax(0, 1fr);
+  grid-template-columns: 168px minmax(0, 1fr) 250px;
   align-items: center;
   gap: 12px;
   padding: 8px 10px;
@@ -306,6 +306,24 @@ h1 {
   display: grid;
   gap: 7px;
   min-width: 0;
+}
+
+.bottom-boss-picker {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+  align-self: stretch;
+}
+
+.bottom-boss-picker .target-choice {
+  min-height: 31px;
+  padding: 4px 6px;
+  font-size: 10px;
+  line-height: 1.05;
+}
+
+.bottom-boss-picker.hidden {
+  display: none;
 }
 
 .move-button {
@@ -412,7 +430,7 @@ h1 {
   .stage-wrap {
     grid-template-columns: 1fr;
     align-items: start;
-    padding: 6px 6px 126px;
+    padding: 6px 6px 174px;
   }
 
   #gameCanvas {
@@ -454,6 +472,18 @@ h1 {
     gap: 5px;
     padding: 5px;
     border-width: 3px;
+  }
+
+  .bottom-boss-picker {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(3, minmax(70px, 1fr));
+    gap: 4px;
+  }
+
+  .bottom-boss-picker .target-choice {
+    min-height: 28px;
+    padding: 3px 4px;
+    font-size: 8px;
   }
 
   .controls-grid {
