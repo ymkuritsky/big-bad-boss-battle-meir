@@ -463,7 +463,7 @@
       yonatanPowerAttack(target, powerSlot);
       return;
     }
-    if (kind === "power" && mustReachBossForPower(target) && !isCloseEnoughToAttack("kick", target)) {
+    if (kind === "power" && mustReachBossForPower(target) && !isGenericPowerCloseEnough(target)) {
       state.action = "miss";
       state.playerAction = kind;
       els.statusText.textContent = `${currentBossName(target)} is too far away for ${attackName(kind)}. Dodge the shots, get closer, then use it.`;
@@ -595,7 +595,7 @@
       draw();
       return;
     }
-    if (!isCloseEnoughToAttack("kick", target)) {
+    if (!isPowerCloseEnough(power.id, target)) {
       state.action = "miss";
       els.statusText.textContent = `${currentBossName(target)} is too far away for Forest Stomp. Move close, then stomp!`;
       draw();
@@ -618,7 +618,7 @@
 
   function elephantTrunkGrab(target) {
     state.playerAction = "power";
-    if (!isCloseEnoughToAttack("kick", target)) {
+    if (!isPowerCloseEnough("elephantTrunkGrab", target)) {
       state.action = "miss";
       els.statusText.textContent = `${currentBossName(target)} is too far away for Elephant Trunk Grab. Move close, then grab with the trunk!`;
       draw();
@@ -668,7 +668,7 @@
       draw();
       return;
     }
-    if (!isCloseEnoughToAttack("kick", target)) {
+    if (!isPowerCloseEnough(power.id, target)) {
       state.action = "miss";
       els.statusText.textContent = `${currentBossName(target)} is too far away for Wing Blast. Move close, then flap!`;
       draw();
@@ -691,7 +691,7 @@
 
   function parrotPowerScream(target) {
     state.playerAction = "power";
-    if (!isCloseEnoughToAttack("kick", target)) {
+    if (!isPowerCloseEnough("parrotScream", target)) {
       state.action = "miss";
       els.statusText.textContent = `${currentBossName(target)} is too far away for Parrot Power Scream. Move close, then scream!`;
       draw();
@@ -718,6 +718,30 @@
     return power;
   }
 
+  function powerNeedsClose(powerId) {
+    return [
+      "elephantTrunkGrab",
+      "elephantForestStomp",
+      "parrotScream",
+      "cheetahTailGrab",
+      "cheetahClaws",
+      "fennecPounce",
+      "mayerBigBock",
+      "yonatanJaw",
+      "yonatanTailSwipe"
+    ].includes(powerId);
+  }
+
+  function isPowerCloseEnough(powerId, target) {
+    if (!powerNeedsClose(powerId)) return true;
+    return isCloseEnoughToAttack("kick", target);
+  }
+
+  function isGenericPowerCloseEnough(target) {
+    if (state.heroId !== "ness") return true;
+    return isCloseEnoughToAttack("kick", target);
+  }
+
   function cheetahPowerAttack(target, powerSlot = 0) {
     const power = pickPower(cheetahPowers, "cheetahPowerStep", powerSlot);
     state.playerAction = "power";
@@ -725,8 +749,7 @@
     state.action = power.id;
     updatePowerButton();
 
-    const closeEnough = power.id === "cheetahSpeed" ? isCloseEnoughToCheetahDash(target) : isCloseEnoughToAttack("kick", target);
-    if (!closeEnough) {
+    if (!isPowerCloseEnough(power.id, target)) {
       state.action = "miss";
       els.statusText.textContent = `${currentBossName(target)} is too far away for ${power.name}. Run closer, then use the cheetah power!`;
       draw();
@@ -804,7 +827,7 @@
     state.action = power.id;
     updatePowerButton();
 
-    const closeEnough = state.fennecPounceTarget === target || isCloseEnoughToAttack("kick", target);
+    const closeEnough = state.fennecPounceTarget === target || isPowerCloseEnough(power.id, target);
     if (!closeEnough) {
       state.action = "miss";
       els.statusText.textContent = `${currentBossName(target)} is too far away for ${power.name}. Move close with Freddy, then use it!`;
@@ -870,7 +893,7 @@
     state.action = power.id;
     updatePowerButton();
 
-    if (!isCloseEnoughToAttack("kick", target)) {
+    if (!isPowerCloseEnough(power.id, target)) {
       state.action = "miss";
       els.statusText.textContent = `${currentBossName(target)} is too far away for ${power.name}. Move close with Benji, then use it!`;
       draw();
@@ -951,7 +974,7 @@
     state.action = power.id;
     updatePowerButton();
 
-    if (!isCloseEnoughToAttack("kick", target)) {
+    if (!isPowerCloseEnough(power.id, target)) {
       state.action = "miss";
       els.statusText.textContent = `${currentBossName(target)} is too far away for ${power.name}. Move close with Mr. 67, then use the banana power!`;
       draw();
@@ -1039,7 +1062,7 @@
     state.action = power.id;
     updatePowerButton();
 
-    if (!isCloseEnoughToAttack("kick", target) && power.id !== "mayerRoosterFlyers") {
+    if (!isPowerCloseEnough(power.id, target)) {
       state.action = "miss";
       els.statusText.textContent = `${currentBossName(target)} is too far away for ${power.name}. Move close, then bock!`;
       draw();
@@ -1088,7 +1111,7 @@
     state.action = power.id;
     updatePowerButton();
 
-    if (!isCloseEnoughToAttack("kick", target) && power.id !== "yonatanAlligatorMonsters") {
+    if (!isPowerCloseEnough(power.id, target)) {
       state.action = "miss";
       els.statusText.textContent = `${currentBossName(target)} is too far away for ${power.name}. Move close, then chomp!`;
       draw();

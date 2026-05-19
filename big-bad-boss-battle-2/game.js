@@ -323,7 +323,7 @@
     }
     const target = currentTarget();
     state.playerTarget = target;
-    if (kind === "power" && mustReachBossForPower(target) && !isCloseEnoughToAttack("kick", target)) {
+    if (kind === "power" && mustReachBossForPower(target) && !isPowerCloseEnough(target)) {
       state.action = "miss";
       state.playerAction = kind;
       els.statusText.textContent = `${currentBossName(target)} is too far away for ${attackName(kind)}. Dodge the shots, get closer, then use it.`;
@@ -538,6 +538,15 @@
 
   function mustReachBossForPower(target) {
     return target === "archer" || target === "librarian";
+  }
+
+  function powerNeedsClose() {
+    return state.heroId === "tats" || state.heroId === "ness";
+  }
+
+  function isPowerCloseEnough(target) {
+    if (!powerNeedsClose()) return true;
+    return isCloseEnoughToAttack("kick", target);
   }
 
   function bossAttackText(target, bossAction = state.action) {
