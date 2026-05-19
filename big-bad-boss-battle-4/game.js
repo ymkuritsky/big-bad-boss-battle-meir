@@ -2048,8 +2048,8 @@
   function resetStatueMazePositions() {
     state.heroX = 214;
     state.heroY = 470;
-    state.mazeBossX = state.level === 4 ? 485 : 945;
-    state.mazeBossY = state.level === 4 ? 464 : 430;
+    state.mazeBossX = state.level === 4 ? 150 : 155;
+    state.mazeBossY = 470;
   }
 
   function resetAntarcticaTreasurePositions() {
@@ -2243,7 +2243,7 @@
   }
 
   function chaseHeroInStatueMaze() {
-    const speed = state.level === 4 ? 26 : 20;
+    const speed = state.level === 4 ? 17 : 13;
     const dx = state.heroX - state.mazeBossX;
     const dy = state.heroY - state.mazeBossY;
     const distance = Math.hypot(dx, dy) || 1;
@@ -2258,7 +2258,7 @@
   }
 
   function mazeBossCaughtHero() {
-    return Math.hypot(state.heroX - state.mazeBossX, state.heroY - state.mazeBossY) < 62;
+    return Math.hypot(state.heroX - state.mazeBossX, state.heroY - state.mazeBossY) < 46;
   }
 
   function moveHeroInAntarcticaTreasure(direction) {
