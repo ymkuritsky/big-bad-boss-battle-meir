@@ -505,7 +505,7 @@
     state.lastDefenseText = "";
     state.nextDropId = 1;
     state.tick = 0;
-    els.statusText.textContent = levels[state.level].intro;
+    els.statusText.textContent = preStartLevelText();
     setAttacks(true);
     updateHud();
     updateBossTargetChoices();
@@ -1777,13 +1777,61 @@
 
   function currentBossName(target = currentTarget()) {
     if (isWhiteHouseProtectLevel()) return "President Trump";
-    if (target === "math") return "Mischievous Mayer";
-    if (target === "evil") return "Yapping Yonatan";
-    if (target === "ice") return "Ice Boss";
+    if (target === "math" || target === "evil" || target === "ice") return selectedBossName(target);
     if (target === "food") return "Food Monster Fiasco";
     if (target === "crazyBall") return "The Crazy Ball";
     if (target === "principal") return bossLevels[state.level].name;
     return "World Boss";
+  }
+
+  function selectedBossName(target = currentTarget()) {
+    if (target === "evil") return "Yapping Yonatan";
+    if (target === "ice") return "Ice Boss";
+    return "Mischievous Mayer";
+  }
+
+  function preStartLevelText() {
+    const boss = selectedBossName();
+    const base = `You are fighting ${boss} in Level ${state.level}.`;
+    return `${base} ${specialWorldText() || "Regular fight: move close enough for punches and kicks, use powers, and beat the boss."} Press Start Level ${state.level} when ready.`;
+  }
+
+  function specialWorldText() {
+    if (isStatueMazeLevel()) {
+      return "Special world: Statue of Liberty maze. Your character is a face in the maze, and the boss chases from behind. Use arrows to reach EXIT at the head.";
+    }
+    if (isAntarcticaTreasureLevel()) {
+      return "Special world: Penguin Treasure hunt. Run across 3 icy screens, dodge icy shots, use powers to push the boss back, then open the treasure chest.";
+    }
+    if (isPhoenixScavengerLevel()) {
+      return state.level === 9
+        ? "Special world: Phoenix scavenger hunt. Find 2 desert treasures hidden around the sand."
+        : "Special world: Phoenix scavenger hunt. Find 3 treasures; the last treasure is behind the boss.";
+    }
+    if (isCanadaTreasureMapLevel()) {
+      return state.level === 15
+        ? "Special world: Canada treasure map. Beat clue guards to earn the first half of the map."
+        : "Special world: Canada treasure map. Finish the map, find the X, beat the boss, and dig up the Canada star treasure.";
+    }
+    if (isWhiteHouseProtectLevel()) {
+      return `Special world: White House protection. Protect President Trump from dangers while ${boss} causes trouble.`;
+    }
+    if (isIsraelWallFightLevel()) {
+      return "Special world: Israel wall fight. Run through wall openings to escape, attack the villain, or finish with more hearts when time runs out.";
+    }
+    if (isIranPalaceLevel()) {
+      return "Special world: Iran palace. Grab charge-ups around the palace while you fight.";
+    }
+    if (isEgyptianPalaceLevel()) {
+      return "Special world: Egyptian palace. Grab Egyptian charge-ups while you fight through the final palace levels.";
+    }
+    if (isAfricaSavannaPowerLevel()) {
+      return "Special world: Africa Savanna. Your heroes look normal but temporarily get their animal powers back.";
+    }
+    if (isChinaShootLevel()) {
+      return "Special world: China shooting level. The villain mostly attacks by shooting Made in China blocks or Chinese chicken pieces.";
+    }
+    return "";
   }
 
   function currentBossPosition(target = currentTarget()) {
@@ -1858,7 +1906,7 @@
     document.querySelectorAll(".hero-choice").forEach((button) => {
       button.classList.toggle("selected", button.dataset.hero === id);
     });
-    els.statusText.textContent = `${heroes[id].name} is ready for Big Bad Boss Battle 4.`;
+    els.statusText.textContent = `${heroes[id].name} is ready. ${preStartLevelText()}`;
     updatePowerButton();
     updateHud();
     draw();
@@ -1892,7 +1940,7 @@
     }
     state.chosenBossTarget = target;
     state.playerTarget = target;
-    els.statusText.textContent = `You chose ${currentBossName(target)}. Press Start Level ${state.level} to play.`;
+    els.statusText.textContent = preStartLevelText();
     updateBossTargetChoices();
     updateHud();
     draw();
