@@ -564,11 +564,13 @@
       els.statusText.textContent = "Press Start Level first, then you can punch, kick, and use powers.";
       return;
     }
-    if (isStatueMazeLevel() || isAntarcticaTreasureLevel()) {
-      els.statusText.textContent = isStatueMazeLevel()
-        ? "This level is a Statue of Liberty maze. Use the arrow buttons or keyboard arrows to reach EXIT."
-        : "This level is an Antarctica treasure hunt. Use arrows to run from the boss and find Penguin Treasure.";
+    if (isStatueMazeLevel()) {
+      els.statusText.textContent = "This level is a Statue of Liberty maze. Use the arrow buttons or keyboard arrows to reach EXIT.";
       draw();
+      return;
+    }
+    if (isAntarcticaTreasureLevel()) {
+      attackAntarcticaTreasure(kind, powerSlot);
       return;
     }
     if (isPhoenixScavengerLevel()) {
@@ -2299,12 +2301,8 @@
 
     if (state.heroX >= 1110) {
       if (state.treasurePart >= 3) {
-        state.won = true;
-        state.action = "win";
-        els.statusText.textContent = `You found the Penguin Treasure chest. ${levelWinText()}`;
-        if (advanceAfterWin()) return;
-        setAttacks(true);
-        updateLevelLocks();
+        els.statusText.textContent = "You reached the Penguin Treasure chest. Press punch, kick, or a power to open it!";
+        state.heroX = 1090;
         updateHud();
         draw();
         return;
@@ -2319,7 +2317,10 @@
       return;
     }
 
-    if (hitPower) {
+    if (hitPower && (Date.now() < state.hiddenUntil || Date.now() < state.jumpingUntil)) {
+      state.action = "";
+      els.statusText.textContent = "Your jump or hide made the icy power miss. Keep running toward the Penguin Treasure!";
+    } else if (hitPower) {
       takeHeroDamage(0.5);
       state.action = "iceBossFreeze";
       els.statusText.textContent = `${currentBossName()} shot an icy power across the snow. You lost half a heart. Keep going!`;
@@ -2339,6 +2340,82 @@
     }
     updateHud();
     draw();
+  }
+
+  function attackAntarcticaTreasure(kind, powerSlot = null) {
+    if (kind === "jump" || kind === "hide") {
+      useAntarcticaDefense(kind);
+      return;
+    }
+    state.playerAction = kind;
+    state.playerTarget = currentTarget();
+    const atChest = isAtPenguinTreasureChest();
+    if (atChest && state.treasurePart >= 3) {
+      state.won = true;
+      state.action = "win";
+      els.statusText.textContent = `${attackName(kind)} opened the Penguin Treasure chest. ${levelWinText()}`;
+      if (advanceAfterWin()) return;
+      setAttacks(true);
+      updateLevelLocks();
+      updateHud();
+      draw();
+      return;
+    }
+
+    if (kind === "power") {
+      useAntarcticaPower(powerSlot);
+      return;
+    }
+
+    if (isCloseEnoughToAntarcticaBoss(kind)) {
+      const push = kind === "kick" ? 150 : 105;
+      state.treasureBossX = clamp(state.treasureBossX - push, 35, 1060);
+      state.action = kind === "kick" ? "kick" : "punch";
+      els.statusText.textContent = `${attackName(kind)} knocked the chasing boss back on the ice. Keep running toward the Penguin Treasure!`;
+    } else {
+      state.action = "miss";
+      els.statusText.textContent = `${attackName(kind)} missed. Get closer to the chasing boss or reach the Penguin Treasure chest.`;
+    }
+    updateHud();
+    draw();
+  }
+
+  function useAntarcticaDefense(kind) {
+    const now = Date.now();
+    state.playerAction = kind;
+    if (kind === "jump") {
+      state.jumpingUntil = now + 1400;
+      state.heroY = clamp(state.heroY - 42, 315, 465);
+      state.action = "heroJump";
+      els.statusText.textContent = "Jump! You hopped over the icy power for a moment.";
+    } else {
+      state.hiddenUntil = now + 1800;
+      state.action = "heroHide";
+      els.statusText.textContent = "Hide! You ducked behind the snow so the icy power can miss.";
+    }
+    updateHud();
+    draw();
+  }
+
+  function useAntarcticaPower(powerSlot = null) {
+    const powerName = currentPowerName();
+    const powerPush = 210 + (Number.isInteger(powerSlot) ? powerSlot * 30 : 0);
+    state.treasureBossX = clamp(state.treasureBossX - powerPush, 35, 1060);
+    state.treasurePowerX = 920;
+    state.action = "power";
+    els.statusText.textContent = `${powerName}! Your power blasted across Antarctica, pushed the chasing boss back, and cleared the icy shot. Keep going to the Penguin Treasure!`;
+    updatePowerButton();
+    updateHud();
+    draw();
+  }
+
+  function isAtPenguinTreasureChest() {
+    return state.treasurePart >= 3 && state.heroX >= 1010 && state.heroY >= 345 && state.heroY <= 465;
+  }
+
+  function isCloseEnoughToAntarcticaBoss(kind) {
+    const range = kind === "kick" ? 235 : 190;
+    return Math.abs(state.heroX - state.treasureBossX) <= range && Math.abs(state.heroY - state.treasureBossY) <= 125;
   }
 
   function chaseHeroInAntarctica(direction) {
