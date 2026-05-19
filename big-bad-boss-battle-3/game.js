@@ -1584,6 +1584,10 @@
   }
 
   function chooseBossTarget(target) {
+    if (state.started && !state.won && !state.lost) {
+      els.statusText.textContent = "Finish this fight or press Reset before choosing a different boss.";
+      return;
+    }
     const hp = target === "math" ? state.mathHp : state.evilHp;
     if (hp <= 0) {
       els.statusText.textContent = `${currentBossName(target)} is already defeated. Pick the other boss.`;
@@ -1601,14 +1605,13 @@
   function updateBossTargetChoices() {
     const targetSelect = document.getElementById("bossTargetSelect");
     if (!targetSelect) return;
-    const showPicker = currentBossHp() > 0;
+    const showPicker = !state.started || state.won || state.lost;
     targetSelect.classList.toggle("hidden", !showPicker);
-    state.chosenBossTarget = chooseAliveLevelOneTarget(state.chosenBossTarget);
     targetSelect.querySelectorAll(".target-choice").forEach((button) => {
       const target = button.dataset.target;
       const hp = target === "math" ? state.mathHp : state.evilHp;
-      const defeated = hp <= 0;
-      button.disabled = defeated || !showPicker;
+      const defeated = hp <= 0 && state.started;
+      button.disabled = !showPicker || defeated;
       button.classList.toggle("defeated", defeated);
       button.classList.toggle("selected", target === state.chosenBossTarget && showPicker);
       button.textContent = target === "math" ? "Choose Mischievous Mayer" : "Choose Yapping Yonatan";
@@ -1936,7 +1939,10 @@
     drawSchool();
     drawHealthBars();
     drawHero(state.heroX, state.heroY);
-    if (currentBossHp() > 0) {
+    if (!state.started) {
+      drawMischievousMayerBoss(900, 365);
+      drawYappingYonatanBoss(1045, 420);
+    } else if (currentBossHp() > 0) {
       if (currentTarget() === "math") {
         drawMischievousMayerBoss(940, 365);
       } else {
