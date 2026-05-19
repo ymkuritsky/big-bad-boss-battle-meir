@@ -436,6 +436,11 @@
     state.mathHp = HEARTS_PER_FIGHTER;
     state.evilHp = HEARTS_PER_FIGHTER;
     state.iceHp = HEARTS_PER_FIGHTER;
+    if (isWhiteHouseProtectLevel()) {
+      state.mathHp = 20;
+      state.evilHp = 20;
+      state.iceHp = 20;
+    }
     state.foodHp = HEARTS_PER_FIGHTER;
     state.crazyBallHp = HEARTS_PER_FIGHTER;
     state.airplaneHp = HEARTS_PER_FIGHTER;
@@ -546,7 +551,7 @@
       setAttacks(false);
     } else if (isWhiteHouseProtectLevel()) {
       resetWhiteHouseProtect(true);
-      els.statusText.textContent = `${levels[state.level].start} Protect President Trump until the timer runs out. Punch, kick, or use powers to knock dangers away.`;
+      els.statusText.textContent = `${levels[state.level].start} Protect President Trump until the timer runs out, or defeat ${currentBossName()} with 20 hearts before time ends.`;
       setAttacks(false);
     } else if (isIsraelWallFightLevel()) {
       resetIsraelWallFight(true);
@@ -1767,22 +1772,20 @@
   }
 
   function currentBossHp() {
-    if (isWhiteHouseProtectLevel()) return state.protectPresidentHp;
     return bossHpFor(currentTarget());
   }
 
   function currentBossMaxHp() {
-    if (isWhiteHouseProtectLevel()) return 5;
+    if (isWhiteHouseProtectLevel()) return 20;
     return HEARTS_PER_FIGHTER;
   }
 
   function levelWinText() {
-    if (isWhiteHouseProtectLevel()) return `You protected President Trump in Level ${state.level}!`;
+    if (isWhiteHouseProtectLevel()) return `You completed the White House protection mission in Level ${state.level}!`;
     return `You beat ${currentBossName()} in Level ${state.level}!`;
   }
 
   function currentBossName(target = currentTarget()) {
-    if (isWhiteHouseProtectLevel()) return "President Trump";
     if (target === "math" || target === "evil" || target === "ice") return selectedBossName(target);
     if (target === "food") return "Food Monster Fiasco";
     if (target === "crazyBall") return "The Crazy Ball";
@@ -1820,7 +1823,7 @@
         : "Special world: Canada treasure map. Finish the map, find the X, beat the boss, and dig up the Canada star treasure.";
     }
     if (isWhiteHouseProtectLevel()) {
-      return `Special world: White House protection. Protect President Trump from dangers while ${boss} causes trouble.`;
+      return `Special world: White House protection. Protect President Trump from dangers until time runs out, or defeat ${boss}, who has 20 hearts.`;
     }
     if (isIsraelWallFightLevel()) {
       return "Special world: Israel wall fight. Run through wall openings to escape, attack the villain, or finish with more hearts when time runs out.";
@@ -1841,7 +1844,6 @@
   }
 
   function currentBossPosition(target = currentTarget()) {
-    if (isWhiteHouseProtectLevel()) return presidentPosition();
     if (isIsraelWallFightLevel()) return { x: state.israelVillainX, y: state.israelVillainY };
     if (isStatueMazeLevel()) return { x: state.mazeBossX, y: state.mazeBossY };
     if (isAntarcticaTreasureLevel()) return { x: state.treasureBossX, y: state.treasureBossY };
@@ -2783,7 +2785,7 @@
     const nearby = nearestProtectHazard(110);
     els.statusText.textContent = nearby
       ? "Move close and punch, kick, or use a power to knock the danger away from President Trump."
-      : `Protect President Trump. ${protectTimeText()} left.`;
+      : `Protect President Trump or defeat ${currentBossName()} before time runs out. ${protectTimeText()} left.`;
     updateHud();
     draw();
   }
@@ -2794,17 +2796,32 @@
       return;
     }
     state.playerAction = kind;
+    const target = currentTarget();
+    state.playerTarget = target;
     const range = kind === "power" ? 210 : kind === "kick" ? 165 : 135;
     const hazard = nearestProtectHazard(range);
-    if (!hazard) {
-      state.action = "miss";
-      els.statusText.textContent = "No danger is close enough. Move near a danger, then knock it away.";
+    if (hazard) {
+      state.protectHazards = state.protectHazards.filter((item) => item.id !== hazard.id);
+      state.action = "protectBlock";
+      els.statusText.textContent = `${attackName(kind)} knocked away the ${hazard.label}. Keep President Trump safe for ${protectTimeText()}.`;
+      updateHud();
       draw();
       return;
     }
-    state.protectHazards = state.protectHazards.filter((item) => item.id !== hazard.id);
-    state.action = "protectBlock";
-    els.statusText.textContent = `${attackName(kind)} knocked away the ${hazard.label}. Keep President Trump safe for ${protectTimeText()}.`;
+    if (!isCloseEnoughToAttack(kind === "kick" ? "kick" : "punch", target)) {
+      state.action = "miss";
+      els.statusText.textContent = `No danger or villain is close enough. Move near a danger to protect President Trump, or get close to ${currentBossName(target)} to attack.`;
+      draw();
+      return;
+    }
+    const damage = heroAttackDamage(kind === "power" ? usePowerDamage() : kind === "kick" ? 2 : 1);
+    damageBoss(target, damage);
+    if (currentBossHp() <= 0) {
+      winWhiteHouseProtectByBossDefeat(target);
+      return;
+    }
+    state.action = kind;
+    els.statusText.textContent = `${attackName(kind)} hit ${currentBossName(target)} for ${heartText(damage)}. You can win by defeating the villain or protecting President Trump for ${protectTimeText()}.`;
     updateHud();
     draw();
   }
@@ -2834,7 +2851,7 @@
       state.action = "presidentHit";
       els.statusText.textContent = `A danger got through. President Trump lost ${hits.length} heart${hits.length === 1 ? "" : "s"}. Protect him for ${protectTimeText()}.`;
     } else {
-      els.statusText.textContent = `Protect President Trump. ${protectTimeText()} left.`;
+      els.statusText.textContent = `Protect President Trump or defeat ${currentBossName()} before time runs out. ${protectTimeText()} left.`;
     }
     if (state.protectPresidentHp <= 0) {
       loseWhiteHouseProtect();
@@ -2902,7 +2919,23 @@
     }
     state.won = true;
     state.action = "win";
-    els.statusText.textContent = `Time ran out and President Trump stayed safe. ${levelWinText()}`;
+    els.statusText.textContent = `Time ran out and President Trump stayed safe from ${currentBossName()}. Level ${state.level} complete!`;
+    if (advanceAfterWin()) return;
+    setAttacks(true);
+    updateLevelLocks();
+    updateHud();
+    draw();
+  }
+
+  function winWhiteHouseProtectByBossDefeat(target) {
+    clearLevelTimer();
+    if (state.protectInterval) {
+      clearInterval(state.protectInterval);
+      state.protectInterval = null;
+    }
+    state.won = true;
+    state.action = "win";
+    els.statusText.textContent = `You defeated ${currentBossName(target)} before time ran out and kept President Trump safe. Level ${state.level} complete!`;
     if (advanceAfterWin()) return;
     setAttacks(true);
     updateLevelLocks();
@@ -3331,6 +3364,16 @@
     } else if (isWhiteHouseProtectLevel()) {
       drawPresidentTrump();
       drawProtectHazards();
+      if (state.started && currentBossHp() > 0) {
+        const boss = currentBossPosition();
+        if (currentTarget() === "math") {
+          drawMischievousMayerBoss(boss.x, boss.y + 10);
+        } else if (currentTarget() === "evil") {
+          drawYappingYonatanBoss(boss.x, boss.y + 10);
+        } else {
+          drawIceBoss(boss.x, boss.y);
+        }
+      }
     } else if (isIsraelWallFightLevel()) {
       drawIsraelVillain();
     } else if (!state.started) {
@@ -5286,7 +5329,7 @@
     drawHeartBar(50, 44, 430, hero.name.toUpperCase(), state.heroHp, currentHeroMaxHp(), hero.accent);
     drawHeartBar(800, 44, 430, currentBossName().toUpperCase(), currentBossHp(), currentBossMaxHp(), "#d91f2e");
     drawLabel(state.started ? `TIME: ${levelTimerText()}` : `TIMER: ${levelTimerDuration() / 60000}:00`, 510, 44, "#fffef7", 260);
-    drawLabel(isWhiteHouseProtectLevel() ? `PROTECTING: ${currentBossName().toUpperCase()}` : `FIGHTING: ${currentBossName().toUpperCase()}`, 365, 122, "#ffd84a", 550);
+    drawLabel(isWhiteHouseProtectLevel() ? `PROTECT PRESIDENT: ${state.protectPresidentHp}/5 | FIGHTING: ${currentBossName().toUpperCase()}` : `FIGHTING: ${currentBossName().toUpperCase()}`, 365, 122, "#ffd84a", 660);
   }
 
   function drawHeartBar(x, y, width, label, hp, maxHp, color) {
