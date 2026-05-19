@@ -262,9 +262,9 @@
   ];
 
   const fennecPowers = [
-    { id: "fennecLove", name: "Sneak Trick", damage: 1 },
-    { id: "fennecSneakBite", name: "Quick Dash", damage: 1 },
-    { id: "fennecPounce", name: "Multiplication", damage: 0 }
+    { id: "fennecLove", name: "Multiplication", damage: 1 },
+    { id: "fennecSneakBite", name: "Turn Into Any Animal", damage: 1 },
+    { id: "fennecPounce", name: "Sneak Trick", damage: 0 }
   ];
 
   const mayerPowers = [
@@ -1012,18 +1012,18 @@
     }
 
     if (power.id === "fennecLove") {
-      els.statusText.textContent = `Sneak Trick! Freddy made ${currentBossName(target)} fall on the floor for 10 seconds. It took away ${heartText(damage)}.`;
+      els.statusText.textContent = `Multiplication! Freddy made extra Freddys that surrounded ${currentBossName(target)} for 10 seconds and took away ${heartText(damage)}.`;
       updateHud();
       draw();
       return;
     }
     if (power.id === "fennecSneakBite") {
-      els.statusText.textContent = `Quick Dash! Freddy zipped in before anyone noticed and hit ${currentBossName(target)} for ${heartText(damage)}.`;
+      els.statusText.textContent = `Turn Into Any Animal! Freddy changed forms and surprised ${currentBossName(target)} for ${heartText(damage)}.`;
       updateHud();
       draw();
       return;
     }
-    els.statusText.textContent = `Multiplication! Freddy made a perfect decoy. Now any attack can hit for a short time.`;
+    els.statusText.textContent = `Sneak Trick! Freddy sneaked onto the boss's head. Now any attack can hit for a short time.`;
     updateHud();
     draw();
   }
@@ -6390,7 +6390,9 @@
     } else if (state.action === "israelTag") {
       drawImpact("RUN!", 650, 215, "#d91f2e");
     } else {
-      drawPlayerAttack(state.playerAction, false);
+      if (!isSpecialPowerAction(state.action)) {
+        drawPlayerAttack(state.playerAction, false);
+      }
       if (state.action === "numberNet") {
         drawNumberNet(state.heroX, state.heroY);
         drawImpact("MISCHIEF!", 650, 215, "#7146d9");
@@ -6445,21 +6447,41 @@
         drawBusStopAttack(state.heroX, state.heroY);
         drawImpact("STOPPED!", 650, 215, "#d91f2e");
       } else if (state.action === "trunkGrab") {
+        drawTrunkGrabEffect();
         drawImpact("GIANT PUNCH!", 650, 215, "#3f8fd2");
+      } else if (state.action === "elephantForestStomp") {
+        drawElephantStompEffect();
+        drawImpact("SUPER STOMP!", 650, 215, "#3f8fd2");
+      } else if (state.action === "elephantTuskShield") {
+        drawElephantShieldEffect();
+        drawImpact("GORILLA JUMP!", 650, 215, "#3f8fd2");
       } else if (state.action === "parrotScream") {
+        drawParrotScreamEffect();
         drawImpact("WING GUST!", 650, 215, "#8542d8");
+      } else if (state.action === "parrotWingBlast") {
+        drawParrotWingBlastEffect();
+        drawImpact("FLY!", 650, 215, "#8542d8");
+      } else if (state.action === "parrotHealingFeather") {
+        drawParrotHealingEffect();
+        drawImpact("TAKEOFF JUMP!", 650, 215, "#8542d8");
       } else if (state.action === "cheetahSpeed") {
+        drawCheetahPowerEffect("speed");
         drawImpact("JUICE SHOT!", 650, 215, "#f18319");
       } else if (state.action === "cheetahTailGrab") {
+        drawCheetahPowerEffect("tail");
         drawImpact("JUICE TORNADO!", 650, 215, "#f18319");
       } else if (state.action === "cheetahClaws") {
+        drawCheetahPowerEffect("claws");
         drawImpact("JUICE LIGHTNING!", 650, 215, "#f18319");
       } else if (state.action === "fennecLove") {
-        drawImpact("SNEAK TRICK!", 650, 215, "#f083bd");
+        drawFreddyMultiplicationEffect();
+        drawImpact("MULTIPLY!", 650, 215, "#f083bd");
       } else if (state.action === "fennecSneakBite") {
-        drawImpact("QUICK DASH!", 650, 215, "#f0cf62");
+        drawFreddyAnimalMorphEffect();
+        drawImpact("ANIMAL FORM!", 650, 215, "#f0cf62");
       } else if (state.action === "fennecPounce") {
-        drawImpact("MULTIPLY!", 650, 215, "#f0cf62");
+        drawFennecPounceEffect();
+        drawImpact("SNEAK TRICK!", 650, 215, "#f0cf62");
       } else if (state.action === "polarTeeth") {
         drawPolarPowerEffect("teeth");
         drawImpact("TORNADO!", 650, 215, "#45a6db");
@@ -6470,11 +6492,13 @@
         drawPolarPowerEffect("tornado");
         drawImpact("ICE SHIELD!", 650, 215, "#45a6db");
       } else if (state.action === "bananaStorm") {
-        drawPolarPowerEffect("chunk");
+        drawMonkeyPowerEffect("storm");
         drawImpact("FREEZE BLOCK!", 650, 215, "#45a6db");
       } else if (state.action === "bananaShoot") {
+        drawMonkeyPowerEffect("shoot");
         drawImpact("BURROW STRIKE!", 650, 215, "#6cf0c2");
       } else if (state.action === "bananaSlip") {
+        drawMonkeyPowerEffect("slip");
         drawImpact("POISON STORM!", 650, 215, "#a4c43a");
       } else if (state.action === "mayerBigBock") {
         drawMayerPowerEffect("bock");
@@ -6505,6 +6529,17 @@
       }
     }
     ctx.restore();
+  }
+
+  function isSpecialPowerAction(action) {
+    return [
+      "trunkGrab", "elephantForestStomp", "elephantTuskShield", "parrotScream",
+      "parrotWingBlast", "parrotHealingFeather", "cheetahSpeed", "cheetahTailGrab", "cheetahClaws",
+      "fennecLove", "fennecSneakBite", "fennecPounce", "polarTeeth", "polarIceChunk",
+      "polarIceTornado", "bananaStorm", "bananaShoot", "bananaSlip", "mayerBigBock",
+      "mayerFlyUp", "mayerRoosterFlyers", "yonatanJaw", "yonatanChomper",
+      "yonatanTailSwipe", "yonatanAlligatorMonsters"
+    ].includes(action);
   }
 
   function drawIceBossFreeze(x, y) {
@@ -6563,6 +6598,90 @@
     ctx.font = "900 20px Trebuchet MS";
     ctx.textAlign = "center";
     ctx.fillText("NO POWERS", boss.x - 43, boss.y - 138);
+    ctx.restore();
+  }
+
+  function drawElephantStompEffect() {
+    const boss = currentBossPosition(state.playerTarget || currentTarget());
+    ctx.save();
+    ctx.strokeStyle = "#1478cf";
+    ctx.fillStyle = "rgba(20, 120, 207, 0.18)";
+    ctx.lineWidth = 8;
+    for (let ring = 0; ring < 4; ring += 1) {
+      ctx.beginPath();
+      ctx.ellipse(boss.x - 85, boss.y + 40, 78 + ring * 38, 24 + ring * 12, 0, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+    ctx.fillStyle = "#78c9ff";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    roundRect(boss.x - 178, boss.y - 140, 180, 58, 12);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#171216";
+    ctx.font = "900 24px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText("STOMP!", boss.x - 88, boss.y - 102);
+    ctx.restore();
+  }
+
+  function drawElephantShieldEffect() {
+    ctx.save();
+    ctx.strokeStyle = "#1478cf";
+    ctx.fillStyle = "rgba(120, 201, 255, 0.26)";
+    ctx.lineWidth = 8;
+    ctx.beginPath();
+    ctx.arc(state.heroX, state.heroY - 78, 88, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#fffef7";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.moveTo(state.heroX, state.heroY - 148);
+    ctx.lineTo(state.heroX + 54, state.heroY - 118);
+    ctx.lineTo(state.heroX + 40, state.heroY - 42);
+    ctx.lineTo(state.heroX, state.heroY - 18);
+    ctx.lineTo(state.heroX - 40, state.heroY - 42);
+    ctx.lineTo(state.heroX - 54, state.heroY - 118);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawParrotWingBlastEffect() {
+    const boss = currentBossPosition(state.playerTarget || currentTarget());
+    ctx.save();
+    ctx.strokeStyle = "#8542d8";
+    ctx.lineWidth = 9;
+    for (let gust = 0; gust < 4; gust += 1) {
+      ctx.beginPath();
+      ctx.moveTo(state.heroX + 70, state.heroY - 140 + gust * 36);
+      ctx.quadraticCurveTo(610, state.heroY - 205 + gust * 26, boss.x - 90, boss.y - 120 + gust * 18);
+      ctx.stroke();
+    }
+    ctx.fillStyle = "#ff89c6";
+    ctx.font = "900 26px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText("WING BLAST", boss.x - 95, boss.y - 165);
+    ctx.restore();
+  }
+
+  function drawParrotHealingEffect() {
+    ctx.save();
+    ctx.strokeStyle = "#8542d8";
+    ctx.fillStyle = "#ff89c6";
+    ctx.lineWidth = 5;
+    for (let feather = 0; feather < 6; feather += 1) {
+      const x = state.heroX - 80 + feather * 32;
+      const y = state.heroY - 155 + (feather % 2) * 26;
+      ctx.beginPath();
+      ctx.ellipse(x, y, 10, 34, 0.4, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    }
+    drawHeartShape(state.heroX, state.heroY - 112, 24);
     ctx.restore();
   }
 
@@ -6732,6 +6851,84 @@
     ctx.bezierCurveTo(size, -size, size * 1.45, 0, 0, size);
     ctx.fill();
     ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawFreddyMultiplicationEffect() {
+    const boss = currentBossPosition(state.fennecLoveTarget || state.playerTarget || currentTarget());
+    ctx.save();
+    const hero = heroes.freddy;
+    [[-170, 5], [-115, -85], [-45, -20], [-220, -60]].forEach(([dx, dy], index) => {
+      ctx.save();
+      ctx.translate(boss.x + dx, boss.y + dy);
+      ctx.globalAlpha = 0.82 - index * 0.08;
+      ctx.fillStyle = hero.color;
+      ctx.strokeStyle = "#171216";
+      ctx.lineWidth = 4;
+      roundRect(-18, -54, 36, 58, 8);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = hero.accent;
+      ctx.beginPath();
+      ctx.arc(0, -72, 20, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "#171216";
+      ctx.font = "900 16px Trebuchet MS";
+      ctx.textAlign = "center";
+      ctx.fillText(`x${index + 2}`, 0, -104);
+      ctx.restore();
+    });
+    ctx.fillStyle = "#fffef7";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    roundRect(boss.x - 260, boss.y - 210, 220, 54, 12);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#17633c";
+    ctx.font = "900 24px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText("MORE FREDDYS!", boss.x - 150, boss.y - 176);
+    ctx.restore();
+  }
+
+  function drawFreddyAnimalMorphEffect() {
+    const boss = currentBossPosition(state.playerTarget || currentTarget());
+    ctx.save();
+    const animals = [
+      ["FOX", "#f0cf62", boss.x - 245, boss.y - 130],
+      ["BEAR", "#d9fbff", boss.x - 175, boss.y - 190],
+      ["CHEETAH", "#f18319", boss.x - 100, boss.y - 130]
+    ];
+    animals.forEach(([label, color, x, y], index) => {
+      ctx.fillStyle = color;
+      ctx.strokeStyle = "#171216";
+      ctx.lineWidth = 5;
+      ctx.beginPath();
+      ctx.ellipse(x, y, 42, 30, index * 0.2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "#171216";
+      ctx.font = "900 12px Trebuchet MS";
+      ctx.textAlign = "center";
+      ctx.fillText(label, x, y + 5);
+    });
+    ctx.strokeStyle = "#f0cf62";
+    ctx.lineWidth = 8;
+    ctx.beginPath();
+    ctx.moveTo(state.heroX + 70, state.heroY - 90);
+    ctx.quadraticCurveTo(610, 225, boss.x - 80, boss.y - 85);
+    ctx.stroke();
+    ctx.fillStyle = "#fffef7";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    roundRect(boss.x - 270, boss.y - 250, 240, 52, 12);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#17633c";
+    ctx.font = "900 20px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText("ANY ANIMAL!", boss.x - 150, boss.y - 216);
     ctx.restore();
   }
 
