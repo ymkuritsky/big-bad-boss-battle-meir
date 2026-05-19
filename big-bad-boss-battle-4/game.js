@@ -7,7 +7,7 @@
     tats: { name: "Super Tats", color: "#1478cf", accent: "#78c9ff", hp: HEARTS_PER_FIGHTER, firstPower: "Giant Punch" },
     fary: { name: "Mom Fary", color: "#8542d8", accent: "#ff89c6", hp: HEARTS_PER_FIGHTER, firstPower: "Wing Gust" },
     apple: { name: "Super Appie Juice", color: "#f18319", accent: "#ffcf54", hp: HEARTS_PER_FIGHTER, firstPower: "Apple Juice Shot" },
-    freddy: { name: "Freddy", color: "#17633c", accent: "#f0cf62", hp: HEARTS_PER_FIGHTER, firstPower: "Mammal" },
+    freddy: { name: "Freddy", color: "#17633c", accent: "#f0cf62", hp: HEARTS_PER_FIGHTER, firstPower: "Sneak Trick" },
     benji: { name: "Benji", color: "#6f737a", accent: "#45a6db", hp: HEARTS_PER_FIGHTER, firstPower: "Tornado" },
     frost: { name: "Mr. 67", color: "#146e8f", accent: "#6cf0c2", hp: HEARTS_PER_FIGHTER, firstPower: "Freeze Block" },
     ness: { name: "Super Ness", color: "#c73583", accent: "#6bd8ff", hp: HEARTS_PER_FIGHTER, firstPower: "Super Kick" },
@@ -18,9 +18,19 @@
   };
 
   const travelStops = [
-    "Florida", "New York", "Paris", "Antarctica", "London", "Tokyo", "Egypt", "Amazon", "Hawaii", "Australia",
-    "Hollywood", "Mexico City", "Rome", "China", "India", "Dubai", "Canada", "Brazil", "South Africa", "Iceland",
-    "Moon Base", "Volcano Island", "Rainy Jungle", "Castle Country", "Space Museum", "Grand Canyon", "Candy Coast", "Robot City", "Pirate Harbor", "Final World"
+    "Florida", "Florida",
+    "New York", "New York",
+    "Antarctica", "Antarctica",
+    "Paris", "Paris",
+    "Phoenix", "Phoenix",
+    "Russia", "Russia",
+    "China", "China",
+    "Canada", "Canada",
+    "Africa Savanna", "Africa Savanna",
+    "Washington D.C.", "Washington D.C.",
+    "Iran Palace", "Iran Palace", "Iran Palace", "Iran Palace",
+    "Israel", "Israel",
+    "Egyptian Palace", "Egyptian Palace", "Egyptian Palace", "Egyptian Palace"
   ];
 
   const levels = {
@@ -30,49 +40,49 @@
       start: "Level 1 started in Florida. Fight the boss you chose!"
     },
     2: {
-      title: "Level 2 New York",
+      title: "Level 2 Florida",
       intro: "Who do you want to choose: Mischievous Mayer, Yapping Yonatan, or Ice Boss?",
-      start: "Level 2 started in New York. Fight the boss you chose!"
+      start: "Level 2 stayed in Florida. Fight the boss you chose!"
     },
     3: {
-      title: "Level 3 Paris",
+      title: "Level 3 New York",
       intro: "Who do you want to choose: Mischievous Mayer, Yapping Yonatan, or Ice Boss?",
-      start: "Level 3 started in Paris. The boss is a little quicker now!"
+      start: "Level 3 started in New York. The boss is a little quicker now!"
     },
     4: {
-      title: "Level 4 Antarctica",
+      title: "Level 4 New York",
       intro: "Who do you want to choose: Mischievous Mayer, Yapping Yonatan, or Ice Boss?",
-      start: "Level 4 started in Antarctica. The boss hits a little harder!"
+      start: "Level 4 stayed in New York. The boss hits a little harder!"
     },
     5: {
-      title: "Level 5 London",
+      title: "Level 5 Antarctica",
       intro: "Who do you want to choose: Mischievous Mayer, Yapping Yonatan, or Ice Boss?",
-      start: "Level 5 started in London. Watch for stronger boss powers!"
+      start: "Level 5 started in Antarctica. Run across the ice and find the Penguin Treasure!"
     },
     6: {
-      title: "Level 6 Tokyo",
+      title: "Level 6 Antarctica",
       intro: "Who do you want to choose: Mischievous Mayer, Yapping Yonatan, or Ice Boss?",
-      start: "Level 6 started in Tokyo. The boss gets faster!"
+      start: "Level 6 stayed in Antarctica. The boss chases faster while you hunt Penguin Treasure!"
     },
     7: {
-      title: "Level 7 Egypt",
+      title: "Level 7 Paris",
       intro: "Who do you want to choose: Mischievous Mayer, Yapping Yonatan, or Ice Boss?",
-      start: "Level 7 started in Egypt. Choose your boss and move close to attack!"
+      start: "Level 7 started in Paris. Choose your boss and move close to attack!"
     },
     8: {
-      title: "Level 8 Amazon",
+      title: "Level 8 Paris",
       intro: "Who do you want to choose: Mischievous Mayer, Yapping Yonatan, or Ice Boss?",
-      start: "Level 8 started in the Amazon. The boss powers are getting sharper!"
+      start: "Level 8 stayed in Paris. The boss powers are getting sharper!"
     },
     9: {
-      title: "Level 9 Hawaii",
+      title: "Level 9 Phoenix",
       intro: "Who do you want to choose: Mischievous Mayer, Yapping Yonatan, or Ice Boss?",
-      start: "Level 9 started in Hawaii. The boss attacks more often!"
+      start: "Level 9 started in Phoenix. Find 2 desert scavenger hunt treasures!"
     },
     10: {
-      title: "Level 10 Australia",
+      title: "Level 10 Phoenix",
       intro: "Who do you want to choose: Mischievous Mayer, Yapping Yonatan, or Ice Boss?",
-      start: "Level 10 started in Australia. Fight the boss you chose!"
+      start: "Level 10 stayed in Phoenix. Find 3 treasures, with the last one behind the boss!"
     }
   };
 
@@ -193,6 +203,21 @@
     };
   }
 
+  levels[15].start = "Level 15 started in Canada. Fight clue guards to earn the first half of the treasure map!";
+  levels[16].start = "Level 16 stayed in Canada. Finish the map, find the X, and dig up the Canada star treasure!";
+  levels[17].start = "Level 17 started in Africa Savanna. Your normal-looking heroes temporarily get their animal powers back!";
+  levels[18].start = "Level 18 stayed in Africa Savanna. Use the animal powers one more time before they switch back!";
+  levels[19].start = "Level 19 started inside the White House in Washington D.C. Protect President Trump for two minutes!";
+  levels[20].start = "Level 20 stayed inside the White House in Washington D.C. Protect President Trump for three minutes!";
+  for (let level = 21; level <= 24; level += 1) {
+    levels[level].start = `Level ${level} started inside the Iran palace. Run over charge-ups to get stronger during the fight!`;
+  }
+  levels[25].start = "Level 25 started in Israel by the wall. Run through wall openings, escape the villain, and win before the 2-minute timer ends!";
+  levels[26].start = "Level 26 stayed in Israel by the wall. This rematch has a 3-minute timer and the villain chases harder!";
+  for (let level = 27; level <= 30; level += 1) {
+    levels[level].start = `Level ${level} started inside the Egyptian palace. Grab Egyptian charge-ups while you fight!`;
+  }
+
   const powerUps = {
     homeworkShield: {
       name: "Homework Shield",
@@ -227,7 +252,7 @@
   const polarPowers = [
     { id: "polarTeeth", name: "Tornado", damage: 1.5 },
     { id: "polarIceChunk", name: "Teleport", damage: 1 },
-    { id: "polarIceTornado", name: "Sharks", damage: 0.5 }
+    { id: "polarIceTornado", name: "Ice Shield", damage: 0.5 }
   ];
 
   const monkeyPowers = [
@@ -237,8 +262,8 @@
   ];
 
   const fennecPowers = [
-    { id: "fennecLove", name: "Mammal", damage: 1 },
-    { id: "fennecSneakBite", name: "Reptile", damage: 1 },
+    { id: "fennecLove", name: "Sneak Trick", damage: 1 },
+    { id: "fennecSneakBite", name: "Quick Dash", damage: 1 },
     { id: "fennecPounce", name: "Multiplication", damage: 0 }
   ];
 
@@ -254,6 +279,34 @@
     { id: "yonatanTailSwipe", name: "Super Yap", damage: 0.5 },
     { id: "yonatanAlligatorMonsters", name: "Mega Mouth Monster", damage: 1 }
   ];
+
+  const animalPowerNames = {
+    elephantTrunkGrab: "Elephant Trunk Grab",
+    elephantForestStomp: "Elephant Smash",
+    elephantTuskShield: "Tusk Shield",
+    parrotScream: "Loud Parrot Screech",
+    parrotWingBlast: "Wing Blast",
+    parrotHealingFeather: "Healing Feather",
+    cheetahSpeed: "Super Speed Run",
+    cheetahTailGrab: "Tail Grab",
+    cheetahClaws: "Claw Scratch",
+    polarTeeth: "Teeth Attack",
+    polarIceChunk: "Ice Chunk",
+    polarIceTornado: "Ice Tornado",
+    bananaStorm: "Poisonous Banana Storm",
+    bananaShoot: "Banana Shoot",
+    bananaSlip: "Banana Peel Slip",
+    fennecLove: "Fennec Love",
+    fennecSneakBite: "Sneak Bite",
+    fennecPounce: "Pounce",
+    mayerBigBock: "Super Big Bock",
+    mayerFlyUp: "Fly Up",
+    mayerRoosterFlyers: "Chicken Rooster Flyers",
+    yonatanJaw: "Crocodile Jaw",
+    yonatanChomper: "Crocodile Chomper",
+    yonatanTailSwipe: "Tail Swipe",
+    yonatanAlligatorMonsters: "Alligator Monsters"
+  };
 
   const els = {
     statusText: document.getElementById("statusText"),
@@ -296,6 +349,30 @@
     iceRewarded: false,
     heroX: 235,
     heroY: 410,
+    mazeBossX: 940,
+    mazeBossY: 430,
+    treasurePart: 1,
+    treasureBossX: 90,
+    treasureBossY: 410,
+    treasurePowerX: 250,
+    scavengerFound: new Set(),
+    scavengerBossReady: false,
+    canadaHits: {},
+    protectPresidentHp: 5,
+    protectStartedAt: 0,
+    protectDurationMs: 120000,
+    protectInterval: null,
+    protectHazards: [],
+    nextHazardId: 1,
+    palaceChargesCollected: new Set(),
+    levelStartedAt: 0,
+    levelDurationMs: 120000,
+    levelTimerInterval: null,
+    israelStartedAt: 0,
+    israelDurationMs: 120000,
+    israelInterval: null,
+    israelVillainX: 980,
+    israelVillainY: 410,
     action: "",
     playerAction: "",
     playerTarget: "",
@@ -332,6 +409,8 @@
     prizeDrops: [],
     bowShots: 0,
     armorBlocks: 0,
+    timedShieldUntil: 0,
+    specialPowerCharges: 0,
     lastDefenseText: "",
     nextDropId: 1,
     tick: 0
@@ -342,10 +421,14 @@
   };
 
   function resetGame() {
+    clearLevelTimer();
     state.started = false;
     state.won = false;
     state.lost = false;
     state.heroHp = heroes[state.heroId].hp;
+    if (isWhiteHouseProtectLevel()) {
+      state.heroHp = 6;
+    }
     state.mathHp = HEARTS_PER_FIGHTER;
     state.evilHp = HEARTS_PER_FIGHTER;
     state.iceHp = HEARTS_PER_FIGHTER;
@@ -364,6 +447,15 @@
     state.iceRewarded = false;
     state.heroX = 235;
     state.heroY = 410;
+    if (isStatueMazeLevel()) {
+      resetStatueMazePositions();
+    } else if (isAntarcticaTreasureLevel()) {
+      resetAntarcticaTreasurePositions();
+    } else if (isPhoenixScavengerLevel()) {
+      resetPhoenixScavengerPositions();
+    } else if (isCanadaTreasureMapLevel()) {
+      resetCanadaTreasurePositions();
+    }
     state.action = "";
     state.playerAction = "";
     state.playerTarget = "";
@@ -398,8 +490,18 @@
     state.yonatanChomperUntil = 0;
     state.yonatanChomperTarget = "";
     state.prizeDrops = [];
+    state.scavengerFound = new Set();
+    state.scavengerBossReady = false;
+    state.canadaHits = {};
+    resetWhiteHouseProtect(false);
+    state.palaceChargesCollected = new Set();
+    state.levelStartedAt = 0;
+    state.levelDurationMs = levelTimerDuration();
+    resetIsraelWallFight(false);
     state.bowShots = 0;
     state.armorBlocks = 0;
+    state.timedShieldUntil = 0;
+    state.specialPowerCharges = 0;
     state.lastDefenseText = "";
     state.nextDropId = 1;
     state.tick = 0;
@@ -421,8 +523,35 @@
     state.started = true;
     state.won = false;
     state.lost = false;
-    els.statusText.textContent = levels[state.level].start;
-    setAttacks(false);
+    if (isStatueMazeLevel()) {
+      resetStatueMazePositions();
+      els.statusText.textContent = `${levels[state.level].start} Use the arrows to escape through the Statue of Liberty maze. Get to EXIT at the head!`;
+      setAttacks(true);
+    } else if (isAntarcticaTreasureLevel()) {
+      resetAntarcticaTreasurePositions();
+      els.statusText.textContent = `${levels[state.level].start} Use arrows to run, dodge boss powers, and cross 3 icy screens.`;
+      setAttacks(true);
+    } else if (isPhoenixScavengerLevel()) {
+      resetPhoenixScavengerPositions();
+      els.statusText.textContent = `${levels[state.level].start} Use arrows to search the desert. Some pieces are behind cactus and rocks.`;
+      setAttacks(false);
+    } else if (isCanadaTreasureMapLevel()) {
+      resetCanadaTreasurePositions();
+      els.statusText.textContent = `${levels[state.level].start} Use arrows to find clue guards, then punch or kick them to earn map pieces.`;
+      setAttacks(false);
+    } else if (isWhiteHouseProtectLevel()) {
+      resetWhiteHouseProtect(true);
+      els.statusText.textContent = `${levels[state.level].start} Protect President Trump until the timer runs out. Punch, kick, or use powers to knock dangers away.`;
+      setAttacks(false);
+    } else if (isIsraelWallFightLevel()) {
+      resetIsraelWallFight(true);
+      els.statusText.textContent = `${levels[state.level].start} If time runs out, you win only if you have more hearts than the villain.`;
+      setAttacks(false);
+    } else {
+      els.statusText.textContent = levels[state.level].start;
+      setAttacks(false);
+    }
+    startLevelTimer();
     updateLevelLocks();
     updateHud();
     updateBossTargetChoices();
@@ -433,6 +562,29 @@
     state.lastDefenseText = "";
     if (!state.started || state.won || state.lost) {
       els.statusText.textContent = "Press Start Level first, then you can punch, kick, and use powers.";
+      return;
+    }
+    if (isStatueMazeLevel() || isAntarcticaTreasureLevel()) {
+      els.statusText.textContent = isStatueMazeLevel()
+        ? "This level is a Statue of Liberty maze. Use the arrow buttons or keyboard arrows to reach EXIT."
+        : "This level is an Antarctica treasure hunt. Use arrows to run from the boss and find Penguin Treasure.";
+      draw();
+      return;
+    }
+    if (isPhoenixScavengerLevel()) {
+      attackPhoenixBoss(kind);
+      return;
+    }
+    if (isCanadaTreasureMapLevel()) {
+      attackCanadaTreasure(kind);
+      return;
+    }
+    if (isWhiteHouseProtectLevel()) {
+      attackWhiteHouseProtect(kind);
+      return;
+    }
+    if (isIsraelWallFightLevel()) {
+      attackIsraelWallFight(kind);
       return;
     }
     if (kind === "jump" || kind === "hide") {
@@ -526,7 +678,7 @@
 
     if (isBossInIceTornado(target)) {
       state.action = "polarIceTornado";
-      els.statusText.textContent = `${attackName(kind)} hit ${currentBossName(target)} while Ice Tornado is trapping them. They cannot hit back yet!`;
+      els.statusText.textContent = `${attackName(kind)} hit ${currentBossName(target)} while Ice Shield is blocking them. They cannot hit back yet!`;
       updateHud();
       draw();
       return;
@@ -534,7 +686,7 @@
 
     if (isBossSlippingOnBanana(target)) {
       state.action = "bananaSlip";
-      els.statusText.textContent = `${attackName(kind)} hit ${currentBossName(target)} while they are slipping on Mr. 67's banana peel. They cannot hit back yet!`;
+      els.statusText.textContent = `${attackName(kind)} hit ${currentBossName(target)} while Poison Storm is making them dizzy. They cannot hit back yet!`;
       updateHud();
       draw();
       return;
@@ -550,7 +702,7 @@
 
     if (isBossBocked(target)) {
       state.action = "mayerBigBock";
-      els.statusText.textContent = `${attackName(kind)} hit ${currentBossName(target)} while Super Big Bock has them on the floor.`;
+      els.statusText.textContent = `${attackName(kind)} hit ${currentBossName(target)} while Flying Boots has them on the floor.`;
       updateHud();
       draw();
       return;
@@ -590,7 +742,7 @@
   }
 
   function elephantPowerAttack(target, powerSlot = 0) {
-    const power = elephantPowers[Number.isInteger(powerSlot) ? powerSlot : 0] || elephantPowers[0];
+    const power = powerForCurrentLevel(elephantPowers[Number.isInteger(powerSlot) ? powerSlot : 0] || elephantPowers[0]);
     if (power.id === "elephantTrunkGrab") {
       elephantTrunkGrab(target);
       return;
@@ -600,7 +752,7 @@
     state.action = power.id;
     if (power.id === "elephantTuskShield") {
       state.armorBlocks += 2;
-      els.statusText.textContent = "Tusk Shield! Super Tats is protected from the next 2 boss hits.";
+      els.statusText.textContent = "Gorilla Jump! Super Tats is protected from the next 2 boss hits.";
       updateHud();
       draw();
       return;
@@ -643,7 +795,7 @@
     if (currentBossHp() === 0) {
       state.won = true;
       state.action = "win";
-      els.statusText.textContent = `Super Tats grabbed ${currentBossName(target)} in his elephant trunk and threw them. ${levelWinText()}`;
+      els.statusText.textContent = `Super Tats landed a giant punch on ${currentBossName(target)}. ${levelWinText()}`;
       if (advanceAfterWin()) {
         return;
       }
@@ -653,7 +805,7 @@
       draw();
       return;
     }
-    els.statusText.textContent = `Giant Punch! Super Tats grabbed ${currentBossName(target)}, hit them with a huge superhero punch for ${heartText(damage)}. They cannot hit back for 30 seconds.`;
+    els.statusText.textContent = `Giant Punch! Super Tats hit ${currentBossName(target)} with a huge superhero punch for ${heartText(damage)}. They cannot hit back for 30 seconds.`;
     updateHud();
     draw();
   }
@@ -663,7 +815,7 @@
   }
 
   function parrotPowerAttack(target, powerSlot = 0) {
-    const power = parrotPowers[Number.isInteger(powerSlot) ? powerSlot : 0] || parrotPowers[0];
+    const power = powerForCurrentLevel(parrotPowers[Number.isInteger(powerSlot) ? powerSlot : 0] || parrotPowers[0]);
     if (power.id === "parrotScream") {
       parrotPowerScream(target);
       return;
@@ -673,14 +825,14 @@
     state.action = power.id;
     if (power.id === "parrotHealingFeather") {
       state.heroHp = Math.min(HEARTS_PER_FIGHTER, state.heroHp + 2);
-      els.statusText.textContent = "Healing Feather! Mom Fary got 2 hearts back.";
+      els.statusText.textContent = "Takeoff Jump! Mom Fary got 2 hearts back.";
       updateHud();
       draw();
       return;
     }
     if (!isCloseEnoughToAttack("kick", target)) {
       state.action = "miss";
-      els.statusText.textContent = `${currentBossName(target)} is too far away for Wing Blast. Move close, then flap!`;
+      els.statusText.textContent = `${currentBossName(target)} is too far away for Wing Blast. Move close, then use it!`;
       draw();
       return;
     }
@@ -689,7 +841,7 @@
     if (currentBossHp() === 0) {
       state.won = true;
       state.action = "win";
-      els.statusText.textContent = `Wing Blast finished the fight. ${levelWinText()}`;
+      els.statusText.textContent = `Fly finished the fight. ${levelWinText()}`;
       if (advanceAfterWin()) return;
       setAttacks(true);
       updateHud();
@@ -720,12 +872,20 @@
   }
 
   function pickPower(powers, stepKey, slot) {
+    let power;
     if (Number.isInteger(slot) && slot >= 0 && slot < powers.length) {
-      return powers[slot];
+      power = powers[slot];
+    } else {
+      power = powers[state[stepKey] % powers.length];
+      state[stepKey] += 1;
     }
-    const power = powers[state[stepKey] % powers.length];
-    state[stepKey] += 1;
-    return power;
+    return powerForCurrentLevel(power);
+  }
+
+  function powerForCurrentLevel(power) {
+    const animalName = animalPowerNames[power.id];
+    if (!isAfricaSavannaPowerLevel() || !animalName) return power;
+    return { ...power, name: animalName };
   }
 
   function cheetahPowerAttack(target, powerSlot = 0) {
@@ -738,7 +898,7 @@
     const closeEnough = power.id === "cheetahSpeed" ? isCloseEnoughToCheetahDash(target) : isCloseEnoughToAttack("kick", target);
     if (!closeEnough) {
       state.action = "miss";
-      els.statusText.textContent = `${currentBossName(target)} is too far away for ${power.name}. Run closer, then use the cheetah power!`;
+      els.statusText.textContent = `${currentBossName(target)} is too far away for ${power.name}. Run closer, then use the power!`;
       draw();
       return;
     }
@@ -852,18 +1012,18 @@
     }
 
     if (power.id === "fennecLove") {
-      els.statusText.textContent = `Mammal Power! Freddy made ${currentBossName(target)} fall on the floor for 10 seconds. It took away ${heartText(damage)} of love.`;
+      els.statusText.textContent = `Sneak Trick! Freddy made ${currentBossName(target)} fall on the floor for 10 seconds. It took away ${heartText(damage)}.`;
       updateHud();
       draw();
       return;
     }
     if (power.id === "fennecSneakBite") {
-      els.statusText.textContent = `Sneak Bite! Freddy snuck up before anyone noticed and bit ${currentBossName(target)} for ${heartText(damage)}.`;
+      els.statusText.textContent = `Quick Dash! Freddy zipped in before anyone noticed and hit ${currentBossName(target)} for ${heartText(damage)}.`;
       updateHud();
       draw();
       return;
     }
-    els.statusText.textContent = `Pounce! Freddy jumped onto ${currentBossName(target)}'s head. Now any attack can hit while he stays there.`;
+    els.statusText.textContent = `Multiplication! Freddy made a perfect decoy. Now any attack can hit for a short time.`;
     updateHud();
     draw();
   }
@@ -922,7 +1082,7 @@
     }
 
     if (isBossInIceTornado(target)) {
-      els.statusText.textContent = `${power.name} hit for ${heartText(power.damage)}. Ice Tornado traps ${currentBossName(target)} in place for 10 seconds!`;
+      els.statusText.textContent = `${power.name} hit for ${heartText(power.damage)}. Ice Shield blocks ${currentBossName(target)} for 10 seconds!`;
       updateHud();
       draw();
       return;
@@ -962,7 +1122,7 @@
 
     if (!isCloseEnoughToAttack("kick", target)) {
       state.action = "miss";
-      els.statusText.textContent = `${currentBossName(target)} is too far away for ${power.name}. Move close with Mr. 67, then use the banana power!`;
+      els.statusText.textContent = `${currentBossName(target)} is too far away for ${power.name}. Move close with Mr. 67, then use the power!`;
       draw();
       return;
     }
@@ -1003,14 +1163,14 @@
     }
 
     if (isBossInIceTornado(target)) {
-      els.statusText.textContent = `${power.name} hit for ${heartText(power.damage)} while Ice Tornado is trapping ${currentBossName(target)}.`;
+      els.statusText.textContent = `${power.name} hit for ${heartText(power.damage)} while Ice Shield is blocking ${currentBossName(target)}.`;
       updateHud();
       draw();
       return;
     }
 
     if (isBossSlippingOnBanana(target)) {
-      els.statusText.textContent = `${power.name} hit for ${heartText(power.damage)}. ${currentBossName(target)} slipped on the banana peel and cannot hit back for a few seconds!`;
+      els.statusText.textContent = `${power.name} hit for ${heartText(power.damage)}. ${currentBossName(target)} got dizzy from Poison Storm and cannot hit back for a few seconds!`;
       updateHud();
       draw();
       return;
@@ -1050,7 +1210,7 @@
 
     if (!isCloseEnoughToAttack("kick", target) && power.id !== "mayerRoosterFlyers") {
       state.action = "miss";
-      els.statusText.textContent = `${currentBossName(target)} is too far away for ${power.name}. Move close, then bock!`;
+      els.statusText.textContent = `${currentBossName(target)} is too far away for ${power.name}. Move close, then use it!`;
       draw();
       return;
     }
@@ -1080,8 +1240,8 @@
     }
     if (power.id === "mayerBigBock" || power.id === "mayerFlyUp") {
       els.statusText.textContent = power.id === "mayerBigBock"
-        ? `Super Big Bock! Everyone falls down and ${currentBossName(target)} loses ${heartText(power.damage)}.`
-        : "Fly Up! Mischievous Mayer flew up for 1 second and avoided the next hit.";
+        ? `Flying Boots! Mischievous Mayer launches a fast hit and ${currentBossName(target)} loses ${heartText(power.damage)}.`
+        : "Mayor Bots! Mischievous Mayer called a quick bot shield.";
       updateHud();
       draw();
       return;
@@ -1098,7 +1258,7 @@
 
     if (!isCloseEnoughToAttack("kick", target) && power.id !== "yonatanAlligatorMonsters") {
       state.action = "miss";
-      els.statusText.textContent = `${currentBossName(target)} is too far away for ${power.name}. Move close, then chomp!`;
+      els.statusText.textContent = `${currentBossName(target)} is too far away for ${power.name}. Move close, then use it!`;
       draw();
       return;
     }
@@ -1263,7 +1423,55 @@
     return "Giant shield earned: it blocks the next 4 hits.";
   }
 
+  function palaceChargeUps() {
+    if (!isPalaceChargeLevel()) return [];
+    const egypt = isEgyptianPalaceLevel();
+    return [
+      { id: `charge-heart-${state.level}`, type: "heart", x: 315, y: 420, label: egypt ? "Ankh Heart" : "Ruby Heart", color: "#d91f2e" },
+      { id: `charge-power-${state.level}`, type: "power", x: 575, y: 340, label: egypt ? "Scarab Power" : "Palace Power", color: "#ffd84a" },
+      { id: `charge-shield-${state.level}`, type: "shield", x: 800, y: 440, label: egypt ? "Pyramid Shield" : "Golden Shield", color: "#45a6db" },
+      { id: `charge-speed-${state.level}`, type: "speed", x: 1010, y: 360, label: egypt ? "Pharaoh Boost" : "Royal Boost", color: "#18a66a" }
+    ];
+  }
+
+  function collectNearbyPalaceChargeUps() {
+    if (!isPalaceChargeLevel()) return "";
+    const collected = [];
+    palaceChargeUps().forEach((charge) => {
+      if (state.palaceChargesCollected.has(charge.id)) return;
+      const near = Math.abs(state.heroX - charge.x) <= 70 && Math.abs(state.heroY - charge.y) <= 74;
+      if (!near) return;
+      state.palaceChargesCollected.add(charge.id);
+      collected.push(applyPalaceCharge(charge));
+    });
+    return collected.join(" ");
+  }
+
+  function applyPalaceCharge(charge) {
+    if (charge.type === "heart") {
+      state.heroHp = Math.min(currentHeroMaxHp(), state.heroHp + (isEgyptianPalaceLevel() ? 5 : 4));
+      return `${charge.label} healed ${isEgyptianPalaceLevel() ? 5 : 4} hearts.`;
+    }
+    if (charge.type === "power") {
+      state.specialPowerCharges += 1;
+      state.bowShots += 3;
+      return `${charge.label} gave you a special power charge and 3 stronger attacks.`;
+    }
+    if (charge.type === "shield") {
+      state.timedShieldUntil = Date.now() + 60000;
+      state.armorBlocks += 3;
+      return `${charge.label} protects you for 1 minute.`;
+    }
+    state.specialPowerCharges += 1;
+    state.heroHp = Math.min(currentHeroMaxHp(), state.heroHp + 4);
+    return `${charge.label} gave a special power charge and 4 hearts.`;
+  }
+
   function heroAttackDamage(baseDamage) {
+    if (state.specialPowerCharges > 0) {
+      state.specialPowerCharges -= 1;
+      return baseDamage + 4;
+    }
     if (state.bowShots <= 0) return baseDamage;
     state.bowShots -= 1;
     return baseDamage + 2;
@@ -1271,6 +1479,10 @@
 
   function takeHeroDamage(amount) {
     if (amount <= 0) return 0;
+    if (Date.now() < state.timedShieldUntil) {
+      state.lastDefenseText = "Your 1-minute shield protected you, so you lost no hearts.";
+      return 0;
+    }
     if (state.armorBlocks > 0) {
       state.armorBlocks -= 1;
       state.lastDefenseText = "Your armor or giant shield blocked it, so you lost no hearts.";
@@ -1306,6 +1518,16 @@
       return;
     }
     if (blocked) {
+      return;
+    }
+    if (isChinaShootLevel()) {
+      state.action = state.level === 13 ? "madeInChinaBlock" : "chineseChickenShot";
+      if (!avoided) {
+        state.heroX = clamp(state.heroX - 38, 120, 560);
+        if (state.action === "chineseChickenShot") {
+          state.heroY = clamp(state.heroY + 18, 270, 470);
+        }
+      }
       return;
     }
     if (target === "math") {
@@ -1430,6 +1652,8 @@
   }
 
   function bossAttackText(target, bossAction = state.action) {
+    if (bossAction === "madeInChinaBlock") return `${currentBossName(target)} shot blocks that say MADE IN CHINA.`;
+    if (bossAction === "chineseChickenShot") return `${currentBossName(target)} shot flying pieces of Chinese chicken.`;
     if (target === "math") return "Mischievous Mayer rushed in with a mischief strike.";
     if (target === "evil") return "Yapping Yonatan blasted a huge yap attack.";
     if (target === "ice") return "Ice Boss stomped and sent freezing blue ice at you.";
@@ -1454,6 +1678,12 @@
   function bossPowerText(target, blocked, bossAction = state.action) {
     if (blocked) {
       return "Homework Shield blocked the boss power!";
+    }
+    if (bossAction === "madeInChinaBlock") {
+      return `${currentBossName(target)} used Made in China Block Shot!`;
+    }
+    if (bossAction === "chineseChickenShot") {
+      return `${currentBossName(target)} used Chinese Chicken Shot!`;
     }
     if (target === "math") {
       return "Mischievous Mayer used Mischief Trap and caught you for 5 seconds!";
@@ -1509,18 +1739,22 @@
   }
 
   function currentBossHp() {
+    if (isWhiteHouseProtectLevel()) return state.protectPresidentHp;
     return bossHpFor(currentTarget());
   }
 
   function currentBossMaxHp() {
+    if (isWhiteHouseProtectLevel()) return 5;
     return HEARTS_PER_FIGHTER;
   }
 
   function levelWinText() {
+    if (isWhiteHouseProtectLevel()) return `You protected President Trump in Level ${state.level}!`;
     return `You beat ${currentBossName()} in Level ${state.level}!`;
   }
 
   function currentBossName(target = currentTarget()) {
+    if (isWhiteHouseProtectLevel()) return "President Trump";
     if (target === "math") return "Mischievous Mayer";
     if (target === "evil") return "Yapping Yonatan";
     if (target === "ice") return "Ice Boss";
@@ -1531,6 +1765,11 @@
   }
 
   function currentBossPosition(target = currentTarget()) {
+    if (isWhiteHouseProtectLevel()) return presidentPosition();
+    if (isIsraelWallFightLevel()) return { x: state.israelVillainX, y: state.israelVillainY };
+    if (isStatueMazeLevel()) return { x: state.mazeBossX, y: state.mazeBossY };
+    if (isAntarcticaTreasureLevel()) return { x: state.treasureBossX, y: state.treasureBossY };
+    if (isPhoenixScavengerLevel()) return { x: 955, y: 410 };
     if (target === "math") return { x: 940, y: 355 };
     if (target === "evil") return { x: 990, y: 410 };
     if (target === "ice") return { x: 965, y: 390 };
@@ -1668,6 +1907,7 @@
   }
 
   function advanceAfterWin() {
+    clearLevelTimer();
     if (state.level >= 30) {
       return false;
     }
@@ -1701,9 +1941,202 @@
     els.startButton.disabled = !canPlayLevel(state.level);
   }
 
+  function levelTimerDuration() {
+    return state.level % 2 === 1 ? 120000 : 180000;
+  }
+
+  function startLevelTimer() {
+    clearLevelTimer();
+    state.levelDurationMs = levelTimerDuration();
+    state.levelStartedAt = Date.now();
+    state.levelTimerInterval = setInterval(tickLevelTimer, 1000);
+  }
+
+  function clearLevelTimer() {
+    if (state.levelTimerInterval) {
+      clearInterval(state.levelTimerInterval);
+      state.levelTimerInterval = null;
+    }
+  }
+
+  function tickLevelTimer() {
+    if (!state.started || state.won || state.lost) {
+      clearLevelTimer();
+      return;
+    }
+    if (levelRemainingMs() <= 0) {
+      if (isWhiteHouseProtectLevel() || isIsraelWallFightLevel()) {
+        updateHud();
+        draw();
+        return;
+      }
+      loseByTimer();
+      return;
+    }
+    updateHud();
+    draw();
+  }
+
+  function levelRemainingMs() {
+    if (!state.levelStartedAt) return state.levelDurationMs;
+    return Math.max(0, state.levelDurationMs - (Date.now() - state.levelStartedAt));
+  }
+
+  function levelTimerText() {
+    const totalSeconds = Math.ceil(levelRemainingMs() / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = String(totalSeconds % 60).padStart(2, "0");
+    return `${minutes}:${seconds}`;
+  }
+
+  function loseByTimer() {
+    clearLevelTimer();
+    state.lost = true;
+    state.action = "lost";
+    els.statusText.textContent = `Time ran out in Level ${state.level}. Start again and beat the level before the timer ends.`;
+    setAttacks(true);
+    updateHud();
+    draw();
+  }
+
+  function isStatueMazeLevel() {
+    return state.level === 3 || state.level === 4;
+  }
+
+  function isAntarcticaTreasureLevel() {
+    return state.level === 5 || state.level === 6;
+  }
+
+  function isPhoenixScavengerLevel() {
+    return state.level === 9 || state.level === 10;
+  }
+
+  function isChinaShootLevel() {
+    return state.level === 13 || state.level === 14;
+  }
+
+  function isCanadaTreasureMapLevel() {
+    return state.level === 15 || state.level === 16;
+  }
+
+  function isAfricaSavannaPowerLevel() {
+    return state.level === 17 || state.level === 18;
+  }
+
+  function isWhiteHouseProtectLevel() {
+    return state.level === 19 || state.level === 20;
+  }
+
+  function isPalaceChargeLevel() {
+    return isIranPalaceLevel() || isEgyptianPalaceLevel();
+  }
+
+  function isIranPalaceLevel() {
+    return state.level >= 21 && state.level <= 24;
+  }
+
+  function isEgyptianPalaceLevel() {
+    return state.level >= 27 && state.level <= 30;
+  }
+
+  function isIsraelWallFightLevel() {
+    return state.level === 25 || state.level === 26;
+  }
+
+  function resetStatueMazePositions() {
+    state.heroX = 214;
+    state.heroY = 470;
+    state.mazeBossX = state.level === 4 ? 485 : 945;
+    state.mazeBossY = state.level === 4 ? 464 : 430;
+  }
+
+  function resetAntarcticaTreasurePositions() {
+    state.heroX = 210;
+    state.heroY = 410;
+    state.treasurePart = 1;
+    state.treasureBossX = state.level === 6 ? 95 : 55;
+    state.treasureBossY = 410;
+    state.treasurePowerX = 320;
+  }
+
+  function resetPhoenixScavengerPositions() {
+    state.heroX = 210;
+    state.heroY = 418;
+    state.scavengerFound = new Set();
+    state.scavengerBossReady = false;
+  }
+
+  function resetCanadaTreasurePositions() {
+    state.heroX = 210;
+    state.heroY = 418;
+    state.scavengerFound = new Set();
+    state.scavengerBossReady = false;
+    state.canadaHits = {};
+  }
+
+  function resetWhiteHouseProtect(startTimer) {
+    if (state.protectInterval) {
+      clearInterval(state.protectInterval);
+      state.protectInterval = null;
+    }
+    state.protectPresidentHp = 5;
+    state.protectDurationMs = state.level === 20 ? 180000 : 120000;
+    state.protectStartedAt = startTimer ? Date.now() : 0;
+    state.protectHazards = [];
+    state.nextHazardId = 1;
+    if (isWhiteHouseProtectLevel()) {
+      state.heroX = 250;
+      state.heroY = 420;
+    }
+    if (startTimer) {
+      spawnProtectHazard();
+      state.protectInterval = setInterval(tickWhiteHouseProtect, 1000);
+    }
+  }
+
+  function resetIsraelWallFight(startTimer) {
+    if (state.israelInterval) {
+      clearInterval(state.israelInterval);
+      state.israelInterval = null;
+    }
+    state.israelDurationMs = state.level === 26 ? 180000 : 120000;
+    state.israelStartedAt = startTimer ? Date.now() : 0;
+    state.heroX = isIsraelWallFightLevel() ? 205 : state.heroX;
+    state.heroY = isIsraelWallFightLevel() ? 420 : state.heroY;
+    state.israelVillainX = state.level === 26 ? 890 : 980;
+    state.israelVillainY = 410;
+    if (startTimer) {
+      state.israelInterval = setInterval(tickIsraelWallFight, 1000);
+    }
+  }
+
   function moveHero(direction) {
     state.lastDefenseText = "";
     if (!state.started || state.won || state.lost) {
+      return;
+    }
+    if (isStatueMazeLevel()) {
+      moveHeroInStatueMaze(direction);
+      return;
+    }
+    if (isAntarcticaTreasureLevel()) {
+      moveHeroInAntarcticaTreasure(direction);
+      return;
+    }
+    if (isPhoenixScavengerLevel()) {
+      moveHeroInPhoenixScavenger(direction);
+      return;
+    }
+    if (isCanadaTreasureMapLevel()) {
+      moveHeroInCanadaTreasure(direction);
+      return;
+    }
+    if (isWhiteHouseProtectLevel()) {
+      moveHeroInWhiteHouseProtect(direction);
+      return;
+    }
+    if (isIsraelWallFightLevel()) {
+      moveHeroInIsraelWallFight(direction);
       return;
     }
     if (Date.now() < state.trappedUntil) {
@@ -1719,7 +2152,7 @@
     state.heroX = clamp(state.heroX, 120, 1080);
     state.heroY = clamp(state.heroY, 270, 470);
     state.playerAction = "";
-    const prizeText = collectNearbyPrizes();
+    const prizeText = [collectNearbyPrizes(), collectNearbyPalaceChargeUps()].filter(Boolean).join(" ");
     const target = currentTarget();
     if (handleBossPressureWhileMoving(target, direction)) {
       if (prizeText) els.statusText.textContent = `${els.statusText.textContent} ${prizeText}`;
@@ -1742,6 +2175,684 @@
     draw();
   }
 
+  function moveHeroInStatueMaze(direction) {
+    const step = 34;
+    let nextX = state.heroX;
+    let nextY = state.heroY;
+    if (direction === "left") nextX -= step;
+    if (direction === "right") nextX += step;
+    if (direction === "up") nextY -= step;
+    if (direction === "down") nextY += step;
+    nextX = clamp(nextX, 145, 850);
+    nextY = clamp(nextY, 120, 505);
+
+    if (isInsideStatuePath(nextX, nextY)) {
+      state.heroX = nextX;
+      state.heroY = nextY;
+      els.statusText.textContent = `You moved ${direction} inside the Statue of Liberty maze. Keep going to EXIT!`;
+    } else {
+      els.statusText.textContent = "That is a statue wall. Try another arrow through the maze.";
+    }
+
+    chaseHeroInStatueMaze();
+    state.action = "";
+    state.playerAction = "";
+
+    if (reachedStatueExit()) {
+      state.won = true;
+      state.action = "win";
+      els.statusText.textContent = `You reached EXIT at the Statue of Liberty head. ${levelWinText()}`;
+      if (advanceAfterWin()) {
+        return;
+      }
+      setAttacks(true);
+      updateLevelLocks();
+      updateHud();
+      draw();
+      return;
+    }
+
+    if (mazeBossCaughtHero()) {
+      state.lost = true;
+      state.action = "lost";
+      els.statusText.textContent = `${currentBossName()} caught you inside the Statue of Liberty maze. Reset for a rematch.`;
+      setAttacks(true);
+      updateHud();
+      draw();
+      return;
+    }
+
+    updateHud();
+    draw();
+  }
+
+  function isInsideStatuePath(x, y) {
+    return statueMazePaths().some((rect) => x >= rect.x && x <= rect.x + rect.w && y >= rect.y && y <= rect.y + rect.h);
+  }
+
+  function statueMazePaths() {
+    return [
+      { x: 155, y: 392, w: 435, h: 116 },
+      { x: 470, y: 250, w: 122, h: 258 },
+      { x: 470, y: 250, w: 330, h: 104 },
+      { x: 690, y: 150, w: 120, h: 204 },
+      { x: 620, y: 118, w: 230, h: 102 }
+    ];
+  }
+
+  function chaseHeroInStatueMaze() {
+    const speed = state.level === 4 ? 26 : 20;
+    const dx = state.heroX - state.mazeBossX;
+    const dy = state.heroY - state.mazeBossY;
+    const distance = Math.hypot(dx, dy) || 1;
+    state.mazeBossX += (dx / distance) * speed;
+    state.mazeBossY += (dy / distance) * speed;
+    state.mazeBossX = clamp(state.mazeBossX, 150, 940);
+    state.mazeBossY = clamp(state.mazeBossY, 130, 500);
+  }
+
+  function reachedStatueExit() {
+    return state.heroX >= 700 && state.heroX <= 825 && state.heroY >= 120 && state.heroY <= 190;
+  }
+
+  function mazeBossCaughtHero() {
+    return Math.hypot(state.heroX - state.mazeBossX, state.heroY - state.mazeBossY) < 62;
+  }
+
+  function moveHeroInAntarcticaTreasure(direction) {
+    const step = direction === "right" ? 48 : 36;
+    if (direction === "left") state.heroX -= step;
+    if (direction === "right") state.heroX += step;
+    if (direction === "up") state.heroY -= step;
+    if (direction === "down") state.heroY += step;
+    state.heroX = clamp(state.heroX, 105, 1125);
+    state.heroY = clamp(state.heroY, 315, 465);
+
+    chaseHeroInAntarctica(direction);
+    state.treasurePowerX -= direction === "right" ? 54 : 28;
+    if (state.treasurePowerX < 90) state.treasurePowerX = 850;
+
+    const dodgedPower = Math.abs(state.heroX - state.treasurePowerX) < 62 && Math.abs(state.heroY - projectileTreasureY()) > 54;
+    const hitPower = Math.abs(state.heroX - state.treasurePowerX) < 58 && Math.abs(state.heroY - projectileTreasureY()) <= 54;
+
+    if (state.heroX >= 1110) {
+      if (state.treasurePart >= 3) {
+        state.won = true;
+        state.action = "win";
+        els.statusText.textContent = `You found the Penguin Treasure chest. ${levelWinText()}`;
+        if (advanceAfterWin()) return;
+        setAttacks(true);
+        updateLevelLocks();
+        updateHud();
+        draw();
+        return;
+      }
+      state.treasurePart += 1;
+      state.heroX = 170;
+      state.treasureBossX = state.level === 6 ? 80 : 45;
+      state.treasurePowerX = 650;
+      els.statusText.textContent = `You passed to Antarctica screen ${state.treasurePart}. Keep running toward the Penguin Treasure!`;
+      updateHud();
+      draw();
+      return;
+    }
+
+    if (hitPower) {
+      takeHeroDamage(0.5);
+      state.action = "iceBossFreeze";
+      els.statusText.textContent = `${currentBossName()} shot an icy power across the snow. You lost half a heart. Keep going!`;
+    } else if (dodgedPower) {
+      state.action = "";
+      els.statusText.textContent = `Nice dodge. The boss power slid past you on the ice. Screen ${state.treasurePart} of 3.`;
+    } else {
+      state.action = "";
+      els.statusText.textContent = `Run through Antarctica screen ${state.treasurePart} of 3. The boss is chasing you!`;
+    }
+
+    if (treasureBossCaughtHero() || state.heroHp === 0) {
+      state.lost = true;
+      state.action = "lost";
+      els.statusText.textContent = `${currentBossName()} caught you before you found Penguin Treasure. Reset for a rematch.`;
+      setAttacks(true);
+    }
+    updateHud();
+    draw();
+  }
+
+  function chaseHeroInAntarctica(direction) {
+    const speed = state.level === 6 ? 32 : 25;
+    const boost = direction === "left" ? 16 : 0;
+    const dx = state.heroX - state.treasureBossX;
+    const dy = state.heroY - state.treasureBossY;
+    const distance = Math.hypot(dx, dy) || 1;
+    state.treasureBossX += (dx / distance) * (speed + boost);
+    state.treasureBossY += (dy / distance) * speed * 0.58;
+    state.treasureBossX = clamp(state.treasureBossX, 35, 1060);
+    state.treasureBossY = clamp(state.treasureBossY, 315, 465);
+  }
+
+  function treasureBossCaughtHero() {
+    return Math.hypot(state.heroX - state.treasureBossX, state.heroY - state.treasureBossY) < 74;
+  }
+
+  function projectileTreasureY() {
+    return 340 + ((state.treasurePart + state.tick) % 3) * 52;
+  }
+
+  function phoenixPieces() {
+    if (state.level === 9) {
+      return [
+        { id: "cactusFlower", label: "Cactus Flower", x: 330, y: 438, hidden: false },
+        { id: "sunStone", label: "Sun Stone", x: 735, y: 432, hidden: true, cover: "cactus" }
+      ];
+    }
+    return [
+      { id: "scorpionCoin", label: "Scorpion Coin", x: 315, y: 438, hidden: false },
+      { id: "redRockKey", label: "Red Rock Key", x: 710, y: 434, hidden: true, cover: "rock" },
+      { id: "bossTreasure", label: "Boss Treasure", x: 955, y: 410, boss: true }
+    ];
+  }
+
+  function moveHeroInPhoenixScavenger(direction) {
+    const step = 38;
+    if (direction === "left") state.heroX -= step;
+    if (direction === "right") state.heroX += step;
+    if (direction === "up") state.heroY -= step;
+    if (direction === "down") state.heroY += step;
+    state.heroX = clamp(state.heroX, 125, 1085);
+    state.heroY = clamp(state.heroY, 318, 470);
+
+    const foundPiece = collectPhoenixPiece();
+    if (foundPiece) {
+      els.statusText.textContent = `Found ${foundPiece.label}! ${phoenixProgressText()}`;
+    } else {
+      els.statusText.textContent = `Search the Phoenix desert. ${phoenixProgressText()}`;
+    }
+
+    if (phoenixCanWinWithoutBoss()) {
+      winPhoenixScavenger("You found every Level 9 desert treasure.");
+      return;
+    }
+
+    if (state.level === 10 && phoenixReadyForBossTreasure()) {
+      state.scavengerBossReady = true;
+      els.statusText.textContent = "The last treasure is behind the boss. Move close and hit the boss to get it!";
+    }
+
+    updateHud();
+    draw();
+  }
+
+  function collectPhoenixPiece() {
+    const piece = phoenixPieces().find((item) => !item.boss && !state.scavengerFound.has(item.id) && Math.abs(state.heroX - item.x) < 62 && Math.abs(state.heroY - item.y) < 70);
+    if (!piece) return null;
+    state.scavengerFound.add(piece.id);
+    return piece;
+  }
+
+  function phoenixReadyForBossTreasure() {
+    return phoenixPieces().filter((piece) => !piece.boss).every((piece) => state.scavengerFound.has(piece.id));
+  }
+
+  function phoenixCanWinWithoutBoss() {
+    return state.level === 9 && phoenixReadyForBossTreasure();
+  }
+
+  function phoenixProgressText() {
+    const pieces = phoenixPieces();
+    const found = pieces.filter((piece) => state.scavengerFound.has(piece.id)).length;
+    return `${found} of ${pieces.length} checklist pieces found.`;
+  }
+
+  function attackPhoenixBoss(kind) {
+    if (kind === "jump" || kind === "hide") {
+      useDefenseMove(kind);
+      return;
+    }
+    if (state.level !== 10 || !state.scavengerBossReady) {
+      els.statusText.textContent = "This is a scavenger hunt. Find the checklist pieces first.";
+      draw();
+      return;
+    }
+    if (!isCloseEnoughToAttack(kind === "kick" ? "kick" : "punch", currentTarget())) {
+      state.action = "miss";
+      state.playerAction = kind;
+      els.statusText.textContent = "The boss is guarding the last treasure. Move closer, then hit the boss.";
+      draw();
+      return;
+    }
+    state.scavengerFound.add("bossTreasure");
+    state.playerAction = kind;
+    state.action = "win";
+    winPhoenixScavenger(`${attackName(kind)} knocked the boss away and revealed the Boss Treasure.`);
+  }
+
+  function winPhoenixScavenger(message) {
+    state.won = true;
+    state.action = "win";
+    els.statusText.textContent = `${message} ${levelWinText()}`;
+    if (advanceAfterWin()) return;
+    setAttacks(true);
+    updateLevelLocks();
+    updateHud();
+    draw();
+  }
+
+  function canadaMapPieces() {
+    if (state.level === 15) {
+      return [
+        { id: "pineClue", label: "Pine Tree Clue", x: 390, y: 408, guard: "snow carrot" },
+        { id: "lakeClue", label: "Frozen Lake Clue", x: 735, y: 426, guard: "ice monster" }
+      ];
+    }
+    return [
+      { id: "mapCorner", label: "Map Corner", x: 350, y: 410, guard: "snow carrot" },
+      { id: "xClue", label: "X Clue", x: 690, y: 430, guard: "ice monster" },
+      { id: "canadaStar", label: "Canada Star Treasure", x: 970, y: 410, boss: true }
+    ];
+  }
+
+  function moveHeroInCanadaTreasure(direction) {
+    const step = 38;
+    if (direction === "left") state.heroX -= step;
+    if (direction === "right") state.heroX += step;
+    if (direction === "up") state.heroY -= step;
+    if (direction === "down") state.heroY += step;
+    state.heroX = clamp(state.heroX, 125, 1085);
+    state.heroY = clamp(state.heroY, 318, 470);
+    state.action = "";
+    state.playerAction = "";
+
+    if (state.level === 16 && canadaReadyForBossTreasure()) {
+      state.scavengerBossReady = true;
+      els.statusText.textContent = "The treasure map is finished. The boss came out and is guarding the Canada star. Move close and hit the boss!";
+    } else {
+      els.statusText.textContent = `Explore Canada for clue guards. ${canadaProgressText()}`;
+    }
+    updateHud();
+    draw();
+  }
+
+  function attackCanadaTreasure(kind) {
+    if (kind === "jump" || kind === "hide") {
+      useDefenseMove(kind);
+      return;
+    }
+    const guard = canadaNearestGuard();
+    if (guard) {
+      state.playerAction = kind;
+      state.action = kind;
+      const hits = (state.canadaHits[guard.id] || 0) + (kind === "kick" ? 2 : 1);
+      state.canadaHits[guard.id] = hits;
+      if (hits >= 2) {
+        state.scavengerFound.add(guard.id);
+        els.statusText.textContent = `You beat the ${guard.guard} and earned ${guard.label}. ${canadaProgressText()}`;
+        if (state.level === 15 && canadaReadyForBossTreasure()) {
+          winCanadaTreasure("You finished the first half of the Canada treasure map.");
+          return;
+        }
+        if (state.level === 16 && canadaReadyForBossTreasure()) {
+          state.scavengerBossReady = true;
+          els.statusText.textContent = "The second half of the map is finished. The boss came out by the X. Hit the boss to dig up the Canada star!";
+        }
+      } else {
+        els.statusText.textContent = `${attackName(kind)} hit the ${guard.guard}. Hit it one more time to win this map clue.`;
+      }
+      updateHud();
+      draw();
+      return;
+    }
+
+    if (state.level === 16 && state.scavengerBossReady) {
+      const boss = canadaBossTreasurePiece();
+      if (Math.abs(state.heroX - boss.x) <= 245 && Math.abs(state.heroY - boss.y) <= 165) {
+        state.scavengerFound.add("canadaStar");
+        state.playerAction = kind;
+        state.action = "win";
+        winCanadaTreasure(`${attackName(kind)} knocked the boss away. You dug where the X marks the spot and found the Canada star treasure.`);
+        return;
+      }
+      state.action = "miss";
+      state.playerAction = kind;
+      els.statusText.textContent = "The boss is guarding the Canada star. Move closer, then hit the boss.";
+      draw();
+      return;
+    }
+
+    state.action = "miss";
+    state.playerAction = kind;
+    els.statusText.textContent = "Move close to a snow carrot or ice monster clue guard, then punch or kick it.";
+    draw();
+  }
+
+  function canadaNearestGuard() {
+    return canadaMapPieces().find((piece) => !piece.boss && !state.scavengerFound.has(piece.id) && Math.abs(state.heroX - piece.x) <= 155 && Math.abs(state.heroY - piece.y) <= 130);
+  }
+
+  function canadaReadyForBossTreasure() {
+    return canadaMapPieces().filter((piece) => !piece.boss).every((piece) => state.scavengerFound.has(piece.id));
+  }
+
+  function canadaBossTreasurePiece() {
+    return canadaMapPieces().find((piece) => piece.boss) || { x: 970, y: 410 };
+  }
+
+  function canadaProgressText() {
+    const pieces = canadaMapPieces().filter((piece) => !piece.boss);
+    const found = pieces.filter((piece) => state.scavengerFound.has(piece.id)).length;
+    const half = state.level === 15 ? "first half" : "second half";
+    return `${found} of ${pieces.length} ${half} map pieces found.`;
+  }
+
+  function winCanadaTreasure(message) {
+    state.won = true;
+    state.action = "win";
+    els.statusText.textContent = `${message} ${levelWinText()}`;
+    if (advanceAfterWin()) return;
+    setAttacks(true);
+    updateLevelLocks();
+    updateHud();
+    draw();
+  }
+
+  function moveHeroInWhiteHouseProtect(direction) {
+    const step = 42;
+    if (direction === "left") state.heroX -= step;
+    if (direction === "right") state.heroX += step;
+    if (direction === "up") state.heroY -= step;
+    if (direction === "down") state.heroY += step;
+    state.heroX = clamp(state.heroX, 110, 1080);
+    state.heroY = clamp(state.heroY, 305, 470);
+    state.action = "";
+    state.playerAction = "";
+    const nearby = nearestProtectHazard(110);
+    els.statusText.textContent = nearby
+      ? "Move close and punch, kick, or use a power to knock the danger away from President Trump."
+      : `Protect President Trump. ${protectTimeText()} left.`;
+    updateHud();
+    draw();
+  }
+
+  function attackWhiteHouseProtect(kind) {
+    if (kind === "jump" || kind === "hide") {
+      useDefenseMove(kind);
+      return;
+    }
+    state.playerAction = kind;
+    const range = kind === "power" ? 210 : kind === "kick" ? 165 : 135;
+    const hazard = nearestProtectHazard(range);
+    if (!hazard) {
+      state.action = "miss";
+      els.statusText.textContent = "No danger is close enough. Move near a danger, then knock it away.";
+      draw();
+      return;
+    }
+    state.protectHazards = state.protectHazards.filter((item) => item.id !== hazard.id);
+    state.action = "protectBlock";
+    els.statusText.textContent = `${attackName(kind)} knocked away the ${hazard.label}. Keep President Trump safe for ${protectTimeText()}.`;
+    updateHud();
+    draw();
+  }
+
+  function tickWhiteHouseProtect() {
+    if (!state.started || state.won || state.lost || !isWhiteHouseProtectLevel()) return;
+    if (protectRemainingMs() <= 0) {
+      winWhiteHouseProtect();
+      return;
+    }
+    if (state.protectHazards.length < (state.level === 20 ? 4 : 3)) {
+      spawnProtectHazard();
+    }
+    const president = presidentPosition();
+    state.protectHazards.forEach((hazard) => {
+      const speed = state.level === 20 ? hazard.speed + 8 : hazard.speed;
+      const dx = president.x - hazard.x;
+      const dy = president.y - hazard.y;
+      const distance = Math.hypot(dx, dy) || 1;
+      hazard.x += (dx / distance) * speed;
+      hazard.y += (dy / distance) * speed;
+    });
+    const hits = state.protectHazards.filter((hazard) => Math.hypot(hazard.x - president.x, hazard.y - president.y) < 62);
+    if (hits.length) {
+      state.protectPresidentHp = Math.max(0, state.protectPresidentHp - hits.length);
+      state.protectHazards = state.protectHazards.filter((hazard) => !hits.includes(hazard));
+      state.action = "presidentHit";
+      els.statusText.textContent = `A danger got through. President Trump lost ${hits.length} heart${hits.length === 1 ? "" : "s"}. Protect him for ${protectTimeText()}.`;
+    } else {
+      els.statusText.textContent = `Protect President Trump. ${protectTimeText()} left.`;
+    }
+    if (state.protectPresidentHp <= 0) {
+      loseWhiteHouseProtect();
+      return;
+    }
+    updateHud();
+    draw();
+  }
+
+  function spawnProtectHazard() {
+    const lanes = [
+      { x: 1050, y: 330, label: "flying paper stack", color: "#fffef7" },
+      { x: 990, y: 470, label: "rolling chair", color: "#6f737a" },
+      { x: 760, y: 305, label: "falling picture frame", color: "#ffd84a" },
+      { x: 1120, y: 405, label: "danger ball", color: "#d91f2e" }
+    ];
+    const lane = lanes[(state.nextHazardId + state.level + state.protectHazards.length) % lanes.length];
+    state.protectHazards.push({
+      id: state.nextHazardId,
+      x: lane.x,
+      y: lane.y,
+      label: lane.label,
+      color: lane.color,
+      speed: 34 + (state.nextHazardId % 3) * 8
+    });
+    state.nextHazardId += 1;
+  }
+
+  function nearestProtectHazard(range) {
+    let best = null;
+    let bestDistance = Infinity;
+    state.protectHazards.forEach((hazard) => {
+      const distance = Math.hypot(hazard.x - state.heroX, hazard.y - state.heroY);
+      if (distance <= range && distance < bestDistance) {
+        best = hazard;
+        bestDistance = distance;
+      }
+    });
+    return best;
+  }
+
+  function presidentPosition() {
+    const wiggle = state.started ? Math.sin((Date.now() - state.protectStartedAt) / 650) * 34 : 0;
+    return { x: 615 + wiggle, y: 405 };
+  }
+
+  function protectRemainingMs() {
+    if (state.levelStartedAt) return levelRemainingMs();
+    if (!state.protectStartedAt) return state.protectDurationMs;
+    return Math.max(0, state.protectDurationMs - (Date.now() - state.protectStartedAt));
+  }
+
+  function protectTimeText() {
+    const totalSeconds = Math.ceil(protectRemainingMs() / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = String(totalSeconds % 60).padStart(2, "0");
+    return `${minutes}:${seconds}`;
+  }
+
+  function winWhiteHouseProtect() {
+    clearLevelTimer();
+    if (state.protectInterval) {
+      clearInterval(state.protectInterval);
+      state.protectInterval = null;
+    }
+    state.won = true;
+    state.action = "win";
+    els.statusText.textContent = `Time ran out and President Trump stayed safe. ${levelWinText()}`;
+    if (advanceAfterWin()) return;
+    setAttacks(true);
+    updateLevelLocks();
+    updateHud();
+    draw();
+  }
+
+  function loseWhiteHouseProtect() {
+    clearLevelTimer();
+    if (state.protectInterval) {
+      clearInterval(state.protectInterval);
+      state.protectInterval = null;
+    }
+    state.lost = true;
+    state.action = "lost";
+    els.statusText.textContent = "President Trump ran out of protection hearts. Start the level again and knock dangers away faster.";
+    setAttacks(true);
+    updateHud();
+    draw();
+  }
+
+  function moveHeroInIsraelWallFight(direction) {
+    const step = 44;
+    if (direction === "left") state.heroX -= step;
+    if (direction === "right") state.heroX += step;
+    if (direction === "up") state.heroY -= step;
+    if (direction === "down") state.heroY += step;
+    state.heroX = clamp(state.heroX, 110, 1085);
+    state.heroY = clamp(state.heroY, 310, 470);
+    if (isAtIsraelWallOpening()) {
+      state.heroX = state.heroX < 640 ? 1010 : 170;
+      state.action = "wallEscape";
+      els.statusText.textContent = `You slipped through the wall opening and came out the other side. ${israelTimeText()} left.`;
+    } else {
+      state.action = "";
+      els.statusText.textContent = `Run through wall openings, attack the villain, or escape with more hearts. ${israelTimeText()} left.`;
+    }
+    chaseHeroInIsrael();
+    checkIsraelVillainHitHero();
+    updateHud();
+    draw();
+  }
+
+  function attackIsraelWallFight(kind) {
+    if (kind === "jump" || kind === "hide") {
+      useDefenseMove(kind);
+      return;
+    }
+    const target = currentTarget();
+    if (!isCloseEnoughToAttack(kind === "kick" ? "kick" : "punch", target)) {
+      state.action = "miss";
+      state.playerAction = kind;
+      els.statusText.textContent = "The villain is too far. Use the wall openings to escape and get a better angle.";
+      draw();
+      return;
+    }
+    state.playerAction = kind;
+    state.playerTarget = target;
+    const damage = heroAttackDamage(kind === "power" ? usePowerDamage() : kind === "kick" ? 2 : 1);
+    damageBoss(target, damage);
+    if (currentBossHp() <= 0) {
+      winIsraelWallFight(`You defeated the villain before time ran out.`);
+      return;
+    }
+    state.action = kind;
+    els.statusText.textContent = `${attackName(kind)} hit ${currentBossName(target)}. Keep going or finish with more hearts when time runs out. ${israelTimeText()} left.`;
+    chaseHeroInIsrael();
+    checkIsraelVillainHitHero();
+    updateHud();
+    draw();
+  }
+
+  function tickIsraelWallFight() {
+    if (!state.started || state.won || state.lost || !isIsraelWallFightLevel()) return;
+    if (israelRemainingMs() <= 0) {
+      finishIsraelByHearts();
+      return;
+    }
+    chaseHeroInIsrael();
+    checkIsraelVillainHitHero();
+    if (!state.won && !state.lost) {
+      els.statusText.textContent = `Israel wall fight: ${israelTimeText()} left. You need more hearts than the villain if time runs out.`;
+      updateHud();
+      draw();
+    }
+  }
+
+  function chaseHeroInIsrael() {
+    const speed = state.level === 26 ? 28 : 22;
+    const dx = state.heroX - state.israelVillainX;
+    const dy = state.heroY - state.israelVillainY;
+    const distance = Math.hypot(dx, dy) || 1;
+    state.israelVillainX += (dx / distance) * speed;
+    state.israelVillainY += (dy / distance) * speed * 0.55;
+    state.israelVillainX = clamp(state.israelVillainX, 115, 1080);
+    state.israelVillainY = clamp(state.israelVillainY, 310, 470);
+  }
+
+  function checkIsraelVillainHitHero() {
+    if (Math.hypot(state.heroX - state.israelVillainX, state.heroY - state.israelVillainY) >= 58) return;
+    takeHeroDamage(0.5);
+    state.heroX = clamp(state.heroX - 85, 110, 1085);
+    state.action = "israelTag";
+    if (state.heroHp <= 0) {
+      loseIsraelWallFight("The villain caught you too many times.");
+    }
+  }
+
+  function finishIsraelByHearts() {
+    if (state.heroHp > currentBossHp()) {
+      winIsraelWallFight("Time ran out and you escaped with more hearts than the villain.");
+    } else {
+      loseIsraelWallFight("Time ran out, but you did not have more hearts than the villain.");
+    }
+  }
+
+  function winIsraelWallFight(message) {
+    clearLevelTimer();
+    if (state.israelInterval) {
+      clearInterval(state.israelInterval);
+      state.israelInterval = null;
+    }
+    state.won = true;
+    state.action = "win";
+    els.statusText.textContent = `${message} ${levelWinText()}`;
+    if (advanceAfterWin()) return;
+    setAttacks(true);
+    updateLevelLocks();
+    updateHud();
+    draw();
+  }
+
+  function loseIsraelWallFight(message) {
+    clearLevelTimer();
+    if (state.israelInterval) {
+      clearInterval(state.israelInterval);
+      state.israelInterval = null;
+    }
+    state.lost = true;
+    state.action = "lost";
+    els.statusText.textContent = `${message} Start again and use the wall openings to escape.`;
+    setAttacks(true);
+    updateHud();
+    draw();
+  }
+
+  function isAtIsraelWallOpening() {
+    const nearLeftOpening = state.heroX >= 405 && state.heroX <= 515 && state.heroY >= 340 && state.heroY <= 452;
+    const nearRightOpening = state.heroX >= 755 && state.heroX <= 865 && state.heroY >= 340 && state.heroY <= 452;
+    return nearLeftOpening || nearRightOpening;
+  }
+
+  function israelRemainingMs() {
+    if (state.levelStartedAt) return levelRemainingMs();
+    if (!state.israelStartedAt) return state.israelDurationMs;
+    return Math.max(0, state.israelDurationMs - (Date.now() - state.israelStartedAt));
+  }
+
+  function israelTimeText() {
+    const totalSeconds = Math.ceil(israelRemainingMs() / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = String(totalSeconds % 60).padStart(2, "0");
+    return `${minutes}:${seconds}`;
+  }
+
   function handleBossPressureWhileMoving(target, direction) {
     if (!bossPressuresWhileMoving(target) || isCloseEnoughToAttack("kick", target)) {
       state.bossPressureStep = 0;
@@ -1754,12 +2865,12 @@
     }
     if (isBossInIceTornado(target)) {
       state.action = "polarIceTornado";
-      els.statusText.textContent = `${currentBossName(target)} is trapped in Benji's Ice Tornado. Keep moving closer!`;
+      els.statusText.textContent = `${currentBossName(target)} is blocked by Benji's Ice Shield. Keep moving closer!`;
       return true;
     }
     if (isBossSlippingOnBanana(target)) {
       state.action = "bananaSlip";
-      els.statusText.textContent = `${currentBossName(target)} is slipping on Mr. 67's banana peel. Keep moving closer!`;
+      els.statusText.textContent = `${currentBossName(target)} is dizzy from Poison Storm. Keep moving closer!`;
       return true;
     }
     if (isBossInFennecLove(target)) {
@@ -1769,7 +2880,7 @@
     }
     if (isBossBocked(target)) {
       state.action = "mayerBigBock";
-      els.statusText.textContent = `${currentBossName(target)} is still knocked down from Super Big Bock. Keep moving closer!`;
+      els.statusText.textContent = `${currentBossName(target)} is still knocked down from Flying Boots. Keep moving closer!`;
       return true;
     }
     if (isBossChomped(target)) {
@@ -1860,24 +2971,34 @@
 
   function updateHud() {
     const hero = heroes[state.heroId];
-    els.levelEyebrow.textContent = `Level ${state.level}`;
+    els.levelEyebrow.textContent = state.started ? `Level ${state.level} | Time ${levelTimerText()}` : `Level ${state.level}`;
     els.selectedHeroName.textContent = hero.name;
-    renderHeartMeter(els.heroHearts, hero.name, state.heroHp, hero.hp);
+    renderHeartMeter(els.heroHearts, hero.name, state.heroHp, currentHeroMaxHp());
     renderHeartMeter(els.bossHearts, currentBossName(), currentBossHp(), currentBossMaxHp());
     renderPrizeStatus();
     updatePowerButton();
     updateBossTargetChoices();
   }
 
+  function currentHeroMaxHp() {
+    return isWhiteHouseProtectLevel() ? 6 : heroes[state.heroId].hp;
+  }
+
   function renderPrizeStatus() {
     const active = [];
     if (state.bowShots > 0) active.push(`Bow x${state.bowShots}`);
     if (state.armorBlocks > 0) active.push(`Shield x${state.armorBlocks}`);
+    if (state.specialPowerCharges > 0) active.push(`Special x${state.specialPowerCharges}`);
+    if (Date.now() < state.timedShieldUntil) active.push(`1-min shield ${timedShieldSeconds()}s`);
     if (!active.length) return;
     const prizeLine = document.createElement("small");
     prizeLine.className = "prize-status";
     prizeLine.textContent = active.join(" | ");
     els.heroHearts.append(prizeLine);
+  }
+
+  function timedShieldSeconds() {
+    return Math.max(0, Math.ceil((state.timedShieldUntil - Date.now()) / 1000));
   }
 
   function renderHeartMeter(element, label, hp, maxHp) {
@@ -1897,7 +3018,7 @@
       } else {
         heart.classList.add("empty");
       }
-      heart.textContent = "â™¥";
+      heart.textContent = "Ã¢â„¢Â¥";
       hearts.append(heart);
     }
     element.append(name, hearts);
@@ -1917,26 +3038,26 @@
   function currentPowerName() {
     const hero = heroes[state.heroId];
     if (!hero) return "Use Power-Up";
-    if (state.heroId === "apple") return cheetahPowers[state.cheetahPowerStep % cheetahPowers.length].name;
-    if (state.heroId === "benji") return polarPowers[state.polarPowerStep % polarPowers.length].name;
-    if (state.heroId === "frost") return monkeyPowers[state.monkeyPowerStep % monkeyPowers.length].name;
-    if (state.heroId === "freddy") return fennecPowers[state.fennecPowerStep % fennecPowers.length].name;
-    if (state.heroId === "mayer") return mayerPowers[state.mayerPowerStep % mayerPowers.length].name;
-    if (state.heroId === "yonatan") return yonatanPowers[state.yonatanPowerStep % yonatanPowers.length].name;
+    if (state.heroId === "apple") return powerForCurrentLevel(cheetahPowers[state.cheetahPowerStep % cheetahPowers.length]).name;
+    if (state.heroId === "benji") return powerForCurrentLevel(polarPowers[state.polarPowerStep % polarPowers.length]).name;
+    if (state.heroId === "frost") return powerForCurrentLevel(monkeyPowers[state.monkeyPowerStep % monkeyPowers.length]).name;
+    if (state.heroId === "freddy") return powerForCurrentLevel(fennecPowers[state.fennecPowerStep % fennecPowers.length]).name;
+    if (state.heroId === "mayer") return powerForCurrentLevel(mayerPowers[state.mayerPowerStep % mayerPowers.length]).name;
+    if (state.heroId === "yonatan") return powerForCurrentLevel(yonatanPowers[state.yonatanPowerStep % yonatanPowers.length]).name;
     return hero.firstPower;
   }
 
   function powerNamesForHero() {
     const hero = heroes[state.heroId];
     if (!hero) return ["Use Power-Up"];
-    if (state.heroId === "tats") return elephantPowers.map((power) => power.name);
-    if (state.heroId === "fary") return parrotPowers.map((power) => power.name);
-    if (state.heroId === "apple") return cheetahPowers.map((power) => power.name);
-    if (state.heroId === "benji") return polarPowers.map((power) => power.name);
-    if (state.heroId === "frost") return monkeyPowers.map((power) => power.name);
-    if (state.heroId === "freddy") return fennecPowers.map((power) => power.name);
-    if (state.heroId === "mayer") return mayerPowers.map((power) => power.name);
-    if (state.heroId === "yonatan") return yonatanPowers.map((power) => power.name);
+    if (state.heroId === "tats") return elephantPowers.map((power) => powerForCurrentLevel(power).name);
+    if (state.heroId === "fary") return parrotPowers.map((power) => powerForCurrentLevel(power).name);
+    if (state.heroId === "apple") return cheetahPowers.map((power) => powerForCurrentLevel(power).name);
+    if (state.heroId === "benji") return polarPowers.map((power) => powerForCurrentLevel(power).name);
+    if (state.heroId === "frost") return monkeyPowers.map((power) => powerForCurrentLevel(power).name);
+    if (state.heroId === "freddy") return fennecPowers.map((power) => powerForCurrentLevel(power).name);
+    if (state.heroId === "mayer") return mayerPowers.map((power) => powerForCurrentLevel(power).name);
+    if (state.heroId === "yonatan") return yonatanPowers.map((power) => powerForCurrentLevel(power).name);
     return [hero.firstPower, "World Power", "Shield Power"];
   }
 
@@ -1977,13 +3098,31 @@
     state.tick += 1;
     drawSchool();
     drawHealthBars();
-    drawHero(state.heroX, state.heroY);
-    if (!state.started) {
+    if (isStatueMazeLevel()) {
+      drawMazeFacePlayer(state.heroX, state.heroY);
+    } else {
+      drawHero(state.heroX, state.heroY);
+    }
+    if (isAntarcticaTreasureLevel() && state.started) {
+      drawMiniMazeBoss(state.treasureBossX, state.treasureBossY);
+      drawAntarcticaBossPower();
+    } else if (isCanadaTreasureMapLevel() && state.started) {
+      drawCanadaGuardsAndTreasure();
+    } else if (isWhiteHouseProtectLevel()) {
+      drawPresidentTrump();
+      drawProtectHazards();
+    } else if (isIsraelWallFightLevel()) {
+      drawIsraelVillain();
+    } else if (!state.started) {
       drawMischievousMayerBoss(900, 365);
       drawYappingYonatanBoss(1045, 420);
       drawIceBoss(970, 405);
     } else if (currentBossHp() > 0) {
-      if (currentTarget() === "math") {
+      if (isStatueMazeLevel()) {
+        drawMiniMazeBoss(state.mazeBossX, state.mazeBossY);
+      } else if (isCanadaTreasureMapLevel()) {
+        // The boss waits hidden until the Canada map is finished.
+      } else if (currentTarget() === "math") {
         drawMischievousMayerBoss(940, 365);
       } else if (currentTarget() === "evil") {
         drawYappingYonatanBoss(990, 420);
@@ -1992,6 +3131,7 @@
       }
     }
     drawPrizeDrops();
+    drawPalaceChargeUps();
     drawAction();
   }
 
@@ -2004,6 +3144,38 @@
 
   function drawTravelScene(w, h) {
     const place = travelStops[state.level - 1] || "World Trip";
+    if (isStatueMazeLevel()) {
+      drawStatueMazeScene(w, h);
+      return;
+    }
+    if (isAntarcticaTreasureLevel()) {
+      drawAntarcticaTreasureScene(w, h);
+      return;
+    }
+    if (isPhoenixScavengerLevel()) {
+      drawPhoenixScavengerScene(w, h);
+      return;
+    }
+    if (isCanadaTreasureMapLevel()) {
+      drawCanadaTreasureScene(w, h);
+      return;
+    }
+    if (isWhiteHouseProtectLevel()) {
+      drawWhiteHouseProtectScene(w, h);
+      return;
+    }
+    if (isPalaceChargeLevel()) {
+      drawPalaceChargeScene(w, h);
+      return;
+    }
+    if (isIsraelWallFightLevel()) {
+      drawIsraelWallFightScene(w, h);
+      return;
+    }
+    if (place === "Florida") {
+      drawFloridaBeachScene(w, h);
+      return;
+    }
     const theme = placeTheme(place);
     ctx.fillStyle = theme.sky;
     ctx.fillRect(0, 0, w, h);
@@ -2023,11 +3195,1083 @@
     drawTravelBoard(place);
   }
 
+  function drawFloridaBeachScene(w, h) {
+    ctx.fillStyle = "#7edbff";
+    ctx.fillRect(0, 0, w, h);
+
+    ctx.fillStyle = "#35aee8";
+    ctx.fillRect(0, 295, w, 160);
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.78)";
+    ctx.lineWidth = 5;
+    for (let y = 324; y <= 420; y += 34) {
+      ctx.beginPath();
+      for (let x = -30; x <= w + 30; x += 70) {
+        const waveY = y + Math.sin((x + state.tick * 3) / 42) * 6;
+        if (x === -30) ctx.moveTo(x, waveY);
+        else ctx.quadraticCurveTo(x - 35, waveY - 9, x, waveY);
+      }
+      ctx.stroke();
+    }
+
+    ctx.fillStyle = "#f1c96f";
+    ctx.fillRect(0, 455, w, h - 455);
+    ctx.fillStyle = "#e5b85f";
+    ctx.fillRect(0, 548, w, 82);
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 6;
+    ctx.beginPath();
+    ctx.moveTo(0, 455);
+    ctx.lineTo(w, 455);
+    ctx.moveTo(0, 548);
+    ctx.lineTo(w, 548);
+    ctx.moveTo(0, 630);
+    ctx.lineTo(w, 630);
+    ctx.stroke();
+
+    drawPalmTree(95, 455, 0.9);
+    drawPalmTree(1130, 455, 0.82);
+    drawPalmTree(1040, 515, 0.55);
+    drawBeachShells();
+    drawTravelBoard("Florida Beach");
+  }
+
+  function drawPalmTree(x, groundY, scale) {
+    ctx.save();
+    ctx.translate(x, groundY);
+    ctx.scale(scale, scale);
+    ctx.strokeStyle = "#171216";
+    ctx.fillStyle = "#9a642d";
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.moveTo(-14, 0);
+    ctx.quadraticCurveTo(5, -80, 22, -178);
+    ctx.quadraticCurveTo(43, -86, 29, 0);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.strokeStyle = "rgba(23, 18, 22, 0.35)";
+    ctx.lineWidth = 3;
+    for (let y = -18; y > -152; y -= 26) {
+      ctx.beginPath();
+      ctx.moveTo(-6, y);
+      ctx.lineTo(28, y - 12);
+      ctx.stroke();
+    }
+    ctx.translate(24, -180);
+    ctx.strokeStyle = "#171216";
+    ctx.fillStyle = "#1f9a55";
+    ctx.lineWidth = 5;
+    [-2.5, -1.7, -0.9, -0.25, 0.55, 1.35, 2.15].forEach((angle) => {
+      ctx.save();
+      ctx.rotate(angle);
+      ctx.beginPath();
+      ctx.ellipse(0, -54, 18, 76, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+    });
+    ctx.fillStyle = "#8a4c2c";
+    for (let i = 0; i < 3; i += 1) {
+      ctx.beginPath();
+      ctx.arc(-12 + i * 12, -4 + (i % 2) * 8, 11, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function drawBeachShells() {
+    const shells = [
+      [175, 604, "#ff9fc0"], [252, 666, "#fff0b8"], [410, 590, "#f7a66e"],
+      [742, 676, "#fbdce8"], [860, 606, "#fff0b8"], [1018, 648, "#ff9fc0"]
+    ];
+    shells.forEach(([x, y, color], index) => {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(index % 2 ? -0.2 : 0.18);
+      ctx.fillStyle = color;
+      ctx.strokeStyle = "#171216";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(0, 0, 15, Math.PI, Math.PI * 2);
+      ctx.lineTo(15, 8);
+      ctx.lineTo(-15, 8);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx.strokeStyle = "rgba(23, 18, 22, 0.45)";
+      ctx.lineWidth = 2;
+      [-8, 0, 8].forEach((sx) => {
+        ctx.beginPath();
+        ctx.moveTo(0, -14);
+        ctx.lineTo(sx, 7);
+        ctx.stroke();
+      });
+      ctx.restore();
+    });
+  }
+
+  function drawStatueMazeScene(w, h) {
+    ctx.fillStyle = "#9edcff";
+    ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = "#2d86c9";
+    ctx.fillRect(0, 455, w, 265);
+    ctx.fillStyle = "rgba(255, 255, 255, 0.72)";
+    for (let y = 492; y < h; y += 42) {
+      ctx.beginPath();
+      for (let x = -40; x <= w + 40; x += 82) {
+        const waveY = y + Math.sin((x + state.tick * 2) / 50) * 5;
+        if (x === -40) ctx.moveTo(x, waveY);
+        else ctx.quadraticCurveTo(x - 42, waveY - 7, x, waveY);
+      }
+      ctx.stroke();
+    }
+
+    ctx.save();
+    ctx.translate(160, 70);
+    ctx.fillStyle = "#7ec7b4";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 7;
+    roundRect(220, 60, 340, 460, 24);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#5db09c";
+    roundRect(275, 0, 230, 106, 18);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#83d6c2";
+    ctx.beginPath();
+    ctx.moveTo(318, 0);
+    ctx.lineTo(384, -58);
+    ctx.lineTo(450, 0);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#ffd84a";
+    ctx.beginPath();
+    ctx.moveTo(384, -124);
+    ctx.lineTo(398, -68);
+    ctx.lineTo(368, -68);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = "#dff8ef";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    statueMazePaths().forEach((rect) => {
+      roundRect(rect.x - 160, rect.y - 70, rect.w, rect.h, 8);
+      ctx.fill();
+      ctx.stroke();
+    });
+    ctx.fillStyle = "#d91f2e";
+    ctx.font = "900 31px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText("EXIT", 575, 74);
+    ctx.restore();
+
+    ctx.fillStyle = "#fffef7";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 6;
+    roundRect(870, 105, 330, 96, 8);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#2f6f52";
+    ctx.font = "900 28px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText(`LEVEL ${state.level}: STATUE MAZE`, 1035, 145);
+    ctx.font = "900 20px Trebuchet MS";
+    ctx.fillText("REACH EXIT AT THE HEAD", 1035, 176);
+  }
+
+  function drawMazeFacePlayer(x, y) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.fillStyle = "#f2c99d";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.arc(0, 0, 24, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#171216";
+    ctx.beginPath();
+    ctx.arc(-8, -4, 3.5, 0, Math.PI * 2);
+    ctx.arc(8, -4, 3.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(0, 7, 8, 0.15, Math.PI - 0.15);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawMiniMazeBoss(x, y) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(0.38, 0.38);
+    if (currentTarget() === "evil") {
+      drawYappingHero();
+    } else if (currentTarget() === "ice") {
+      drawIceBoss(0, 0);
+    } else {
+      drawMayorHero();
+    }
+    ctx.restore();
+  }
+
+  function drawAntarcticaTreasureScene(w, h) {
+    ctx.fillStyle = "#bfefff";
+    ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = "#e9fbff";
+    ctx.fillRect(0, 430, w, h - 430);
+    ctx.fillStyle = "#cce7f5";
+    ctx.fillRect(0, 548, w, 82);
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 6;
+    ctx.beginPath();
+    ctx.moveTo(0, 430);
+    ctx.lineTo(w, 430);
+    ctx.moveTo(0, 548);
+    ctx.lineTo(w, 548);
+    ctx.moveTo(0, 630);
+    ctx.lineTo(w, 630);
+    ctx.stroke();
+
+    ctx.fillStyle = "#fff";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    for (let x = -60; x < w; x += 220) {
+      ctx.beginPath();
+      ctx.moveTo(x, 430);
+      ctx.lineTo(x + 105, 230 - (state.treasurePart % 2) * 24);
+      ctx.lineTo(x + 220, 430);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+    }
+
+    drawPenguin(905, 440, 0.72);
+    drawPenguin(985, 468, 0.55);
+    drawTreasureChest(1090, 405);
+
+    ctx.fillStyle = "#fffef7";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 6;
+    roundRect(375, 88, 540, 116, 8);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#146e8f";
+    ctx.font = "900 30px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText(`LEVEL ${state.level}: ANTARCTICA TREASURE`, 645, 132);
+    ctx.font = "900 21px Trebuchet MS";
+    ctx.fillText(`SCREEN ${state.treasurePart} OF 3 - FIND PENGUIN TREASURE`, 645, 170);
+  }
+
+  function drawPenguin(x, y, scale) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(scale, scale);
+    ctx.fillStyle = "#171216";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 30, 48, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#fffef7";
+    ctx.beginPath();
+    ctx.ellipse(0, 10, 19, 30, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "#ffd84a";
+    ctx.beginPath();
+    ctx.moveTo(0, -12);
+    ctx.lineTo(21, -5);
+    ctx.lineTo(0, 3);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#fffef7";
+    ctx.beginPath();
+    ctx.arc(-9, -18, 5, 0, Math.PI * 2);
+    ctx.arc(9, -18, 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "#171216";
+    ctx.beginPath();
+    ctx.arc(-9, -18, 2, 0, Math.PI * 2);
+    ctx.arc(9, -18, 2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawTreasureChest(x, y) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.fillStyle = "#8a4c2c";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    roundRect(-52, -24, 104, 64, 8);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#ffd84a";
+    ctx.fillRect(-8, -24, 16, 64);
+    ctx.fillRect(-52, 0, 104, 12);
+    ctx.strokeRect(-8, -24, 16, 64);
+    ctx.strokeRect(-52, 0, 104, 12);
+    ctx.fillStyle = "#fffef7";
+    ctx.font = "900 17px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText("PENGUIN", 0, -45);
+    ctx.fillText("TREASURE", 0, -28);
+    ctx.restore();
+  }
+
+  function drawAntarcticaBossPower() {
+    ctx.save();
+    const y = projectileTreasureY();
+    ctx.strokeStyle = "#45a6db";
+    ctx.fillStyle = "#9be8ff";
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.moveTo(state.treasurePowerX - 58, y);
+    ctx.lineTo(state.treasurePowerX + 34, y);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(state.treasurePowerX + 34, y);
+    ctx.lineTo(state.treasurePowerX + 8, y - 22);
+    ctx.lineTo(state.treasurePowerX + 8, y + 22);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawPhoenixScavengerScene(w, h) {
+    ctx.fillStyle = "#9edcff";
+    ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = "#e7b85d";
+    ctx.fillRect(0, 430, w, h - 430);
+    ctx.fillStyle = "#b77938";
+    ctx.fillRect(0, 548, w, 82);
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 6;
+    ctx.beginPath();
+    ctx.moveTo(0, 430);
+    ctx.lineTo(w, 430);
+    ctx.moveTo(0, 548);
+    ctx.lineTo(w, 548);
+    ctx.moveTo(0, 630);
+    ctx.lineTo(w, 630);
+    ctx.stroke();
+
+    ctx.fillStyle = "#c77f3d";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    for (let x = -40; x < w; x += 250) {
+      ctx.beginPath();
+      ctx.moveTo(x, 430);
+      ctx.lineTo(x + 110, 270);
+      ctx.lineTo(x + 240, 430);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+    }
+
+    drawCactus(180, 430, 0.85);
+    drawCactus(735, 430, 0.75);
+    drawDesertRock(710, 455, 1);
+    drawDesertRock(1015, 470, 0.82);
+    drawPhoenixPieces();
+    drawScavengerList();
+  }
+
+  function drawCactus(x, groundY, scale) {
+    ctx.save();
+    ctx.translate(x, groundY);
+    ctx.scale(scale, scale);
+    ctx.strokeStyle = "#171216";
+    ctx.fillStyle = "#1f9a55";
+    ctx.lineWidth = 5;
+    roundRect(-16, -118, 32, 118, 14);
+    ctx.fill();
+    ctx.stroke();
+    roundRect(-62, -82, 24, 72, 12);
+    ctx.fill();
+    ctx.stroke();
+    roundRect(40, -98, 24, 84, 12);
+    ctx.fill();
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(-38, -48);
+    ctx.lineTo(-16, -48);
+    ctx.moveTo(16, -64);
+    ctx.lineTo(40, -64);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawDesertRock(x, y, scale) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(scale, scale);
+    ctx.fillStyle = "#8a5a3d";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 62, 34, -0.12, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawPhoenixPieces() {
+    phoenixPieces().forEach((piece) => {
+      if (state.scavengerFound.has(piece.id)) return;
+      if (piece.boss) {
+        drawTreasureStar(piece.x + 78, piece.y + 22, "#ffd84a", "BOSS");
+      } else if (piece.hidden) {
+        const label = piece.cover === "rock" ? "HIDDEN" : "PEEK";
+        drawTreasureStar(piece.x + 42, piece.y - 42, "#fff0b8", label);
+      } else {
+        drawTreasureStar(piece.x, piece.y - 34, "#ffd84a", "ITEM");
+      }
+    });
+  }
+
+  function drawTreasureStar(x, y, color, label) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.fillStyle = color;
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    for (let i = 0; i < 10; i += 1) {
+      const angle = -Math.PI / 2 + i * Math.PI / 5;
+      const radius = i % 2 === 0 ? 24 : 11;
+      const px = Math.cos(angle) * radius;
+      const py = Math.sin(angle) * radius;
+      if (i === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
+    }
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#171216";
+    ctx.font = "900 9px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText(label, 0, 4);
+    ctx.restore();
+  }
+
+  function drawScavengerList() {
+    const pieces = phoenixPieces();
+    ctx.fillStyle = "#fffef7";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    roundRect(370, 78, 545, 150, 8);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#b77938";
+    ctx.font = "900 27px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText(`PHOENIX SCAVENGER HUNT`, 642, 116);
+    ctx.textAlign = "left";
+    ctx.font = "900 18px Trebuchet MS";
+    pieces.forEach((piece, index) => {
+      const found = state.scavengerFound.has(piece.id);
+      ctx.fillStyle = found ? "#18a66a" : "#171216";
+      const extra = piece.boss ? " - behind boss" : piece.hidden ? " - hidden" : "";
+      ctx.fillText(`${found ? "YES" : "NO"} ${piece.label}${extra}`, 405, 150 + index * 28);
+    });
+  }
+
+  function drawCanadaTreasureScene(w, h) {
+    ctx.fillStyle = "#bfefff";
+    ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = "#e9fbff";
+    ctx.fillRect(0, 425, w, h - 425);
+    ctx.fillStyle = "#cce7f5";
+    ctx.fillRect(0, 548, w, 82);
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 6;
+    ctx.beginPath();
+    ctx.moveTo(0, 425);
+    ctx.lineTo(w, 425);
+    ctx.moveTo(0, 548);
+    ctx.lineTo(w, 548);
+    ctx.moveTo(0, 630);
+    ctx.lineTo(w, 630);
+    ctx.stroke();
+
+    ctx.fillStyle = "#fff";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    for (let x = -60; x < w; x += 240) {
+      ctx.beginPath();
+      ctx.moveTo(x, 425);
+      ctx.lineTo(x + 120, 235);
+      ctx.lineTo(x + 240, 425);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+    }
+    drawMapleTree(145, 425, 0.9);
+    drawMapleTree(1040, 430, 0.75);
+    drawCanadaMapPanel();
+  }
+
+  function drawWhiteHouseProtectScene(w, h) {
+    ctx.fillStyle = "#dce9f8";
+    ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = "#f7f1e4";
+    ctx.fillRect(0, 230, w, 270);
+    ctx.fillStyle = "#8a4c2c";
+    ctx.fillRect(0, 500, w, h - 500);
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 7;
+    ctx.strokeRect(0, 230, w, 270);
+    ctx.fillStyle = "#fffef7";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    for (let x = 100; x <= 1040; x += 180) {
+      roundRect(x, 260, 82, 122, 6);
+      ctx.fill();
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(x + 41, 260);
+      ctx.lineTo(x + 41, 382);
+      ctx.moveTo(x, 321);
+      ctx.lineTo(x + 82, 321);
+      ctx.stroke();
+    }
+    ctx.fillStyle = "#2e5fa3";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    roundRect(500, 360, 280, 78, 10);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#d91f2e";
+    ctx.fillRect(520, 382, 238, 12);
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(520, 398, 238, 12);
+    ctx.fillStyle = "#fffef7";
+    ctx.font = "900 20px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText("WHITE HOUSE", 640, 333);
+
+    ctx.fillStyle = "#fffef7";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 6;
+    roundRect(370, 84, 560, 122, 8);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#2e5fa3";
+    ctx.font = "900 29px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText(`LEVEL ${state.level}: WASHINGTON D.C.`, 650, 125);
+    ctx.fillStyle = "#d91f2e";
+    ctx.font = "900 21px Trebuchet MS";
+    ctx.fillText(`PROTECT PRESIDENT TRUMP - TIME ${protectTimeText()}`, 650, 160);
+    ctx.fillStyle = "#171216";
+    ctx.font = "900 17px Trebuchet MS";
+    ctx.fillText("Keep the dangers from reaching him.", 650, 186);
+  }
+
+  function drawIsraelWallFightScene(w, h) {
+    ctx.fillStyle = "#9edcff";
+    ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = "#dfc18d";
+    ctx.fillRect(0, 455, w, h - 455);
+    ctx.fillStyle = "#b77938";
+    ctx.fillRect(0, 548, w, 82);
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 6;
+    ctx.beginPath();
+    ctx.moveTo(0, 455);
+    ctx.lineTo(w, 455);
+    ctx.moveTo(0, 548);
+    ctx.lineTo(w, 548);
+    ctx.moveTo(0, 630);
+    ctx.lineTo(w, 630);
+    ctx.stroke();
+
+    ctx.fillStyle = "#c9aa78";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    for (let y = 205; y <= 435; y += 48) {
+      for (let x = 170; x <= 1020; x += 92) {
+        const offset = (Math.floor(y / 48) % 2) * 46;
+        roundRect(x + offset, y, 84, 42, 4);
+        ctx.fill();
+        ctx.stroke();
+      }
+    }
+    ctx.fillStyle = "#1f7f45";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    roundRect(410, 342, 94, 114, 8);
+    ctx.fill();
+    ctx.stroke();
+    roundRect(770, 342, 94, 114, 8);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = "#fffef7";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 6;
+    roundRect(345, 70, 590, 128, 8);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#2f6f52";
+    ctx.font = "900 30px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText(`LEVEL ${state.level}: ISRAEL WALL FIGHT`, 640, 112);
+    ctx.fillStyle = "#171216";
+    ctx.font = "900 19px Trebuchet MS";
+    ctx.fillText(`TIMER ${israelTimeText()} - WIN BY DEFEATING OR HAVING MORE HEARTS`, 640, 150);
+    ctx.fillStyle = "#d91f2e";
+    ctx.font = "900 17px Trebuchet MS";
+    ctx.fillText("GREEN OPENINGS TELEPORT YOU THROUGH THE WALL", 640, 178);
+  }
+
+  function drawIsraelVillain() {
+    ctx.save();
+    ctx.translate(state.israelVillainX, state.israelVillainY);
+    ctx.scale(0.48, 0.48);
+    if (currentTarget() === "evil") {
+      drawYappingHero();
+    } else if (currentTarget() === "ice") {
+      drawIceBoss(0, 0);
+    } else {
+      drawMayorHero();
+    }
+    ctx.restore();
+  }
+
+  function drawPresidentTrump() {
+    const position = presidentPosition();
+    ctx.save();
+    ctx.translate(position.x, position.y);
+    ctx.fillStyle = "#1f3f8f";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    roundRect(-25, -62, 50, 72, 10);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#d91f2e";
+    ctx.beginPath();
+    ctx.moveTo(0, -50);
+    ctx.lineTo(13, -14);
+    ctx.lineTo(0, 16);
+    ctx.lineTo(-13, -14);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#f2c99d";
+    ctx.beginPath();
+    ctx.arc(0, -92, 31, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#f0b84c";
+    ctx.beginPath();
+    ctx.ellipse(0, -118, 35, 14, -0.08, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#171216";
+    ctx.beginPath();
+    ctx.arc(-10, -95, 3.5, 0, Math.PI * 2);
+    ctx.arc(10, -95, 3.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(0, -83, 10, 0.1, Math.PI - 0.1);
+    ctx.stroke();
+    ctx.fillStyle = "#fffef7";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 4;
+    roundRect(-77, -168, 154, 38, 8);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#171216";
+    ctx.font = "900 14px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText("PROTECT ME!", 0, -144);
+    ctx.restore();
+  }
+
+  function drawProtectHazards() {
+    state.protectHazards.forEach((hazard) => {
+      ctx.save();
+      ctx.translate(hazard.x, hazard.y);
+      ctx.strokeStyle = "#171216";
+      ctx.fillStyle = hazard.color;
+      ctx.lineWidth = 5;
+      if (hazard.label === "rolling chair") {
+        roundRect(-34, -22, 68, 44, 8);
+        ctx.fill();
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(-22, 30, 8, 0, Math.PI * 2);
+        ctx.arc(22, 30, 8, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      } else if (hazard.label === "falling picture frame") {
+        roundRect(-38, -30, 76, 60, 4);
+        ctx.fill();
+        ctx.stroke();
+        ctx.strokeRect(-22, -16, 44, 32);
+      } else if (hazard.label === "flying paper stack") {
+        for (let i = 0; i < 3; i += 1) {
+          roundRect(-34 + i * 12, -22 - i * 8, 58, 38, 4);
+          ctx.fill();
+          ctx.stroke();
+        }
+      } else {
+        ctx.beginPath();
+        ctx.arc(0, 0, 30, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = "#fffef7";
+        ctx.font = "900 18px Trebuchet MS";
+        ctx.textAlign = "center";
+        ctx.fillText("!", 0, 7);
+      }
+      ctx.restore();
+    });
+  }
+
+  function drawMapleTree(x, groundY, scale) {
+    ctx.save();
+    ctx.translate(x, groundY);
+    ctx.scale(scale, scale);
+    ctx.fillStyle = "#8a4c2c";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    roundRect(-18, -95, 36, 95, 8);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#d91f2e";
+    [-48, -18, 18, 48, 0].forEach((lx, index) => {
+      ctx.beginPath();
+      ctx.ellipse(lx, -118 - (index % 2) * 18, 34, 45, lx / 90, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    });
+    ctx.restore();
+  }
+
+  function drawCanadaMapPanel() {
+    ctx.fillStyle = "#fffef7";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 6;
+    roundRect(380, 76, 530, 150, 8);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#d91f2e";
+    ctx.font = "900 29px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText(`LEVEL ${state.level}: CANADA MAP`, 645, 116);
+    ctx.font = "900 18px Trebuchet MS";
+    ctx.fillStyle = "#171216";
+    ctx.fillText(canadaProgressText().toUpperCase(), 645, 148);
+    drawMapFragment(470, 180, state.scavengerFound.has("pineClue") || state.scavengerFound.has("mapCorner"));
+    drawMapFragment(590, 180, state.scavengerFound.has("lakeClue") || state.scavengerFound.has("xClue"));
+    drawMapFragment(710, 180, state.level === 16 && state.scavengerBossReady);
+    if (state.level === 16 && state.scavengerBossReady) {
+      ctx.strokeStyle = "#d91f2e";
+      ctx.lineWidth = 7;
+      ctx.beginPath();
+      ctx.moveTo(810, 157);
+      ctx.lineTo(858, 205);
+      ctx.moveTo(858, 157);
+      ctx.lineTo(810, 205);
+      ctx.stroke();
+      drawTreasureStar(835, 180, "#ffd84a", "STAR");
+    }
+  }
+
+  function drawMapFragment(x, y, active) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.fillStyle = active ? "#f0d49a" : "#c8d0d8";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(-44, -25);
+    ctx.lineTo(42, -18);
+    ctx.lineTo(36, 28);
+    ctx.lineTo(-40, 22);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.strokeStyle = active ? "#8a4c2c" : "#6f737a";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(-22, 6);
+    ctx.quadraticCurveTo(2, -18, 24, 10);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawCanadaGuardsAndTreasure() {
+    canadaMapPieces().forEach((piece) => {
+      if (piece.boss) {
+        if (!state.scavengerBossReady) return;
+        drawTreasureStar(piece.x + 75, piece.y + 40, "#ffd84a", "X");
+        drawCurrentChosenBoss(piece.x, piece.y);
+        return;
+      }
+      if (state.scavengerFound.has(piece.id)) {
+        drawTreasureStar(piece.x, piece.y - 48, "#f0d49a", "MAP");
+        return;
+      }
+      if (piece.guard === "snow carrot") {
+        drawSnowCarrot(piece.x, piece.y);
+      } else {
+        drawIceMonster(piece.x, piece.y);
+      }
+      const hits = state.canadaHits[piece.id] || 0;
+      ctx.fillStyle = "#171216";
+      ctx.font = "900 15px Trebuchet MS";
+      ctx.textAlign = "center";
+      ctx.fillText(`${piece.label}: ${hits}/2 hits`, piece.x, piece.y - 82);
+    });
+  }
+
+  function drawCurrentChosenBoss(x, y) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(0.55, 0.55);
+    if (currentTarget() === "evil") {
+      drawYappingHero();
+    } else if (currentTarget() === "ice") {
+      drawIceBoss(0, 0);
+    } else {
+      drawMayorHero();
+    }
+    ctx.restore();
+  }
+
+  function drawSnowCarrot(x, y) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.fillStyle = "#f18319";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.moveTo(0, -58);
+    ctx.lineTo(42, 26);
+    ctx.lineTo(-34, 24);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#1f9a55";
+    [-18, 0, 18].forEach((lx) => {
+      ctx.beginPath();
+      ctx.ellipse(lx, -66, 10, 25, lx / 35, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    });
+    ctx.fillStyle = "#171216";
+    ctx.beginPath();
+    ctx.arc(-10, -24, 4, 0, Math.PI * 2);
+    ctx.arc(10, -24, 4, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(0, -8, 12, 0.15, Math.PI - 0.15);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawIceMonster(x, y) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.fillStyle = "#9be8ff";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.moveTo(-42, 28);
+    ctx.lineTo(-55, -18);
+    ctx.lineTo(-18, -64);
+    ctx.lineTo(22, -58);
+    ctx.lineTo(58, -12);
+    ctx.lineTo(40, 32);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#171216";
+    ctx.beginPath();
+    ctx.arc(-15, -22, 5, 0, Math.PI * 2);
+    ctx.arc(17, -22, 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(-18, 3);
+    ctx.lineTo(20, 0);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawRussiaBackground() {
+    ctx.fillStyle = "#dbe5ef";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    [[105, 455, 185, 92], [330, 455, 150, 72], [980, 455, 210, 96]].forEach(([x, y, w, h]) => {
+      roundRect(x, y - h, w, h, 8);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "#d91f2e";
+      ctx.beginPath();
+      ctx.moveTo(x - 6, y - h);
+      ctx.lineTo(x + w / 2, y - h - 42);
+      ctx.lineTo(x + w + 6, y - h);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "#dbe5ef";
+    });
+    ctx.fillStyle = "#5b5b63";
+    ctx.strokeStyle = "#171216";
+    [[560, 455, 130, 72], [720, 455, 150, 88]].forEach(([x, y, w, h]) => {
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.quadraticCurveTo(x + w / 2, y - h * 1.5, x + w, y);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "#171216";
+      roundRect(x + w * 0.38, y - 38, w * 0.24, 38, 6);
+      ctx.fill();
+      ctx.fillStyle = "#5b5b63";
+    });
+  }
+
+  function drawChinaBackground() {
+    ctx.save();
+    ctx.fillStyle = "#cf3e32";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    [135, 1000].forEach((x) => {
+      roundRect(x, 255, 88, 145, 8);
+      ctx.fill();
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(x - 18, 255);
+      ctx.lineTo(x + 44, 210);
+      ctx.lineTo(x + 106, 255);
+      ctx.closePath();
+      ctx.fillStyle = "#f0b84c";
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "#cf3e32";
+      ctx.fillRect(x + 28, 400, 32, 62);
+      ctx.strokeRect(x + 28, 400, 32, 62);
+    });
+    ctx.strokeStyle = "#8b6a44";
+    ctx.lineWidth = 12;
+    ctx.beginPath();
+    ctx.moveTo(250, 410);
+    ctx.quadraticCurveTo(405, 345, 560, 390);
+    ctx.quadraticCurveTo(720, 440, 920, 360);
+    ctx.stroke();
+    ctx.lineWidth = 5;
+    for (let x = 270; x <= 900; x += 78) {
+      ctx.fillStyle = "#c9a15a";
+      roundRect(x, 355 + Math.sin(x / 65) * 26, 46, 54, 5);
+      ctx.fill();
+      ctx.stroke();
+    }
+    ctx.fillStyle = "#d91f2e";
+    ctx.strokeStyle = "#171216";
+    [[450, 212], [610, 230], [780, 205]].forEach(([x, y]) => {
+      ctx.beginPath();
+      ctx.moveTo(x, y - 30);
+      ctx.lineTo(x, y + 34);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.ellipse(x, y + 48, 24, 32, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    });
+    ctx.restore();
+  }
+
+  function drawAfricaSavannaBackground(w) {
+    ctx.save();
+    ctx.fillStyle = "#f5b84c";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.arc(1070, 145, 58, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#b88b2e";
+    for (let x = -30; x < w; x += 190) {
+      ctx.beginPath();
+      ctx.moveTo(x, 455);
+      ctx.quadraticCurveTo(x + 92, 380, x + 190, 455);
+      ctx.closePath();
+      ctx.fill();
+    }
+    drawAcaciaTree(130, 455, 0.95);
+    drawAcaciaTree(1010, 455, 0.82);
+    drawTallGrass(300, 520);
+    drawTallGrass(760, 525);
+    ctx.restore();
+  }
+
+  function drawAcaciaTree(x, groundY, scale) {
+    ctx.save();
+    ctx.translate(x, groundY);
+    ctx.scale(scale, scale);
+    ctx.fillStyle = "#70481f";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.moveTo(-16, 0);
+    ctx.lineTo(6, -142);
+    ctx.lineTo(28, 0);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#3f7f35";
+    [[-62, -160, 70, 34], [0, -185, 92, 40], [76, -154, 72, 34]].forEach(([cx, cy, rx, ry]) => {
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    });
+    ctx.restore();
+  }
+
+  function drawTallGrass(x, y) {
+    ctx.save();
+    ctx.strokeStyle = "#49752e";
+    ctx.lineWidth = 5;
+    for (let i = 0; i < 12; i += 1) {
+      ctx.beginPath();
+      ctx.moveTo(x + i * 15, y);
+      ctx.lineTo(x + i * 15 + (i % 2 ? 14 : -12), y - 50 - (i % 3) * 9);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
   function placeTheme(place) {
     if (place === "Antarctica" || place === "Iceland") return { sky: "#bfefff", ground: "#f5fbff", road: "#cce7f5" };
+    if (place === "Russia") return { sky: "#bcd8ff", ground: "#dbe5ef", road: "#6f737a" };
+    if (place === "China") return { sky: "#ffd6b0", ground: "#78b56a", road: "#b77938" };
+    if (place === "Africa Savanna") return { sky: "#ffcf7a", ground: "#d9b94b", road: "#8a6a28" };
     if (place === "Paris" || place === "Rome" || place === "London") return { sky: "#bcd8ff", ground: "#78b56a", road: "#b68a58" };
     if (place === "New York" || place === "Tokyo" || place === "Robot City") return { sky: "#9edcff", ground: "#8c9aa3", road: "#4a4d56" };
     if (place === "Egypt" || place === "Dubai" || place === "Grand Canyon") return { sky: "#9edcff", ground: "#e7b85d", road: "#b77938" };
+    if (place === "Phoenix") return { sky: "#9edcff", ground: "#e7b85d", road: "#b77938" };
     if (place === "Hawaii" || place === "Florida" || place === "Candy Coast") return { sky: "#7edbff", ground: "#66c36f", road: "#e5c16c" };
     if (place === "Moon Base" || place === "Space Museum") return { sky: "#18152b", ground: "#b7bcc8", road: "#7a8191" };
     if (place === "Volcano Island") return { sky: "#ff9d6c", ground: "#5b3932", road: "#2d2528" };
@@ -2045,15 +4289,7 @@
       return;
     }
     if (place === "Paris") {
-      ctx.strokeStyle = "#171216";
-      ctx.lineWidth = 9;
-      ctx.beginPath();
-      ctx.moveTo(160, 455);
-      ctx.lineTo(250, 220);
-      ctx.lineTo(340, 455);
-      ctx.moveTo(205, 338);
-      ctx.lineTo(295, 338);
-      ctx.stroke();
+      drawEiffelTower();
       return;
     }
     if (place === "Antarctica" || place === "Iceland") {
@@ -2084,6 +4320,18 @@
       ctx.stroke();
       return;
     }
+    if (place === "Russia") {
+      drawRussiaBackground();
+      return;
+    }
+    if (place === "China") {
+      drawChinaBackground();
+      return;
+    }
+    if (place === "Africa Savanna") {
+      drawAfricaSavannaBackground(w);
+      return;
+    }
     for (let x = 35; x < w; x += 170) {
       drawForestTree(x, 455, 0.75 + (x % 3) * 0.1);
     }
@@ -2102,6 +4350,63 @@
     ctx.fillText(`LEVEL ${state.level}: ${place.toUpperCase()}`, 640, 270);
     ctx.font = "900 25px Trebuchet MS";
     ctx.fillText(boardNote(), 640, 318);
+  }
+
+  function drawEiffelTower() {
+    ctx.save();
+    ctx.translate(128, 118);
+    ctx.strokeStyle = "#171216";
+    ctx.fillStyle = "#6f737a";
+    ctx.lineWidth = 8;
+    ctx.lineJoin = "round";
+    ctx.beginPath();
+    ctx.moveTo(28, 337);
+    ctx.lineTo(122, 30);
+    ctx.lineTo(216, 337);
+    ctx.lineTo(168, 337);
+    ctx.lineTo(122, 190);
+    ctx.lineTo(76, 337);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.strokeStyle = "#fffef7";
+    ctx.lineWidth = 5;
+    [82, 142, 205, 268].forEach((y) => {
+      ctx.beginPath();
+      ctx.moveTo(62, y);
+      ctx.lineTo(182, y);
+      ctx.stroke();
+    });
+    ctx.beginPath();
+    ctx.moveTo(78, 305);
+    ctx.quadraticCurveTo(122, 250, 166, 305);
+    ctx.stroke();
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.moveTo(122, 30);
+    ctx.lineTo(122, -34);
+    ctx.stroke();
+    ctx.fillStyle = "#d91f2e";
+    ctx.font = "900 24px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText("PARIS", 122, 374);
+    ctx.restore();
+
+    ctx.fillStyle = "#fffef7";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 4;
+    for (let x = 505; x <= 1120; x += 150) {
+      roundRect(x, 365, 92, 90, 6);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "#bcd8ff";
+      for (let wx = x + 14; wx <= x + 58; wx += 22) {
+        ctx.fillRect(wx, 385, 12, 16);
+        ctx.fillRect(wx, 417, 12, 16);
+      }
+      ctx.fillStyle = "#fffef7";
+    }
   }
 
   function drawForestScene(w, h) {
@@ -2234,6 +4539,129 @@
       ctx.font = "900 12px Trebuchet MS";
       ctx.textAlign = "center";
       ctx.fillText("PICK", 0, 48);
+      ctx.restore();
+    });
+  }
+
+  function drawPalaceChargeScene(w, h) {
+    const egypt = isEgyptianPalaceLevel();
+    ctx.fillStyle = egypt ? "#f3cc73" : "#c8e3ff";
+    ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = egypt ? "#e6b85c" : "#f6e3bd";
+    ctx.fillRect(0, 180, w, 320);
+    ctx.fillStyle = egypt ? "#b77938" : "#8a4c2c";
+    ctx.fillRect(0, 500, w, h - 500);
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 7;
+    ctx.strokeRect(0, 180, w, 320);
+
+    if (egypt) {
+      drawEgyptianPalaceDetails(w);
+    } else {
+      drawIranPalaceDetails(w);
+    }
+
+    ctx.fillStyle = "#fffef7";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 6;
+    roundRect(360, 70, 560, 126, 8);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = egypt ? "#b77938" : "#8a4c2c";
+    ctx.font = "900 30px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText(`LEVEL ${state.level}: ${egypt ? "EGYPTIAN PALACE" : "IRAN PALACE"}`, 640, 112);
+    ctx.fillStyle = "#171216";
+    ctx.font = "900 20px Trebuchet MS";
+    ctx.fillText("RUN OVER CHARGE-UPS TO GET THEM", 640, 150);
+    ctx.fillStyle = "#18a66a";
+    ctx.font = "900 18px Trebuchet MS";
+    ctx.fillText(`${state.palaceChargesCollected.size} CHARGE-UP${state.palaceChargesCollected.size === 1 ? "" : "S"} COLLECTED`, 640, 176);
+  }
+
+  function drawIranPalaceDetails(w) {
+    ctx.fillStyle = "#6fb0d8";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    for (let x = 80; x < w; x += 210) {
+      roundRect(x, 245, 86, 190, 8);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "#f6e3bd";
+      ctx.beginPath();
+      ctx.arc(x + 43, 245, 43, Math.PI, 0);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "#6fb0d8";
+    }
+    ctx.fillStyle = "#2e91de";
+    ctx.beginPath();
+    ctx.arc(640, 260, 96, Math.PI, 0);
+    ctx.lineTo(736, 430);
+    ctx.lineTo(544, 430);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#fffef7";
+    ctx.font = "900 18px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText("PALACE", 640, 340);
+  }
+
+  function drawEgyptianPalaceDetails(w) {
+    ctx.fillStyle = "#d99b42";
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    for (let x = 60; x < w; x += 180) {
+      roundRect(x, 225, 62, 230, 4);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "#2e91de";
+      ctx.fillRect(x + 8, 255, 46, 22);
+      ctx.fillRect(x + 8, 330, 46, 22);
+      ctx.fillStyle = "#d99b42";
+    }
+    ctx.fillStyle = "#c98738";
+    ctx.beginPath();
+    ctx.moveTo(455, 455);
+    ctx.lineTo(640, 230);
+    ctx.lineTo(825, 455);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#171216";
+    ctx.font = "900 25px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText("EGYPT", 640, 374);
+  }
+
+  function drawPalaceChargeUps() {
+    palaceChargeUps().forEach((charge) => {
+      if (state.palaceChargesCollected.has(charge.id)) return;
+      ctx.save();
+      ctx.translate(charge.x, charge.y);
+      ctx.fillStyle = charge.color;
+      ctx.strokeStyle = "#171216";
+      ctx.lineWidth = 5;
+      ctx.beginPath();
+      for (let i = 0; i < 10; i += 1) {
+        const angle = -Math.PI / 2 + i * Math.PI / 5;
+        const radius = i % 2 === 0 ? 30 : 14;
+        const x = Math.cos(angle) * radius;
+        const y = Math.sin(angle) * radius;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "#fffef7";
+      ctx.font = "900 15px Trebuchet MS";
+      ctx.textAlign = "center";
+      ctx.fillText("CHARGE", 0, 5);
+      ctx.fillStyle = "#171216";
+      ctx.font = "900 11px Trebuchet MS";
+      ctx.fillText(charge.label.toUpperCase(), 0, 48);
       ctx.restore();
     });
   }
@@ -2428,9 +4856,19 @@
   }
 
   function boardNote() {
-    if (state.level === 1) return "PICK YOUR BOSS!";
-    if (state.level === 2) return "CITY BOSS PICK!";
-    if (state.level === 3) return "PARIS BOSS PICK!";
+    if (state.level <= 2) return "FLORIDA BEACH FIGHT!";
+    if (state.level <= 4) return "STATUE MAZE ESCAPE!";
+    if (state.level <= 6) return "PENGUIN TREASURE!";
+    if (state.level <= 8) return "EIFFEL TOWER FIGHT!";
+    if (state.level <= 10) return "DESERT SCAVENGER HUNT!";
+    if (state.level <= 12) return "RUSSIA CAVE FIGHT!";
+    if (state.level <= 14) return "CHINA SHOOTING POWERS!";
+    if (state.level <= 16) return "CANADA MAP TREASURE!";
+    if (state.level <= 18) return "ANIMAL POWERS RETURN!";
+    if (state.level <= 20) return "WHITE HOUSE PROTECTION!";
+    if (state.level <= 24) return "PALACE CHARGE-UPS!";
+    if (state.level <= 26) return "WALL ESCAPE FIGHT!";
+    if (state.level <= 30) return "EGYPTIAN CHARGE-UPS!";
     if (state.level >= 16) return "BOSSES DROP PRIZES!";
     return "MAYER OR YONATAN!";
   }
@@ -2483,9 +4921,10 @@
 
   function drawHealthBars() {
     const hero = heroes[state.heroId];
-    drawHeartBar(50, 44, 430, hero.name.toUpperCase(), state.heroHp, hero.hp, hero.accent);
+    drawHeartBar(50, 44, 430, hero.name.toUpperCase(), state.heroHp, currentHeroMaxHp(), hero.accent);
     drawHeartBar(800, 44, 430, currentBossName().toUpperCase(), currentBossHp(), currentBossMaxHp(), "#d91f2e");
-    drawLabel(`FIGHTING: ${currentBossName().toUpperCase()}`, 365, 122, "#ffd84a", 550);
+    drawLabel(state.started ? `TIME: ${levelTimerText()}` : `TIMER: ${levelTimerDuration() / 60000}:00`, 510, 44, "#fffef7", 260);
+    drawLabel(isWhiteHouseProtectLevel() ? `PROTECTING: ${currentBossName().toUpperCase()}` : `FIGHTING: ${currentBossName().toUpperCase()}`, 365, 122, "#ffd84a", 550);
   }
 
   function drawHeartBar(x, y, width, label, hp, maxHp, color) {
@@ -2518,15 +4957,15 @@
       ctx.lineWidth = 4;
       ctx.strokeStyle = "#171216";
       ctx.fillStyle = "#f1dada";
-      ctx.strokeText("â™¥", heartX, y);
-      ctx.fillText("â™¥", heartX, y);
+      ctx.strokeText("Ã¢â„¢Â¥", heartX, y);
+      ctx.fillText("Ã¢â„¢Â¥", heartX, y);
       if (fillAmount > 0) {
         ctx.beginPath();
         ctx.rect(heartX - 2, y - size, (size + 6) * fillAmount, size * 1.45);
         ctx.clip();
         ctx.fillStyle = color;
-        ctx.strokeText("â™¥", heartX, y);
-        ctx.fillText("â™¥", heartX, y);
+        ctx.strokeText("Ã¢â„¢Â¥", heartX, y);
+        ctx.fillText("Ã¢â„¢Â¥", heartX, y);
       }
       ctx.restore();
     }
@@ -3415,7 +5854,7 @@
     ctx.fillText("+", 24, -70);
     ctx.fillText("12", -24, -8);
     ctx.fillText("-", 34, -8);
-    ctx.fillText("Ã·", -28, 48);
+    ctx.fillText("ÃƒÂ·", -28, 48);
     ctx.fillText("3", 30, 50);
     ctx.fillText("=", 0, 82);
     ctx.restore();
@@ -3803,6 +6242,10 @@
     } else if (state.action === "heroHide") {
       drawDefenseMove("hide");
       drawImpact("HIDE!", 650, 215, "#6f737a");
+    } else if (state.action === "wallEscape") {
+      drawImpact("WALL ESCAPE!", 650, 215, "#2f6f52");
+    } else if (state.action === "israelTag") {
+      drawImpact("RUN!", 650, 215, "#d91f2e");
     } else {
       drawPlayerAttack(state.playerAction, false);
       if (state.action === "numberNet") {
@@ -3814,6 +6257,17 @@
       } else if (state.action === "iceBossFreeze") {
         drawIceBossFreeze(state.heroX, state.heroY);
         drawImpact("FREEZE!", 650, 215, "#45a6db");
+      } else if (state.action === "madeInChinaBlock") {
+        drawMadeInChinaBlocks(state.heroX, state.heroY);
+        drawImpact("BLOCK SHOT!", 650, 215, "#d91f2e");
+      } else if (state.action === "chineseChickenShot") {
+        drawChineseChickenShot(state.heroX, state.heroY);
+        drawImpact("CHICKEN SHOT!", 650, 215, "#f18319");
+      } else if (state.action === "protectBlock") {
+        drawProtectBurst();
+        drawImpact("PROTECTED!", 650, 215, "#18a66a");
+      } else if (state.action === "presidentHit") {
+        drawImpact("PROTECT HIM!", 650, 215, "#d91f2e");
       } else if (state.action === "garbageShot") {
         drawGarbageShot(state.heroX, state.heroY);
         drawImpact("GARBAGE HIT!", 650, 215, "#d91f2e");
@@ -3848,65 +6302,55 @@
         drawBusStopAttack(state.heroX, state.heroY);
         drawImpact("STOPPED!", 650, 215, "#d91f2e");
       } else if (state.action === "trunkGrab") {
-        drawTrunkGrabEffect();
-        drawImpact("TRUNK GRAB!", 650, 215, "#3f8fd2");
+        drawImpact("GIANT PUNCH!", 650, 215, "#3f8fd2");
       } else if (state.action === "parrotScream") {
-        drawParrotScreamEffect();
-        drawImpact("POWER OFF!", 650, 215, "#8542d8");
+        drawImpact("WING GUST!", 650, 215, "#8542d8");
       } else if (state.action === "cheetahSpeed") {
-        drawCheetahPowerEffect("speed");
-        drawImpact("SUPER SPEED!", 650, 215, "#f18319");
+        drawImpact("JUICE SHOT!", 650, 215, "#f18319");
       } else if (state.action === "cheetahTailGrab") {
-        drawCheetahPowerEffect("tail");
-        drawImpact("TAIL GRAB!", 650, 215, "#f18319");
+        drawImpact("JUICE TORNADO!", 650, 215, "#f18319");
       } else if (state.action === "cheetahClaws") {
-        drawCheetahPowerEffect("claws");
-        drawImpact("CLAW SCRATCH!", 650, 215, "#f18319");
+        drawImpact("JUICE LIGHTNING!", 650, 215, "#f18319");
       } else if (state.action === "fennecLove") {
-        drawFennecLoveEffect();
-        drawImpact("LOVE!", 650, 215, "#f083bd");
+        drawImpact("SNEAK TRICK!", 650, 215, "#f083bd");
       } else if (state.action === "fennecSneakBite") {
-        drawFennecSneakBiteEffect();
-        drawImpact("SNEAK BITE!", 650, 215, "#f0cf62");
+        drawImpact("QUICK DASH!", 650, 215, "#f0cf62");
       } else if (state.action === "fennecPounce") {
-        drawFennecPounceEffect();
-        drawImpact("POUNCE!", 650, 215, "#f0cf62");
+        drawImpact("MULTIPLY!", 650, 215, "#f0cf62");
       } else if (state.action === "polarTeeth") {
         drawPolarPowerEffect("teeth");
-        drawImpact("TEETH ATTACK!", 650, 215, "#45a6db");
+        drawImpact("TORNADO!", 650, 215, "#45a6db");
       } else if (state.action === "polarIceChunk") {
         drawPolarPowerEffect("chunk");
-        drawImpact("ICE CHUNK!", 650, 215, "#45a6db");
+        drawImpact("TELEPORT!", 650, 215, "#45a6db");
       } else if (state.action === "polarIceTornado") {
         drawPolarPowerEffect("tornado");
-        drawImpact("ICE TORNADO!", 650, 215, "#45a6db");
+        drawImpact("ICE SHIELD!", 650, 215, "#45a6db");
       } else if (state.action === "bananaStorm") {
-        drawMonkeyPowerEffect("storm");
-        drawImpact("BANANA STORM!", 650, 215, "#a4c43a");
+        drawPolarPowerEffect("chunk");
+        drawImpact("FREEZE BLOCK!", 650, 215, "#45a6db");
       } else if (state.action === "bananaShoot") {
-        drawMonkeyPowerEffect("shoot");
-        drawImpact("BANANA SHOOT!", 650, 215, "#ffd84a");
+        drawImpact("BURROW STRIKE!", 650, 215, "#6cf0c2");
       } else if (state.action === "bananaSlip") {
-        drawMonkeyPowerEffect("slip");
-        drawImpact("BANANA SLIP!", 650, 215, "#ffd84a");
+        drawImpact("POISON STORM!", 650, 215, "#a4c43a");
       } else if (state.action === "mayerBigBock") {
         drawMayerPowerEffect("bock");
-        drawImpact("BIG BOCK!", 650, 215, "#6b28c7");
+        drawImpact("FLYING BOOTS!", 650, 215, "#6b28c7");
       } else if (state.action === "mayerFlyUp") {
         drawMayerPowerEffect("fly");
-        drawImpact("FLY UP!", 650, 215, "#f08318");
+        drawImpact("MAYOR BOTS!", 650, 215, "#f08318");
       } else if (state.action === "mayerRoosterFlyers") {
         drawMayerPowerEffect("flyers");
-        drawImpact("ROOSTER FLYERS!", 650, 215, "#f08318");
+        drawImpact("LASER RAY!", 650, 215, "#f08318");
       } else if (state.action === "yonatanJaw") {
         drawYonatanPowerEffect("jaw");
-        drawImpact("CROC JAW!", 650, 215, "#1f8f4d");
+        drawImpact("MOUTH MONSTER!", 650, 215, "#1f8f4d");
       } else if (state.action === "yonatanChomper") {
         drawYonatanPowerEffect("chomper");
-        drawImpact("CHOMPER!", 650, 215, "#1f8f4d");
+        drawImpact("YAP BLAST!", 650, 215, "#1f8f4d");
       } else if (state.action === "yonatanTailSwipe") {
-        drawYonatanPowerEffect("tail");
-        drawImpact("TAIL SWIPE!", 650, 215, "#1f8f4d");
+        drawYonatanPowerEffect("jaw");
+        drawImpact("SUPER YAP!", 650, 215, "#1f8f4d");
       } else if (state.action === "yonatanAlligatorMonsters") {
         drawYonatanPowerEffect("monsters");
         drawImpact("MONSTERS!", 650, 215, "#1f8f4d");
@@ -4490,7 +6934,7 @@
     ctx.fillStyle = "#ffd84a";
     ctx.font = "900 24px Trebuchet MS";
     ctx.textAlign = "center";
-    ctx.fillText("1 2 + 7 Ã·", x, y - 68);
+    ctx.fillText("1 2 + 7 ÃƒÂ·", x, y - 68);
     ctx.restore();
   }
 
@@ -4518,6 +6962,103 @@
     ctx.moveTo(795, 338);
     ctx.lineTo(x + 70, y - 70);
     ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawMadeInChinaBlocks(x, y) {
+    ctx.save();
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    [
+      [840, 315, -0.14],
+      [735, 360, 0.12],
+      [620, 405, -0.08]
+    ].forEach(([bx, by, angle], index) => {
+      ctx.save();
+      ctx.translate(bx, by);
+      ctx.rotate(angle);
+      ctx.fillStyle = ["#f0b84c", "#d99b42", "#ffd36d"][index];
+      roundRect(-48, -30, 96, 60, 6);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "#d91f2e";
+      ctx.font = "900 12px Trebuchet MS";
+      ctx.textAlign = "center";
+      ctx.fillText("MADE IN", 0, -3);
+      ctx.fillText("CHINA", 0, 17);
+      ctx.restore();
+      ctx.strokeStyle = "#d91f2e";
+      ctx.lineWidth = 5;
+      ctx.beginPath();
+      ctx.moveTo(bx + 70, by - 10);
+      ctx.lineTo(bx + 125, by - 22);
+      ctx.stroke();
+    });
+    ctx.strokeStyle = "#d91f2e";
+    ctx.lineWidth = 7;
+    ctx.beginPath();
+    ctx.moveTo(845, 318);
+    ctx.lineTo(x + 74, y - 70);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawChineseChickenShot(x, y) {
+    ctx.save();
+    ctx.strokeStyle = "#171216";
+    ctx.lineWidth = 5;
+    [
+      [830, 318, 0.1],
+      [730, 372, -0.22],
+      [620, 425, 0.18]
+    ].forEach(([cx, cy, angle], index) => {
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(angle);
+      ctx.fillStyle = ["#f18319", "#ffad42", "#d66b1f"][index];
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 34, 22, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "#ffe0a6";
+      ctx.beginPath();
+      ctx.arc(-28, 3, 10, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(30, -5, 9, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+      ctx.strokeStyle = "#f18319";
+      ctx.lineWidth = 5;
+      ctx.beginPath();
+      ctx.moveTo(cx + 48, cy - 8);
+      ctx.lineTo(cx + 103, cy - 22);
+      ctx.stroke();
+    });
+    ctx.strokeStyle = "#f18319";
+    ctx.lineWidth = 7;
+    ctx.beginPath();
+    ctx.moveTo(830, 322);
+    ctx.lineTo(x + 76, y - 68);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawProtectBurst() {
+    ctx.save();
+    ctx.strokeStyle = "#18a66a";
+    ctx.fillStyle = "rgba(24, 166, 106, 0.18)";
+    ctx.lineWidth = 7;
+    ctx.beginPath();
+    ctx.arc(state.heroX + 52, state.heroY - 82, 72, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#18a66a";
+    ctx.font = "900 22px Trebuchet MS";
+    ctx.textAlign = "center";
+    ctx.fillText("BLOCKED", state.heroX + 52, state.heroY - 82);
     ctx.restore();
   }
 
