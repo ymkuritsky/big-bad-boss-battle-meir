@@ -385,6 +385,9 @@
     laneDodgeDirection: "",
     projectileLane: "middle",
     bossPressureStep: 0,
+    chasingBossX: 940,
+    chasingBossY: 355,
+    chaseInterval: null,
     trunkGrabUntil: 0,
     trunkGrabTarget: "",
     powerSilenceUntil: 0,
@@ -422,6 +425,7 @@
 
   function resetGame() {
     clearLevelTimer();
+    stopAutoBossChase();
     state.started = false;
     state.won = false;
     state.lost = false;
@@ -468,6 +472,7 @@
     state.laneDodgeDirection = "";
     state.projectileLane = "middle";
     state.bossPressureStep = 0;
+    resetAutoBossPosition();
     state.trunkGrabUntil = 0;
     state.trunkGrabTarget = "";
     state.powerSilenceUntil = 0;
@@ -552,6 +557,7 @@
       setAttacks(false);
     }
     startLevelTimer();
+    startAutoBossChase();
     updateLevelLocks();
     updateHud();
     updateBossTargetChoices();
@@ -1840,12 +1846,74 @@
     if (isStatueMazeLevel()) return { x: state.mazeBossX, y: state.mazeBossY };
     if (isAntarcticaTreasureLevel()) return { x: state.treasureBossX, y: state.treasureBossY };
     if (isPhoenixScavengerLevel()) return { x: 955, y: 410 };
+    if (shouldNormalAutoBossChase() && state.started) {
+      return { x: state.chasingBossX, y: state.chasingBossY };
+    }
+    return baseBossPosition(target);
+  }
+
+  function baseBossPosition(target = currentTarget()) {
     if (target === "math") return { x: 940, y: 355 };
     if (target === "evil") return { x: 990, y: 410 };
     if (target === "ice") return { x: 965, y: 390 };
     if (target === "food") return { x: 950, y: 390 };
     if (target === "crazyBall") return { x: 950, y: 390 };
     return { x: 950, y: 380 };
+  }
+
+  function shouldAutoBossChase() {
+    return state.level >= 2 && state.level <= 4;
+  }
+
+  function shouldNormalAutoBossChase() {
+    return state.level === 2;
+  }
+
+  function resetAutoBossPosition() {
+    const boss = baseBossPosition(currentTarget());
+    state.chasingBossX = boss.x;
+    state.chasingBossY = boss.y;
+  }
+
+  function startAutoBossChase() {
+    stopAutoBossChase();
+    resetAutoBossPosition();
+    if (!shouldAutoBossChase()) return;
+    state.chaseInterval = setInterval(tickAutoBossChase, 650);
+  }
+
+  function stopAutoBossChase() {
+    if (state.chaseInterval) {
+      clearInterval(state.chaseInterval);
+      state.chaseInterval = null;
+    }
+  }
+
+  function tickAutoBossChase() {
+    if (!state.started || state.won || state.lost || !shouldAutoBossChase()) {
+      stopAutoBossChase();
+      return;
+    }
+    if (isStatueMazeLevel()) {
+      chaseHeroInStatueMaze();
+      if (mazeBossCaughtHero()) {
+        state.lost = true;
+        state.action = "lost";
+        els.statusText.textContent = `${currentBossName()} caught you inside the Statue of Liberty maze. Reset for a rematch.`;
+        setAttacks(true);
+        stopAutoBossChase();
+      }
+      updateHud();
+      draw();
+      return;
+    }
+    const dx = state.heroX - state.chasingBossX;
+    const dy = state.heroY - state.chasingBossY;
+    const distance = Math.hypot(dx, dy) || 1;
+    const speed = 18;
+    state.chasingBossX = clamp(state.chasingBossX + (dx / distance) * speed, 120, 1080);
+    state.chasingBossY = clamp(state.chasingBossY + (dy / distance) * speed * 0.7, 270, 470);
+    draw();
   }
 
   function isCloseEnoughToAttack(kind, target) {
@@ -3270,16 +3338,17 @@
       drawYappingYonatanBoss(1045, 420);
       drawIceBoss(970, 405);
     } else if (currentBossHp() > 0) {
+      const boss = currentBossPosition();
       if (isStatueMazeLevel()) {
         drawMiniMazeBoss(state.mazeBossX, state.mazeBossY);
       } else if (isCanadaTreasureMapLevel()) {
         // The boss waits hidden until the Canada map is finished.
       } else if (currentTarget() === "math") {
-        drawMischievousMayerBoss(940, 365);
+        drawMischievousMayerBoss(boss.x, boss.y + 10);
       } else if (currentTarget() === "evil") {
-        drawYappingYonatanBoss(990, 420);
+        drawYappingYonatanBoss(boss.x, boss.y + 10);
       } else {
-        drawIceBoss(965, 390);
+        drawIceBoss(boss.x, boss.y);
       }
     }
     drawPrizeDrops();

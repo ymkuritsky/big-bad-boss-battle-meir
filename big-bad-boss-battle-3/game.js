@@ -299,6 +299,9 @@
     laneDodgeDirection: "",
     projectileLane: "middle",
     bossPressureStep: 0,
+    chasingBossX: 940,
+    chasingBossY: 355,
+    chaseInterval: null,
     trunkGrabUntil: 0,
     trunkGrabTarget: "",
     powerSilenceUntil: 0,
@@ -333,6 +336,7 @@
   };
 
   function resetGame() {
+    stopAutoBossChase();
     state.started = false;
     state.won = false;
     state.lost = false;
@@ -365,6 +369,7 @@
     state.laneDodgeDirection = "";
     state.projectileLane = "middle";
     state.bossPressureStep = 0;
+    resetAutoBossPosition();
     state.trunkGrabUntil = 0;
     state.trunkGrabTarget = "";
     state.powerSilenceUntil = 0;
@@ -412,6 +417,7 @@
     state.lost = false;
     els.statusText.textContent = levels[state.level].start;
     setAttacks(false);
+    startAutoBossChase();
     updateLevelLocks();
     updateHud();
     updateBossTargetChoices();
@@ -1526,11 +1532,56 @@
   }
 
   function currentBossPosition(target = currentTarget()) {
+    if (shouldAutoBossChase() && state.started) {
+      return { x: state.chasingBossX, y: state.chasingBossY };
+    }
+    return baseBossPosition(target);
+  }
+
+  function baseBossPosition(target = currentTarget()) {
     if (target === "math") return { x: 940, y: 355 };
     if (target === "evil") return { x: 990, y: 410 };
     if (target === "food") return { x: 950, y: 390 };
     if (target === "crazyBall") return { x: 950, y: 390 };
     return { x: 950, y: 380 };
+  }
+
+  function shouldAutoBossChase() {
+    return state.level >= 2 && state.level <= 4;
+  }
+
+  function resetAutoBossPosition() {
+    const boss = baseBossPosition(currentTarget());
+    state.chasingBossX = boss.x;
+    state.chasingBossY = boss.y;
+  }
+
+  function startAutoBossChase() {
+    stopAutoBossChase();
+    resetAutoBossPosition();
+    if (!shouldAutoBossChase()) return;
+    state.chaseInterval = setInterval(tickAutoBossChase, 650);
+  }
+
+  function stopAutoBossChase() {
+    if (state.chaseInterval) {
+      clearInterval(state.chaseInterval);
+      state.chaseInterval = null;
+    }
+  }
+
+  function tickAutoBossChase() {
+    if (!state.started || state.won || state.lost || !shouldAutoBossChase()) {
+      stopAutoBossChase();
+      return;
+    }
+    const dx = state.heroX - state.chasingBossX;
+    const dy = state.heroY - state.chasingBossY;
+    const distance = Math.hypot(dx, dy) || 1;
+    const speed = state.level === 4 ? 24 : state.level === 3 ? 20 : 17;
+    state.chasingBossX = clamp(state.chasingBossX + (dx / distance) * speed, 120, 1080);
+    state.chasingBossY = clamp(state.chasingBossY + (dy / distance) * speed * 0.7, 270, 470);
+    draw();
   }
 
   function isCloseEnoughToAttack(kind, target) {
@@ -1966,10 +2017,11 @@
       drawMischievousMayerBoss(900, 365);
       drawYappingYonatanBoss(1045, 420);
     } else if (currentBossHp() > 0) {
+      const boss = currentBossPosition();
       if (currentTarget() === "math") {
-        drawMischievousMayerBoss(940, 365);
+        drawMischievousMayerBoss(boss.x, boss.y + 10);
       } else {
-        drawYappingYonatanBoss(990, 420);
+        drawYappingYonatanBoss(boss.x, boss.y + 10);
       }
     }
     drawPrizeDrops();
