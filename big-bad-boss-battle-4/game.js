@@ -7235,64 +7235,90 @@
     const boss = currentBossPosition(state.playerTarget || state.bananaSlipTarget || currentTarget());
     ctx.save();
     if (kind === "storm") {
-      ctx.fillStyle = "#ffd84a";
+      ctx.fillStyle = "rgba(102, 240, 194, 0.34)";
+      ctx.strokeStyle = "#146e8f";
+      ctx.lineWidth = 8;
+      roundRect(boss.x - 178, boss.y - 170, 142, 170, 18);
+      ctx.fill();
+      ctx.stroke();
+      ctx.strokeStyle = "#fffef7";
+      ctx.lineWidth = 5;
+      for (let line = 0; line < 4; line += 1) {
+        ctx.beginPath();
+        ctx.moveTo(boss.x - 162 + line * 34, boss.y - 154);
+        ctx.lineTo(boss.x - 188 + line * 34, boss.y - 20);
+        ctx.stroke();
+      }
+      ctx.fillStyle = "#45a6db";
       ctx.strokeStyle = "#171216";
       ctx.lineWidth = 4;
-      for (let drop = 0; drop < 3; drop += 1) {
-        const x = boss.x - 168 + drop * 54;
-        const y = boss.y - 164 + drop * 42;
-        ctx.save();
-        ctx.translate(x, y);
-        ctx.rotate(-0.65 + drop * 0.35);
+      for (let shard = 0; shard < 5; shard += 1) {
         ctx.beginPath();
-        ctx.ellipse(0, 0, 16, 38, 0, 0, Math.PI * 2);
+        ctx.moveTo(boss.x - 170 + shard * 26, boss.y - 136 + (shard % 2) * 18);
+        ctx.lineTo(boss.x - 150 + shard * 26, boss.y - 104 + (shard % 2) * 18);
+        ctx.lineTo(boss.x - 184 + shard * 26, boss.y - 102 + (shard % 2) * 18);
+        ctx.closePath();
         ctx.fill();
         ctx.stroke();
-        ctx.restore();
       }
-      ctx.fillStyle = "#6ca122";
+      ctx.fillStyle = "#fffef7";
       ctx.font = "900 22px Trebuchet MS";
       ctx.textAlign = "center";
-      ctx.fillText("3 x 0.5", boss.x - 92, boss.y - 186);
+      ctx.fillText("FREEZE BLOCK", boss.x - 106, boss.y - 188);
     } else if (kind === "shoot") {
-      ctx.strokeStyle = "#ffd84a";
-      ctx.lineWidth = 12;
+      ctx.strokeStyle = "#9be8ff";
+      ctx.lineWidth = 14;
       ctx.beginPath();
       ctx.moveTo(state.heroX + 56, state.heroY - 112);
       ctx.quadraticCurveTo(650, 190, boss.x - 88, boss.y - 88);
       ctx.stroke();
-      ctx.fillStyle = "#ffd84a";
+      ctx.fillStyle = "#45a6db";
       ctx.strokeStyle = "#171216";
       ctx.lineWidth = 5;
       ctx.save();
       ctx.translate(boss.x - 88, boss.y - 88);
       ctx.rotate(-0.5);
       ctx.beginPath();
-      ctx.ellipse(0, 0, 20, 48, 0, 0, Math.PI * 2);
+      ctx.moveTo(-42, 0);
+      ctx.lineTo(12, -30);
+      ctx.lineTo(44, 0);
+      ctx.lineTo(12, 30);
+      ctx.closePath();
       ctx.fill();
       ctx.stroke();
       ctx.restore();
-    } else {
-      ctx.fillStyle = "#ffd84a";
-      ctx.strokeStyle = "#171216";
-      ctx.lineWidth = 5;
-      ctx.save();
-      ctx.translate(boss.x - 92, boss.y + 42);
-      ctx.rotate(1.25);
-      ctx.beginPath();
-      ctx.ellipse(0, 0, 16, 54, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.stroke();
-      ctx.restore();
-      ctx.strokeStyle = "#6ca122";
-      ctx.lineWidth = 7;
-      ctx.beginPath();
-      ctx.arc(boss.x - 82, boss.y - 46, 76, 0.15, Math.PI * 1.35);
-      ctx.stroke();
       ctx.fillStyle = "#fffef7";
       ctx.font = "900 22px Trebuchet MS";
       ctx.textAlign = "center";
-      ctx.fillText("SLIPPING", boss.x - 82, boss.y - 138);
+      ctx.fillText("ICE CHUNK", boss.x - 92, boss.y - 146);
+    } else {
+      const cx = boss.x - 88;
+      const cy = boss.y - 72;
+      ctx.fillStyle = "rgba(64, 166, 92, 0.25)";
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, 130, 120, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = "#2f8d3e";
+      ctx.lineWidth = 10;
+      for (let swirl = 0; swirl < 5; swirl += 1) {
+        ctx.beginPath();
+        ctx.ellipse(cx, cy + swirl * 17, 110 - swirl * 15, 24, -0.35 + swirl * 0.18, 0, Math.PI * 1.75);
+        ctx.stroke();
+      }
+      ctx.fillStyle = "#6cf0c2";
+      ctx.strokeStyle = "#171216";
+      ctx.lineWidth = 4;
+      for (let puff = 0; puff < 9; puff += 1) {
+        const angle = puff * 0.72;
+        ctx.beginPath();
+        ctx.arc(cx + Math.cos(angle) * (48 + puff * 3), cy + Math.sin(angle) * 52, 15 + (puff % 3) * 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      }
+      ctx.fillStyle = "#fffef7";
+      ctx.font = "900 22px Trebuchet MS";
+      ctx.textAlign = "center";
+      ctx.fillText("POISON STORM", cx, cy - 118);
     }
     ctx.restore();
   }

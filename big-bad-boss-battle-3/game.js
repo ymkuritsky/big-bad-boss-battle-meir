@@ -4057,25 +4057,39 @@
     const boss = currentBossPosition(state.playerTarget || state.bananaSlipTarget || currentTarget());
     ctx.save();
     if (kind === "storm") {
+      const cx = boss.x - 92;
+      const cy = boss.y - 82;
+      ctx.fillStyle = "rgba(108, 161, 34, 0.22)";
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, 132, 124, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = "#6ca122";
+      ctx.lineWidth = 9;
+      for (let swirl = 0; swirl < 5; swirl += 1) {
+        ctx.beginPath();
+        ctx.ellipse(cx, cy + swirl * 16, 112 - swirl * 15, 24, -0.3 + swirl * 0.16, 0, Math.PI * 1.78);
+        ctx.stroke();
+      }
       ctx.fillStyle = "#ffd84a";
       ctx.strokeStyle = "#171216";
       ctx.lineWidth = 4;
-      for (let drop = 0; drop < 3; drop += 1) {
-        const x = boss.x - 168 + drop * 54;
-        const y = boss.y - 164 + drop * 42;
+      for (let drop = 0; drop < 9; drop += 1) {
+        const angle = drop * 0.8;
+        const x = cx + Math.cos(angle) * (38 + drop * 6);
+        const y = cy + Math.sin(angle) * (32 + drop * 5);
         ctx.save();
         ctx.translate(x, y);
-        ctx.rotate(-0.65 + drop * 0.35);
+        ctx.rotate(angle + 0.7);
         ctx.beginPath();
-        ctx.ellipse(0, 0, 16, 38, 0, 0, Math.PI * 2);
+        ctx.ellipse(0, 0, 13, 34, 0, 0, Math.PI * 2);
         ctx.fill();
         ctx.stroke();
         ctx.restore();
       }
-      ctx.fillStyle = "#6ca122";
+      ctx.fillStyle = "#fffef7";
       ctx.font = "900 22px Trebuchet MS";
       ctx.textAlign = "center";
-      ctx.fillText("3 x 0.5", boss.x - 92, boss.y - 186);
+      ctx.fillText("BANANA STORM", cx, cy - 122);
     } else if (kind === "shoot") {
       ctx.strokeStyle = "#ffd84a";
       ctx.lineWidth = 12;
