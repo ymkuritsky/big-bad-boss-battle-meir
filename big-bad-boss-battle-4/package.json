@@ -1,0 +1,7 @@
+{
+  "name": "big-bad-boss-battle-4",
+  "version": "1.0.0",
+  "scripts": {
+    "check": "node --check game.js"
+  }
+}

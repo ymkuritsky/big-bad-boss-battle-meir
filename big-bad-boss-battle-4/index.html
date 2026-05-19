@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>Big Bad Boss Battle 4</title>
+    <link rel="stylesheet" href="styles.css?v=bbb4-world-travel-start" />
+  </head>
+  <body>
+    <main class="game-shell">
+      <header class="top-bar">
+        <h1>Big Bad Boss Battle 4</h1>
+        <div class="top-actions">
+          <button id="startButton" class="comic-button">Start Level 1</button>
+          <button id="resetButton" class="comic-button small">Reset</button>
+        </div>
+      </header>
+
+      <section class="stage-wrap">
+        <canvas id="gameCanvas" width="1280" height="720" aria-label="World travel boss battle"></canvas>
+        <aside class="hud-panel">
+          <p id="levelEyebrow" class="eyebrow">Level 1</p>
+          <h2 id="selectedHeroName">World Trip Showdown</h2>
+          <p id="statusText">Who do you want to choose: Mischievous Mayer or Yapping Yonatan?</p>
+          <div class="level-select" aria-label="Choose level">
+            <button class="level-choice selected" data-level="1">Level 1 Florida</button>
+            <button class="level-choice" data-level="2">Level 2 New York</button>
+            <button class="level-choice" data-level="3">Level 3 Paris</button>
+            <button class="level-choice" data-level="4">Level 4 Antarctica</button>
+            <button class="level-choice" data-level="5">Level 5 London</button>
+            <button class="level-choice" data-level="6">Level 6 Tokyo</button>
+            <button class="level-choice" data-level="7">Level 7 Egypt</button>
+            <button class="level-choice" data-level="8">Level 8 Amazon</button>
+            <button class="level-choice" data-level="9">Level 9 Hawaii</button>
+            <button class="level-choice" data-level="10">Level 10 Australia</button>
+          </div>
+          <div id="bossTargetSelect" class="boss-target-select" aria-label="Choose boss">
+            <button class="target-choice selected" data-target="math">Choose Mischievous Mayer</button>
+            <button class="target-choice" data-target="evil">Choose Yapping Yonatan</button>
+          </div>
+          <div id="characterSelect" class="character-select" aria-label="Choose character">
+            <button class="hero-choice selected" data-hero="tats">Super Tats</button>
+            <button class="hero-choice" data-hero="fary">Mom Fary</button>
+            <button class="hero-choice" data-hero="apple">Super Appie Juice</button>
+            <button class="hero-choice" data-hero="freddy">Freddy</button>
+            <button class="hero-choice" data-hero="benji">Benji</button>
+            <button class="hero-choice" data-hero="frost">Mr. 67</button>
+            <button class="hero-choice" data-hero="ness">Super Ness</button>
+            <button class="hero-choice" data-hero="crayon">Captain Crayonstorm</button>
+            <button class="hero-choice" data-hero="hoodie">Zap Hoodie</button>
+            <button class="hero-choice" data-hero="mayer">Mischievous Mayer</button>
+            <button class="hero-choice" data-hero="yonatan">Yapping Yonatan</button>
+          </div>
+          <div class="game-nav-links" aria-label="Go to another game">
+            <a class="game-nav-link" href="https://ymkuritsky.github.io/big-bad-boss-battle-meir/index.html?fresh=bbb4-world-travel-start">Go back to Big Bad Boss Battle</a>
+            <a class="game-nav-link sequel-two" href="https://ymkuritsky.github.io/big-bad-boss-battle-meir/big-bad-boss-battle-2/index.html?fresh=bbb4-world-travel-start">Go back to Big Bad Boss Battle 2</a>
+            <a class="game-nav-link sequel-three" href="https://ymkuritsky.github.io/big-bad-boss-battle-meir/big-bad-boss-battle-3/index.html?fresh=bbb4-world-travel-start">Go back to Big Bad Boss Battle 3</a>
+          </div>
+          <div class="heart-row">
+            <span id="heroHearts">Hero: 8</span>
+            <span id="bossHearts">Bosses: 16</span>
+          </div>
+          <div id="powerInventory" class="power-inventory" aria-label="Earned power ups"></div>
+        </aside>
+        <div class="player-controls" aria-label="Player controls">
+          <div class="controls-grid" aria-label="Move">
+            <button class="move-button up" data-move="up" aria-label="Move up">&#9650;</button>
+            <button class="move-button left" data-move="left" aria-label="Move left">&#9664;</button>
+            <button class="move-button right" data-move="right" aria-label="Move right">&#9654;</button>
+            <button class="move-button down" data-move="down" aria-label="Move down">&#9660;</button>
+          </div>
+          <div class="combat-controls">
+            <div class="attack-row">
+              <button id="punchButton" class="comic-button attack">Punch</button>
+              <button id="kickButton" class="comic-button attack">Kick</button>
+              <button id="jumpButton" class="comic-button attack">Jump</button>
+              <button id="hideButton" class="comic-button attack">Hide</button>
+            </div>
+            <div id="powerRow" class="power-row" aria-label="Hero powers">
+              <button class="comic-button attack violet power-slot" data-power-slot="0">Power 1</button>
+              <button class="comic-button attack violet power-slot" data-power-slot="1">Power 2</button>
+              <button class="comic-button attack violet power-slot" data-power-slot="2">Power 3</button>
+              <button class="comic-button attack violet power-slot" data-power-slot="3">Power 4</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="game.js?v=bbb4-world-travel-start"></script>
+  </body>
+</html>
